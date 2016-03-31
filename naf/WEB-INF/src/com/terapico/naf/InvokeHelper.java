@@ -97,6 +97,8 @@ public class InvokeHelper {
 			Object []parameters=ExpressionBeanTool.getParameters(method.getGenericParameterTypes(), furi.getParameter());
 			
 			Object actualResult=method.invoke(test, parameters);
+			
+			
 			manager.saveParameters(methodParameterTypes, nameList.toArray(new String[0]),parameters);
 			
 			return  InvokeResult.createInstance(actualResult,method,parameters);
@@ -109,7 +111,11 @@ public class InvokeHelper {
 
 	
 	}
-
+	protected void saveParameters()
+	{
+		
+		
+	}
 	private Method findMethod(Object object, String serviceName) {
 		// TODO Auto-generated method stub
 		return MethodIndex.findMethod(object, serviceName);

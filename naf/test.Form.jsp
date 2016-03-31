@@ -31,7 +31,8 @@
 		    $("#parameters").css({
 		        position: "absolute",
 		        top: pos.top + pos.height+"px",
-		        left: (pos.left) + "px"
+		        left: (pos.left) + "px",
+				    overflow: "scroll"
 		    }).toggle();
 			
 		
@@ -45,7 +46,8 @@
 			 $("#parameters").css({
 			        position: "absolute",
 			        top: pos.top + pos.height+"px",
-			        left: (pos.left) + "px"
+			        left: (pos.left) + "px",
+				      overflow: "scroll"
 			   });
 		});
 	

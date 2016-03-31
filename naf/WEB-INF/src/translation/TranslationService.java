@@ -14,16 +14,18 @@ public class TranslationService extends BaiduInstantService {
 	public TranslationResponse translate(String chineseOrEnglish) throws URISyntaxException, Exception
 	{
 		
+		
 		String urlExpr=buildRequestURL(chineseOrEnglish);
-		System.out.println(urlExpr);
+		log(urlExpr);
 		String content=callBaiduAPI(new URI(urlExpr));     
         Gson gson = new Gson();     
-        System.out.println(content);
+        log(content);
         final TranslationResponse transResponse=gson.fromJson(content,TranslationResponse.class);
-        System.out.println(transResponse.getErrMsg());
+        log(transResponse.getErrMsg());
 		return transResponse;
 		
 	}
+	
 
 	public String buildRequestURL(String chineseOrEnglish) throws UnsupportedEncodingException
 	{

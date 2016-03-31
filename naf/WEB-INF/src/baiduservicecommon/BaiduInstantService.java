@@ -1,8 +1,10 @@
 package baiduservicecommon;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URLConnection;
 
@@ -18,34 +20,68 @@ public class BaiduInstantService {
 	{
 		return System.getenv("BAIDUAPIKEY");
 	}
-	protected String callBaiduAPI(URI uri, String apiKey) throws Exception{				
+	protected String callBaiduAPI(URI uri, String apiKey) throws Exception {				
 		
-		
-		
-		URLConnection conn = uri.toURL().openConnection();
-		
-		
-		if(!(conn instanceof HttpURLConnection)){
-			
-			throw new IllegalArgumentException("The URI must be HTTP URI");
-		}
-		
-		
-		HttpURLConnection httpConn=(HttpURLConnection) conn;
-		
+		int count=0;
+		final int retryCount=10;
+		while(true){
+			URLConnection conn;
+			try {
+				conn = uri.toURL().openConnection();
 
-		httpConn.setRequestProperty("apikey", apiKey);
+				
+				if(!(conn instanceof HttpURLConnection)){
+					
+					throw new IllegalArgumentException("The URI must be HTTP URI");
+				}
+				
+				
+				HttpURLConnection httpConn=(HttpURLConnection) conn;
+				
+
+				httpConn.setRequestProperty("apikey", apiKey);
+				
+				conn.setRequestProperty("apikey", apiKey);
+				BufferedReader reader=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				String line;
+				StringBuilder content=new StringBuilder(1000);
+			    while ((line = reader.readLine()) != null) {
+			    	content.append(line);
+			    	content.append("\r\n");
+			    }		
+			    reader.close();
+			    log("重试第: "+(count+1)+"次");
+				return content.toString();
+			} catch (MalformedURLException e) {
+				throw e;
+			} catch (IOException e) {
+				
+				
+				count++;
+				
+				sleepOrDie(count,retryCount,1000,e);
+				
+			}
+			
+		}
+		//throw new IOException("重试次数超过"+count+"次，只好放弃了",lastException);
+
+	}
+	
+	protected void sleepOrDie(int currentCount, int retryCount, int sleepMillis, Exception e) throws Exception
+	{
+		if(currentCount<retryCount) {
+			Thread.sleep(sleepMillis);
+			return;
+		}
+		throw e;
 		
-		conn.setRequestProperty("apikey", apiKey);
-		BufferedReader reader=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		String line;
-		StringBuilder content=new StringBuilder(1000);
-	    while ((line = reader.readLine()) != null) {
-	    	content.append(line);
-	    	content.append("\r\n");
-	    }		
+	}
+	
+	protected void log(String message)
+	{
+		System.out.println("BaiduInstantService: "+message);
 		
-		return content.toString();
 		
 	}
 	
