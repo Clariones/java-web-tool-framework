@@ -47,10 +47,10 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 		System.out.println("Deleted Record with ID = " + id);
 		return;
 	}
-	public void deleteAll() {
+	public int deleteAll() {
 		String SQL = "delete from user_data ";
-		jdbcTemplateObject.update(SQL);
-		return;
+		return jdbcTemplateObject.update(SQL);
+		
 	}
 
 	public void update(Integer id, Integer password) {
