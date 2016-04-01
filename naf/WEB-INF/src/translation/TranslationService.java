@@ -39,9 +39,6 @@ public class TranslationService extends BaiduInstantService {
 		}
 
 		return builder.parameter("from", "zh").parameter("to", "en").parameter("query", chineseOrEnglish).done();
-		
-		
-	
-		
+
 	}
 }

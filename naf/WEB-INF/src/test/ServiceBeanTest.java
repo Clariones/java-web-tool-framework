@@ -2,27 +2,29 @@ package test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 import silver.SilverPriceService;
 import translation.TranslationResponse;
 import translation.TranslationService;
 import weather.BaiduWeatherService;
-import weather.Today;
 import weather.WeatherResponse;
+import webtranslation.WebTranslationResponse;
+import webtranslation.WebTranslationService;
 
 public class ServiceBeanTest {
 	
@@ -51,8 +53,7 @@ public class ServiceBeanTest {
 			
 		}
 		
-		
-		
+
 		
 		//get all headers
 		Map<String, List<String>> map = conn.getHeaderFields();
@@ -69,7 +70,7 @@ public class ServiceBeanTest {
 	}
 	
 	
-	public TranslationResponse translate(String englishOrChineseString) throws URISyntaxException, Exception
+	protected TranslationResponse translate2(String englishOrChineseString) throws URISyntaxException, Exception
 	{
 		
 		TranslationService service=new TranslationService();
@@ -78,7 +79,13 @@ public class ServiceBeanTest {
 		
 	}
 	
-	
+	public WebTranslationResponse translate(String englishOrChineseString) throws URISyntaxException, Exception
+	{
+		
+		WebTranslationService service=new WebTranslationService();
+		return service.translate(englishOrChineseString);
+		
+	}
 
 	
 	public Double silverCurrentPrice() throws URISyntaxException, Exception
@@ -105,7 +112,26 @@ public class ServiceBeanTest {
 	
 
 	
-	
+	public boolean sendEmailIfLowerThan(double value) throws URISyntaxException, Exception
+	{
+		
+		double price=this.silverCurrentPrice();
+		if(price>value){
+			return false;
+		}
+		Session session = Session.getDefaultInstance(System.getProperties(), null);
+        Message msg = new MimeMessage(session);
+        msg.setFrom(new InternetAddress("pricenear@aaxischina.com"));
+        msg.setRecipient(Message.RecipientType.TO, new InternetAddress("pzhang@aaxischina.com"));
+        String content=price +"! product price has been changed " ;
+        msg.setSubject(content);
+        msg.setText(content);
+
+        // Send the message
+        Transport.send(msg);
+        return true;
+		
+	}
 	
 	
 	protected String getValueInExpr(String contentType, String prefix)

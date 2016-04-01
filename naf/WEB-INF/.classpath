@@ -5,7 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="lib/jsdk-15.jar"/>
-	<classpathentry kind="lib" path="lib/gson-2.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/asm-all-4.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/spring-aop-3.0.1.RELEASE.jar"/>
@@ -18,5 +17,9 @@
 	<classpathentry kind="lib" path="lib/spring-expression-3.0.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/mongo-java-driver-2.12.2.jar"/>
 	<classpathentry kind="lib" path="lib/jsoup-1.8.3.jar" sourcepath="lib/jsoup-1.8.3-sources.jar"/>
+	<classpathentry kind="lib" path="/opt/resin/lib/javamail-141.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-annotations-2.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.7.3.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

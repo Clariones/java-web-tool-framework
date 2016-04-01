@@ -1,0 +1,60 @@
+{
+    "dict_result": {
+        "baike_means": [],
+        "edict": "",
+        "from": "netdata",
+        "lang": "0",
+        "simple_means": {
+            "from": "netdata",
+            "symbols": [
+                {
+                    "parts": [
+                        {
+                            "means": [
+                                "I ate too much1",
+                                "I ate too much2."
+                            ],
+                            "part_name": "\u7f51\u7edc"
+                        }
+                    ]
+                }
+            ],
+            "word_name": "\u6211\u5403\u5f97\u592a\u591a\u4e86"
+        },
+        "zdict": ""
+    },
+    "liju_result": {
+        "double": "",
+        "single": ""
+    },
+    "trans_result": {
+        "data": [
+            {
+                "dst": "I ate too much3.",
+                "relation": [],
+                "result": [
+                    [
+                        0,
+                        "I ate too much4.",
+                        [
+                            "0|18"
+                        ],
+                        [],
+                        [
+                            "0|18"
+                        ],
+                        [
+                            "0|15"
+                        ]
+                    ]
+                ],
+                "src": "\u6211\u5403\u5f97\u592a\u591a\u4e86"
+            }
+        ],
+        "domain": "all",
+        "from": "zh",
+        "status": 0,
+        "to": "en",
+        "type": 2
+    }
+}
