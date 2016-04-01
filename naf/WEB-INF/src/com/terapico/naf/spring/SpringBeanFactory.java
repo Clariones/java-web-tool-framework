@@ -16,6 +16,12 @@ public class SpringBeanFactory implements BeanFactory{
 		return context.getBean(beanLocation.getName());
 	}
 
+	public Object getBean(String beanName) {
+		// TODO Auto-generated method stub
+		return context.getBean(beanName);
+	}
+	
+	
 	public String[] getBeanNames() {
 		// TODO Auto-generated method stub
 		return context.getBeanDefinitionNames();

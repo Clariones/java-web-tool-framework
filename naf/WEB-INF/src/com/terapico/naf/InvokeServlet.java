@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import privilege.PrivilegeService;
 import test.MathmaticalTool;
 import test.ServiceBeanTest;
 
@@ -63,7 +64,7 @@ public class InvokeServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		Object test = new ServiceBeanTest();
+		Object test = new PrivilegeService();
 		BaseInvokeResult result = helper.getResult(test, request, response);
 
 		String accept = request.getHeader("Accept");

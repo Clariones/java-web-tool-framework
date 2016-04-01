@@ -13,8 +13,7 @@ public class URLBuilder {
 	public URLBuilder(String base)
 	{
 		this.baseURL=base;
-		
-		
+
 	}
 	public URLBuilder(String base,String encoding)
 	{

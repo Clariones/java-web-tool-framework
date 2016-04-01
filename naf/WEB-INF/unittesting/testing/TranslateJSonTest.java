@@ -28,7 +28,22 @@ public class TranslateJSonTest extends TestCaseBase {
 		
 		
 		String content=this.loadStringFromFile("tmp/jsonload.json");
-		
+		JsonFactory factory = new JsonFactory();
+		JsonParser  parser  = factory.createParser(content);
+		while(!parser.isClosed()){
+		    JsonToken jsonToken = parser.nextToken();
+
+		    if(JsonToken.FIELD_NAME.equals(jsonToken)){
+		        String fieldName = parser.getCurrentName();
+		        //System.out.println(fieldName);
+
+		        jsonToken = parser.nextToken();
+
+		        if("dst".equals(fieldName)){
+		            this.logln(parser.getValueAsString());
+		        } 
+		    }
+		}
 		
 	}
 	

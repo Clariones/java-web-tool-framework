@@ -12,6 +12,9 @@ public class InvokeResult extends BaseInvokeResult{
 		result.setMethod(method);
 		result.setResult(actualResult);
 		result.setParameters(parameters);
+		if(actualResult==null){
+			result.setResult(true);
+		}
 		return result;
 	}
 
