@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class UserDAOJDBCTemplateImpl implements UserDAO {
@@ -13,17 +14,17 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
-		this.jdbcTemplateObject = new JdbcTemplate(dataSource);
+		this.jdbcTemplateObject = new JdbcTemplate(this.dataSource);
 	}
 
 	public int create(String username, String password) {
 		// TODO Auto-generated method stub
 		String SQL = "insert into user_data (id,username, password) values (?, ?, ?)";
 
-		return jdbcTemplateObject.update(SQL, System.currentTimeMillis()%1000, username, password);
+		return jdbcTemplateObject.update(SQL, System.currentTimeMillis() % 1000, username, password);
 		// System.out.println("Created Record Name = " + name + " Age = " +
 		// age);
-		
+
 	}
 
 	public List<User> listUsers() {
@@ -35,30 +36,47 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 
 	}
 
-	public User getUser(Integer id) {
-		String SQL = "select * from user_data where id = ?";
-		User student = jdbcTemplateObject.queryForObject(SQL, new Object[] { id }, new UserMapper());
-		return student;
-	}
+	public User getUser(Integer id) throws UserNotFoundException {
+		try {
+			String SQL = "select * from user_data where id = ?";
+			User student = jdbcTemplateObject.queryForObject(SQL, new Object[] { id }, new UserMapper());
+			return student;
+		} catch (EmptyResultDataAccessException e) {
+			throw new UserNotFoundException("找不到ID为: "+id+" 的用户");
+		}
 
-	public void delete(Integer id) {
-		String SQL = "delete from user_data where id = ?";
-		jdbcTemplateObject.update(SQL, id);
-		System.out.println("Deleted Record with ID = " + id);
-		return;
-	}
-	public int deleteAll() {
-		String SQL = "delete from user_data ";
-		return jdbcTemplateObject.update(SQL);
 		
 	}
 
-	public void update(Integer id, Integer password) {
-		String SQL = "update user_data set password = ? where id = ?";
-		jdbcTemplateObject.update(SQL, password, id);
-		System.out.println("Updated Record with ID = " + id);
+	public void delete(Integer id) throws UserNotFoundException {
+
+		try {
+			String SQL = "delete from user_data where id = ?";
+			jdbcTemplateObject.update(SQL, id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new UserNotFoundException("找不到ID为: "+id+" 的用户");
+		}
+
+		System.out.println("Deleted Record with ID = " + id);
 		return;
 	}
-//	}
+
+	public int deleteAll() {
+		String SQL = "delete from user_data";
+		return jdbcTemplateObject.update(SQL);
+	}
+
+	public void update(Integer id, String password) throws UserNotFoundException {
+		try {
+			String SQL = "update user_data set password = ? where id = ?";
+			jdbcTemplateObject.update(SQL, password, id);
+
+		} catch (EmptyResultDataAccessException e) {
+			throw new UserNotFoundException("找不到ID为: "+id+" 的用户");
+		}
+		// System.out.println("Updated Record with ID = " + id);
+		return;
+	}
+	// }
 
 }
