@@ -98,9 +98,12 @@ public class InvokeHelper {
 			
 			Object actualResult=method.invoke(test, parameters);
 			
-			
-			manager.saveParameters(methodParameterTypes, nameList.toArray(new String[0]),parameters);
-			
+			try{
+							
+				manager.saveParameters(methodParameterTypes, nameList.toArray(new String[0]),parameters);
+			}catch(Exception e){
+				this.logln("保存出错");
+			}
 			return  InvokeResult.createInstance(actualResult,method,parameters);
 
 		} catch (InvocationTargetException exception) {
