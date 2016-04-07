@@ -64,7 +64,9 @@ public class InvokeServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		Object test = new PrivilegeService();
+		//Object test = new PrivilegeService();
+		Object test = new ServiceBeanTest();
+		
 		BaseInvokeResult result = helper.getResult(test, request, response);
 
 		String accept = request.getHeader("Accept");

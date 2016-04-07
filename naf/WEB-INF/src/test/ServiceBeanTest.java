@@ -70,7 +70,7 @@ public class ServiceBeanTest {
 	}
 	
 	
-	protected TranslationResponse translate2(String englishOrChineseString) throws URISyntaxException, Exception
+	public TranslationResponse translateAPI(String englishOrChineseString) throws URISyntaxException, Exception
 	{
 		
 		TranslationService service=new TranslationService();
@@ -79,7 +79,7 @@ public class ServiceBeanTest {
 		
 	}
 	
-	public WebTranslationResponse translate(String englishOrChineseString) throws URISyntaxException, Exception
+	public WebTranslationResponse translateWeb(String englishOrChineseString) throws URISyntaxException, Exception
 	{
 		
 		WebTranslationService service=new WebTranslationService();
@@ -94,7 +94,7 @@ public class ServiceBeanTest {
 		return service.currentPrice();
 		
 	}
-	public WeatherResponse 当前天气() throws URISyntaxException, Exception
+	public WeatherResponse today() throws URISyntaxException, Exception
 	{
 		BaiduWeatherService service=new BaiduWeatherService();		
 		WeatherResponse response=service.buildFromURI("成都");
@@ -103,7 +103,7 @@ public class ServiceBeanTest {
 		
 	}
 	
-	public Double 贵金属价格(String 白银或钯或铑或铂) throws URISyntaxException, Exception
+	public Double metalPrice(String 白银或钯或铑或铂) throws URISyntaxException, Exception
 	{
 		SilverPriceService service =new  SilverPriceService();
 		return service.currentPrice(白银或钯或铑或铂);

@@ -1,4 +1,9 @@
-   function  fillResult(reqURI, container)
+  var done=false;
+  function wait(reqURI,container){
+	  if(done)return;
+	  $(container).html("请耐心等待"+reqURI+"，时间可能有点长，外面的服务比较慢，不是我慢........要不，给你讲个笑话吧....");
+  }
+  function  fillResult(reqURI, container)
     {
     	
     	var request = $.ajax({
@@ -7,7 +12,11 @@
 			dataType : "html"
 		});
 
+    	setTimeout(wait,1000,reqURI, container);
+    	done=false;
+    	
 		request.done(function(msg) {
+			done=true;
 			$(container).html(msg);
 		});
 
@@ -16,7 +25,7 @@
 			$(container).html("<div style='text-align: left' >"+jqXHR.responseText+"</div>")
 		});    	
 
-    $(container).html("请耐心等待，时间可能有点长，外面的服务比较慢，不是我慢........要不，给你讲个笑话吧....");
+		
 
     }
 
