@@ -15,6 +15,6 @@
 	java.lang.Throwable t=(Throwable)request.getAttribute("result");
 	java.io.PrintWriter writer = response.getWriter();
 	t.printStackTrace(writer);
-
+	
 %></textarea>
 </div>

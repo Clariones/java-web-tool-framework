@@ -15,6 +15,8 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 		this.jdbcTemplateObject = new JdbcTemplate(this.dataSource);
+		
+		jdbcTemplateObject.setFetchSize(100);
 	}
 
 	public int create(String username, String password) {

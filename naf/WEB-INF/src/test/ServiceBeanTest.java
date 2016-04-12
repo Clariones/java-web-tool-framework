@@ -177,8 +177,6 @@ public class ServiceBeanTest {
 	{
 		return stringToTest.matches(regex);
 		
-		
-		
 		//return stringToEcho;		
 	}
 	

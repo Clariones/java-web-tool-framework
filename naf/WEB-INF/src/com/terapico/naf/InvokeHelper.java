@@ -79,19 +79,7 @@ public class InvokeHelper {
 			List<String> nameList=ExpressionBeanTool.getParameterNames(method);
 			if(method.getGenericParameterTypes().length>furi.getParameterLength()){				
 				
-				Form form=new Form();	
-				
-				for(int i=0;i<methodParameterTypes.length;i++){
-					Field field=new Field();
-					String name=nameList.get(i);
-					field.setLabel(name);
-					field.setName(name);
-					field.setType(methodParameterTypes[i]);
-					form.addField(field);
-				}		
-			
-				form.addAction(new Action(method.getName()));
-				return InvokeResult.createInstance(form,null,null);
+				return buildForm(method, methodParameterTypes, nameList);
 				
 			}
 			Object []parameters=ExpressionBeanTool.getParameters(method.getGenericParameterTypes(), furi.getParameter());
@@ -113,6 +101,22 @@ public class InvokeHelper {
 		}
 
 	
+	}
+
+	private BaseInvokeResult buildForm(Method method, Type[] methodParameterTypes, List<String> nameList) {
+		Form form=new Form();	
+		
+		for(int i=0;i<methodParameterTypes.length;i++){
+			Field field=new Field();
+			String name=nameList.get(i);
+			field.setLabel(name);
+			field.setName(name);
+			field.setType(methodParameterTypes[i]);
+			form.addField(field);
+		}		
+
+		form.addAction(new Action(method.getName()));
+		return InvokeResult.createInstance(form,null,null);
 	}
 	protected void saveParameters()
 	{

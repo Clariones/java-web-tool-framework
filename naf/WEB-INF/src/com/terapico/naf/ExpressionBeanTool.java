@@ -1,6 +1,5 @@
 package com.terapico.naf;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
@@ -24,10 +23,10 @@ import org.objectweb.asm.tree.MethodNode;
 import com.google.gson.Gson;
 
 public class ExpressionBeanTool {
-	
-	static final Map<String,Type> wrappedMap;
-	static{
-		wrappedMap=new HashMap<String,Type>();
+
+	static final Map<String, Type> wrappedMap;
+	static {
+		wrappedMap = new HashMap<String, Type>();
 		wrappedMap.put("byte", byte.class);
 		wrappedMap.put("char", char.class);
 		wrappedMap.put("short", short.class);
@@ -35,48 +34,46 @@ public class ExpressionBeanTool {
 		wrappedMap.put("long", long.class);
 		wrappedMap.put("double", double.class);
 		wrappedMap.put("float", float.class);
-		
-		
-		
+
 	}
-	public static Type getTypeFromString(String typeName) throws ClassNotFoundException
-	{
-		Type val=wrappedMap.get(typeName);
-		if(val==null){
-			
+
+	public static Type getTypeFromString(String typeName) throws ClassNotFoundException {
+		Type val = wrappedMap.get(typeName);
+		if (val == null) {
+
 			return Class.forName(typeName);
 		}
 		return val;
-			
+
 	}
 
-	
-	public static Object invokeExpr(Object object,String methodName, Object[] parameters) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public static Object invokeExpr(Object object, String methodName, Object[] parameters)
+			throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		Method method = findMethod(object, methodName, parameters.length);
 		if (method == null) {
-			String message="'" + methodName+"' with "+parameters.length+" parameter(s) is not supported now!";
+			String message = "'" + methodName + "' with " + parameters.length + " parameter(s) is not supported now!";
 			throw new IllegalArgumentException(message);
 		}
-		Object[] params = getParameters(method.getGenericParameterTypes(), parameters);		
+		Object[] params = getParameters(method.getGenericParameterTypes(), parameters);
 		return method.invoke(object, params);
 
 	}
-	public  static  Method findMethod(Object object,String name, int paramLength){
-		
+
+	public static Method findMethod(Object object, String name, int paramLength) {
+
 		Class clazz = object.getClass();
-		Method[] methods = clazz.getDeclaredMethods();		
+		Method[] methods = clazz.getDeclaredMethods();
 		for (Method method : methods) {
-			if (method.getGenericParameterTypes().length!=paramLength) {
+			if (method.getGenericParameterTypes().length != paramLength) {
 				continue;
 			}
 			if (!method.getName().equalsIgnoreCase(name)) {
 				continue;
 			}
-			return method;		
+			return method;
 		}
 		return null;
 	}
-	
 
 	public static Object[] getParameters(Type[] types, Object[] parameters) {
 
@@ -88,24 +85,23 @@ public class ExpressionBeanTool {
 
 		for (int i = 0; i < length; i++) {
 			ret[i] = converExprToObject(types[i], parameters[i]);
-			//System.out.println(ret[i].getClass() + "" + ret[i]);
+			// System.out.println(ret[i].getClass() + "" + ret[i]);
 		}
 		return ret;
 	}
-	
 
 	public static Object converExprToObject(Type type, Object parameter) {
-		
-		
+
 		if (type == String.class) {
 			return parameter;
 		}
-		if(!(parameter instanceof String)){
+		if (!(parameter instanceof String)) {
 			return parameter;
-			//this allow external service to initiate the object directly like File in the context of Web Container
-			
+			// this allow external service to initiate the object directly like
+			// File in the context of Web Container
+
 		}
-		String stringParameter=parameter.toString();
+		String stringParameter = parameter.toString();
 		if (type == int.class || type == Integer.class) {
 			return Integer.parseInt(stringParameter);
 		}
@@ -118,88 +114,86 @@ public class ExpressionBeanTool {
 		if (type == double.class || type == Double.class) {
 			return Double.parseDouble(stringParameter);
 		}
-		
+
 		if (type == byte.class || type == Byte.class) {
 			return Byte.parseByte(stringParameter);
 		}
-		
-		//if the class has a default constructor and the only parameter is String like URL
-		Constructor constructor=getOneStringConstructor((Class)type);
-		if(constructor!=null){			
+
+		// if the class has a default constructor and the only parameter is
+		// String like URL
+		Constructor constructor = getOneStringConstructor((Class) type);
+		if (constructor != null) {
 			try {
-				return constructor.newInstance(new Object[] { stringParameter });			
+				return constructor.newInstance(new Object[] { stringParameter });
 			} catch (Exception exception) {
-				
+
 			}
 		}
-		
-		
-		
-		
-		if (DateTime.class.isAssignableFrom((Class)type) ) {
-			String defaultFormat=System.getProperty("system.types.datetime.format");
-			if(defaultFormat==null){
-				defaultFormat="yyyy-MM-DD HH:mm:ss";
+
+		if (DateTime.class.isAssignableFrom((Class) type)) {
+			String defaultFormat = System.getProperty("system.types.datetime.format");
+			if (defaultFormat == null) {
+				defaultFormat = "yyyy-MM-DD HH:mm:ss";
 			}
 			DateFormat formatter = new SimpleDateFormat(defaultFormat);
 			try {
-				DateTime dateTime=new DateTime();				
-				java.util.Date date=formatter.parse(stringParameter);
+				DateTime dateTime = new DateTime();
+				java.util.Date date = formatter.parse(stringParameter);
 				dateTime.setTime(date.getTime());
 				return dateTime;
 			} catch (ParseException e) {
-				return null;				
+				return null;
 			}
 		}
-		if (java.util.Date.class.isAssignableFrom((Class)type) ) {
-			String defaultFormat=System.getProperty("system.types.date.format");
-			if(defaultFormat==null){
-				defaultFormat="yyyy-MM-DD";
+		if (java.util.Date.class.isAssignableFrom((Class) type)) {
+			String defaultFormat = System.getProperty("system.types.date.format");
+			if (defaultFormat == null) {
+				defaultFormat = "yyyy-MM-DD";
 			}
 			DateFormat formatter = new SimpleDateFormat(defaultFormat);
 			try {
 				return formatter.parse(stringParameter);
 			} catch (ParseException e) {
-				return null;				
+				return null;
 			}
 		}
 
-		if(!isArrayType(type)){
-			//other component type
-			//parse it as json
-			Gson gson = new Gson();		
-			return gson.fromJson(stringParameter,(Class)type);
+		if (!isArrayType(type)) {
+			// other component type
+			// parse it as json
+			Gson gson = new Gson();
+			return gson.fromJson(stringParameter, (Class) type);
 		}
-		
-		if(isArrayOfPrimaryType(type)){			
-			String subParameters[]=stringParameter.split(";");
-			int length=subParameters.length;
-			Class typeClazz=(Class)type;
-			Class componentClazz=typeClazz.getComponentType();
-			Object object = Array.newInstance(componentClazz,length);
-			for(int index=0;index<length;index++){				
-				Array.set(object,
-						index,
-						converExprToObject(typeClazz.getComponentType(),subParameters[index]));
+
+		if (isArrayOfPrimaryType(type)) {
+			String subParameters[] = stringParameter.split(";");
+			int length = subParameters.length;
+			Class typeClazz = (Class) type;
+			Class componentClazz = typeClazz.getComponentType();
+			Object object = Array.newInstance(componentClazz, length);
+			for (int index = 0; index < length; index++) {
+				Array.set(object, index, converExprToObject(typeClazz.getComponentType(), subParameters[index]));
 			}
 			return object;
 		}
-		//any other should presents as json string, include objects, list of objects.
-		//List<Video> videos = gson.fromJson(json, new TypeToken<List<Video>>(){}.getType());
-		Gson gson = new Gson();		
-		return gson.fromJson(stringParameter,(Class)type);
+		// any other should presents as json string, include objects, list of
+		// objects.
+		// List<Video> videos = gson.fromJson(json, new
+		// TypeToken<List<Video>>(){}.getType());
+		Gson gson = new Gson();
+		return gson.fromJson(stringParameter, (Class) type);
 	}
-	
+
 	protected static boolean isArrayType(Type type) {
-		Class typeClazz=(Class)type;
+		Class typeClazz = (Class) type;
 		if (typeClazz.isArray()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	protected static boolean isArrayOfPrimaryType(Type type) {
-		Class typeClazz=(Class)type;
+		Class typeClazz = (Class) type;
 		if (!typeClazz.isArray()) {
 			return false;
 		}
@@ -209,32 +203,31 @@ public class ExpressionBeanTool {
 		}
 		return false;
 	}
-	
+
 	public static Constructor getOneStringConstructor(Class clazz) {
 		Constructor constructors[] = clazz.getDeclaredConstructors();
-		
-		for(int i=0;i<constructors.length;i++){
-			Constructor constructor=constructors[i];			
-			Type[] types=constructor.getGenericParameterTypes();			
-			if(types.length!=1){
+
+		for (int i = 0; i < constructors.length; i++) {
+			Constructor constructor = constructors[i];
+			Type[] types = constructor.getGenericParameterTypes();
+			if (types.length != 1) {
 				continue;
 			}
-			if(types[0]==java.lang.String.class){
-				
+			if (types[0] == java.lang.String.class) {
+
 				return constructor;
-			}			
+			}
 		}
-		
+
 		return null;
-		
+
 	}
-	
-	
+
 	public static boolean isPrimaryType(Class clazz) {
 
-		if(clazz.isPrimitive()){
+		if (clazz.isPrimitive()) {
 			return true;
-		}		
+		}
 		if (clazz == String.class) {
 			return true;
 		}
@@ -280,7 +273,9 @@ public class ExpressionBeanTool {
 		return false;
 
 	}
-	public static void invokeAndPrint(Object object, Method method) throws IllegalArgumentException, InvocationTargetException {
+
+	public static void invokeAndPrint(Object object, Method method)
+			throws IllegalArgumentException, InvocationTargetException {
 
 		Object ret;
 		try {
@@ -291,7 +286,7 @@ public class ExpressionBeanTool {
 		}
 
 	}
-	
+
 	public static void peekObject(Object object) throws IllegalArgumentException, InvocationTargetException {
 		if (object == null) {
 			return;
@@ -300,7 +295,7 @@ public class ExpressionBeanTool {
 		Method[] methods = clazz.getMethods();
 		for (Method method : methods) {
 
-			if(!isPrimaryType(method.getReturnType())){
+			if (!isPrimaryType(method.getReturnType())) {
 				continue;
 			}
 			if (method.getGenericParameterTypes().length != 0) {
@@ -318,16 +313,19 @@ public class ExpressionBeanTool {
 		}
 
 	}
+
 	public static List<String> getParameterNames(Method method) throws IOException {
 		Class<?> declaringClass = method.getDeclaringClass();
 		ClassLoader declaringClassLoader = declaringClass.getClassLoader();
 
-		 org.objectweb.asm.Type declaringType =  org.objectweb.asm.Type.getType(declaringClass);
+		org.objectweb.asm.Type declaringType = org.objectweb.asm.Type.getType(declaringClass);
 		String url = declaringType.getInternalName() + ".class";
 
 		InputStream classFileInputStream = declaringClassLoader.getResourceAsStream(url);
 		if (classFileInputStream == null) {
-			throw new IllegalArgumentException("The constructor's class loader cannot find the bytecode that defined the constructor's class (URL: " + url + ")");
+			throw new IllegalArgumentException(
+					"The constructor's class loader cannot find the bytecode that defined the constructor's class (URL: "
+							+ url + ")");
 		}
 
 		ClassNode classNode;
@@ -342,28 +340,30 @@ public class ExpressionBeanTool {
 		@SuppressWarnings("unchecked")
 		List<MethodNode> methods = classNode.methods;
 		for (MethodNode methodNode : methods) {
-			
-			if(!isMatch(methodNode,method)){
+
+			if (!isMatch(methodNode, method)) {
 				continue;
 			}
-			
-			 org.objectweb.asm.Type[] argumentTypes =  org.objectweb.asm.Type.getArgumentTypes(methodNode.desc);
+
+			org.objectweb.asm.Type[] argumentTypes = org.objectweb.asm.Type.getArgumentTypes(methodNode.desc);
 			List<String> parameterNames = new ArrayList<String>(argumentTypes.length);
 
 			@SuppressWarnings("unchecked")
 			List<LocalVariableNode> localVariables = methodNode.localVariables;
-			
-			if(localVariables.isEmpty()){
+
+			if (localVariables.isEmpty()) {
 				continue;
 			}
-			
+
 			for (int i = 0; i < argumentTypes.length; i++) {
 				// The first local variable actually represents the "this"
 				// object
-				LocalVariableNode lv=localVariables.get(i + 1);
-				//parameterNames.add( org.objectweb.asm.Type.getType(lv.desc).getClassName()+" " + lv.name);
-				parameterNames.add( lv.name);
-				
+				LocalVariableNode lv = localVariables.get(i + 1);
+				// parameterNames.add(
+				// org.objectweb.asm.Type.getType(lv.desc).getClassName()+" " +
+				// lv.name);
+				parameterNames.add(lv.name);
+
 			}
 
 			return parameterNames;
@@ -372,29 +372,28 @@ public class ExpressionBeanTool {
 
 		return null;
 	}
-	public static boolean isMatch(MethodNode methodNode, Method method){
-		
+
+	public static boolean isMatch(MethodNode methodNode, Method method) {
+
 		if (!methodNode.name.equals(method.getName())) {
 			return false;
 		}
-		
-		 org.objectweb.asm.Type [] types= org.objectweb.asm.Type.getArgumentTypes(methodNode.desc);
-		Class[] parameterTypes=method.getParameterTypes();
-		if(types.length!=parameterTypes.length){
+
+		org.objectweb.asm.Type[] types = org.objectweb.asm.Type.getArgumentTypes(methodNode.desc);
+		Class[] parameterTypes = method.getParameterTypes();
+		if (types.length != parameterTypes.length) {
 			return false;
 		}
-		for(int i=0;i<types.length;i++){
-			//Type type=types[i];
-			
-			if(types[i]!= org.objectweb.asm.Type.getType(parameterTypes[i])){
-				//return false;
+		for (int i = 0; i < types.length; i++) {
+			// Type type=types[i];
+
+			if (types[i] != org.objectweb.asm.Type.getType(parameterTypes[i])) {
+				// return false;
 			}
-			
+
 		}
-		
+
 		return true;
-		
-		
-		
+
 	}
 }
