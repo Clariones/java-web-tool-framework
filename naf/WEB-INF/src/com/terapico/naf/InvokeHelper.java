@@ -95,7 +95,7 @@ public class InvokeHelper {
 			field.setName(name);
 			field.setType(methodParameterTypes[i]);
 			form.addField(field);
-		}		
+		}
 
 		form.addAction(new Action(method.getName()));
 		return InvokeResult.createInstance(form,null,null);
