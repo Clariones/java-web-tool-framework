@@ -4,33 +4,72 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import privilege.PrivilegeService;
-import test.MathmaticalTool;
 import test.ServiceBeanTest;
+
 
 public class InvokeServlet extends HttpServlet {
 
-	InvokeHelper helper;
-
+	
+	private Object target;
 	@Override
-	public void init() throws ServletException {
+	public void init(ServletConfig config) throws ServletException {
+		
+		super.init(config);
+		
+		initHelper(config); 
+		
+		initObject(config);
+
+		
+	}
+
+	protected void initHelper(ServletConfig config) {
+		String helperClass=config.getInitParameter("invokehelperclass");
+		if(helperClass==null){
+			this.logInfo("helper class is NOT configured, using default helper class");
+			return;
+		}
+		
+		
 		try {
-			helper = new InvokeHelper();
-		} catch (UnknownHostException exception) {
+			Class clazz=Class.forName(helperClass);
+			helper=(InvokeHelper)clazz.newInstance();
+			
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			exception.printStackTrace();
+			this.logInfo("helper class is configured as '"+helperClass+"', ensure it exists, and a sub class of InvokeHelper");			
+		}
+	}
+	
+	private void initObject(ServletConfig config) {
+		String targetclass=config.getInitParameter("targetclass");
+		if(targetclass==null){
+			this.logInfo("targetclass is NOT configured!");
+			return;
+		}
+		
+		
+		try {
+			Class clazz=Class.forName(targetclass);
+			target=clazz.newInstance();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			this.logInfo("helper class is configured as '"+targetclass+"', ensure it exists, and a sub class of InvokeHelper");			
 		}
 	}
 
@@ -55,6 +94,24 @@ public class InvokeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private transient Logger log = Logger.getLogger(InvokeServlet.class.getName());
 
+	protected InvokeHelper helper;
+	protected InvokeHelper getInvokeHelper() throws UnknownHostException {
+		if(helper==null){
+			helper = new InvokeHelper();
+		}
+		return helper;
+
+	}
+	
+	protected Object getTarget(HttpServletRequest request, HttpServletResponse response)
+	{
+		if(target==null){
+			target = new ServiceBeanTest();
+		}
+		return target;
+		
+	}
+
 	/*
 	 * suddy100 suddy106
 	 * 
@@ -64,33 +121,44 @@ public class InvokeServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//Object test = new PrivilegeService();
-		Object test = new ServiceBeanTest();
-		
-		BaseInvokeResult result = helper.getResult(test, request, response);
+		// Object test = new PrivilegeService();
+		Object test = getTarget(request,response);
+
+		BaseInvokeResult result = getInvokeHelper().getResult(test, request, response);
 
 		String accept = request.getHeader("Accept");
 
 		if (isNeedJson(accept)) {
-
-			if (!(result.getActualResult() instanceof Exception)) {
-
-				response.setCharacterEncoding("UTF-8");
-				response.setContentType("applicaton/json; encoding=UTF-8");
-
-				Gson gson = new Gson();
-				// Type t=new TypeToken<weather.WeatherResponse>().getType();
-				response.getWriter().println(gson.toJson(result.getActualResult()));
-				return;
-			}
-
+			renderJson(result, request, response);
+			return;
 		}
 
+		renderHTMLPage(result, request, response);
+
+	}
+
+	protected void renderJson(BaseInvokeResult result, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		if ((result.getActualResult() instanceof Exception)) {
+			return;
+		}
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("applicaton/json; encoding=UTF-8");
+		Gson gson = new Gson();
+		// Type t=new TypeToken<weather.WeatherResponse>().getType();
+		response.getWriter().println(gson.toJson(result.getActualResult()));
+		return;
+
+	}
+
+	protected void renderHTMLPage(BaseInvokeResult result, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; encoding=UTF-8");
 		response.addHeader("Cache-Control", "no-cache, must-revalidate");
 		request.setAttribute("result", result.getActualResult());
 		this.dispatchView(request, response, result);
+
 	}
 
 	protected void dispatchView(HttpServletRequest request, HttpServletResponse response, BaseInvokeResult result)
@@ -101,7 +169,7 @@ public class InvokeServlet extends HttpServlet {
 	}
 
 	protected void logInfo(String message) {
-		log.log(Level.INFO, message);
+		//log.log(Level.INFO, message);
 
 	}
 
@@ -114,16 +182,27 @@ public class InvokeServlet extends HttpServlet {
 		return request.getRequestDispatcher("/" + result.getRenderKey() + ".jsp");
 
 	}
-
+	
+	private Map<Class,String>viewCache=new Hashtable();
+	
 	protected RequestDispatcher getSimpleRenderView(HttpServletRequest request, Object object)
 			throws MalformedURLException {
 
+		
+		
 		Class temp = object.getClass();
+		String cachedPage=viewCache.get(temp);
+		if(cachedPage!=null){
+			return request.getRequestDispatcher(cachedPage);
+		}
+		
+		
 		while (temp != null) {
 			String jsp = "/" + temp.getName() + ".jsp";
 			logInfo("trying to find: " + jsp);
 			URL url = getServletContext().getResource(jsp);
-			if (url != null) {
+			if (url != null) {				
+				viewCache.put(temp, jsp);
 				return request.getRequestDispatcher(jsp);
 			}
 			temp = temp.getSuperclass();

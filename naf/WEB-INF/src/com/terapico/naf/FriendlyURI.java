@@ -32,7 +32,7 @@ public class FriendlyURI {
 		return parameters.toArray(new String[0]);		
 	}
 
-	public  static FriendlyURI parse(String requestURI,int start) throws UnsupportedEncodingException
+	public  FriendlyURI parse(String requestURI,int start) throws UnsupportedEncodingException
 	{
 		if(start<0){
 			throw new IllegalArgumentException(" parse(String requestURI,int start): start<0, not expected");
@@ -44,21 +44,19 @@ public class FriendlyURI {
 		if(array.length<start+1){
 			throw new IllegalArgumentException("requestURI '"+requestURI+"' not full defined");
 		}
-		FriendlyURI furi=new FriendlyURI();
-		furi.setServiceName(URLDecoder.decode(array[start],"UTF-8"));
+		//FriendlyURI furi=new FriendlyURI();
+		this.setServiceName(URLDecoder.decode(array[start],"UTF-8"));
 		for(int i=start+1;i<array.length;i++){
 			String val=URLDecoder.decode(array[i],"UTF-8").trim();
-			furi.addParameter(val);
+			this.addParameter(val);
 		}
-		
-		
+
 		//System.out.println(URLDecoder.decode(schema[2],"UTF-8"));
-		return furi;
-		
-	
+		return this;
+
 		
 	}
-	public static FriendlyURI parse(StringBuffer requestURL, int start) throws UnsupportedEncodingException {
+	public FriendlyURI parse(StringBuffer requestURL, int start) throws UnsupportedEncodingException {
 		// TODO Auto-generated method stub
 		return parse(requestURL.toString(),start);
 	}

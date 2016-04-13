@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -313,8 +314,20 @@ public class ExpressionBeanTool {
 		}
 
 	}
+	
+	private static Map<Method,List<String>>parameterNamesCache=new Hashtable<Method,List<String>>();
+	
 
 	public static List<String> getParameterNames(Method method) throws IOException {
+		
+		
+		List<String> cachedParameteNames=parameterNamesCache.get(method);
+		if(cachedParameteNames!=null){
+			return cachedParameteNames;
+		}
+		
+		
+		
 		Class<?> declaringClass = method.getDeclaringClass();
 		ClassLoader declaringClassLoader = declaringClass.getClassLoader();
 
@@ -365,7 +378,9 @@ public class ExpressionBeanTool {
 				parameterNames.add(lv.name);
 
 			}
-
+			
+			parameterNamesCache.put(method, parameterNames);
+			
 			return parameterNames;
 
 		}

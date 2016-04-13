@@ -18,6 +18,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.terapico.naf.baseelement.PlainText;
+
 import silver.SilverPriceService;
 import translation.TranslationResponse;
 import translation.TranslationService;
