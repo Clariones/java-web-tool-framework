@@ -9,7 +9,7 @@
 		$(".submit").click(function(){
 			action=$(this).attr("action");
 		});
-		
+		/*
 		$(":input").dblclick(function(){		
 			//alert("sdfsdf");	
 			//$( ".parameters" ).toggle();
@@ -50,7 +50,7 @@
 				      overflow: "scroll"
 			   });
 		});
-	
+	*/
 		
 		var cache = {};
 
