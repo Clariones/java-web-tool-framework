@@ -22,6 +22,11 @@ public class TranslationService extends BaiduInstantService {
         log(content);
         final TranslationResponse transResponse=gson.fromJson(content,TranslationResponse.class);
         log(transResponse.getErrMsg());
+        
+        if(transResponse.getErrNum()!=0){
+        	throw new IllegalStateException("Service  returns error: "+transResponse.getErrMsg());
+        }
+        
 		return transResponse;
 		
 	}

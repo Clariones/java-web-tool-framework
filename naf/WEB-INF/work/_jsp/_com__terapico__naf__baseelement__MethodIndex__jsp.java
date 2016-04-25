@@ -44,7 +44,7 @@ public class _com__terapico__naf__baseelement__MethodIndex__jsp extends com.cauc
         out.write(_jsp_string1, 0, _jsp_string1.length);
         _caucho_expr_1.print(out, _jsp_env, false);
         out.write(_jsp_string2, 0, _jsp_string2.length);
-        _caucho_expr_1.print(out, _jsp_env, false);
+        _caucho_expr_2.print(out, _jsp_env, false);
         out.write(_jsp_string3, 0, _jsp_string3.length);
       }
       pageContext.pageSetOrRemove("method", _jsp_oldVar_1);
@@ -105,6 +105,7 @@ public class _com__terapico__naf__baseelement__MethodIndex__jsp extends com.cauc
     com.caucho.jsp.PageContextImpl pageContext = new com.caucho.jsp.PageContextImpl(webApp, this);
     _caucho_expr_0 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${result.items}");
     _caucho_expr_1 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${method.name}");
+    _caucho_expr_2 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${method.friendName}");
   }
 
   public void destroy()
@@ -125,7 +126,7 @@ public class _com__terapico__naf__baseelement__MethodIndex__jsp extends com.cauc
     String resourcePath = loader.getResourcePathSpecificFirst();
     mergePath.addClassPath(resourcePath);
     com.caucho.vfs.Depend depend;
-    depend = new com.caucho.vfs.Depend(appDir.lookup("com.terapico.naf.baseelement.MethodIndex.jsp"), -1537016979835799929L, false);
+    depend = new com.caucho.vfs.Depend(appDir.lookup("com.terapico.naf.baseelement.MethodIndex.jsp"), 8929739300698582243L, false);
     com.caucho.jsp.JavaPage.addDepend(_caucho_depends, depend);
   }
 
@@ -138,6 +139,7 @@ public class _com__terapico__naf__baseelement__MethodIndex__jsp extends com.cauc
   }
   private static com.caucho.el.Expr _caucho_expr_0;
   private static com.caucho.el.Expr _caucho_expr_1;
+  private static com.caucho.el.Expr _caucho_expr_2;
 
   private final static char []_jsp_string4;
   private final static char []_jsp_string0;

@@ -9,5 +9,5 @@
 </style>
 
 <div class="message">
-          ${result}d
+          ${result}D
 </div>

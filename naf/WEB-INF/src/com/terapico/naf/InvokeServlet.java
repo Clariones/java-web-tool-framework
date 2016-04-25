@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Hashtable;
 import java.util.Map;
-import java.util.logging.Level;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -183,7 +182,7 @@ public class InvokeServlet extends HttpServlet {
 
 	}
 	
-	private Map<Class,String>viewCache=new Hashtable();
+	private Map<Class,String>viewCache=new ConcurrentHashMap<Class,String>();
 	
 	protected RequestDispatcher getSimpleRenderView(HttpServletRequest request, Object object)
 			throws MalformedURLException {

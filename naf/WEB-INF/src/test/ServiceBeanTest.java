@@ -1,7 +1,9 @@
 package test;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,6 +22,7 @@ import javax.mail.internet.MimeMessage;
 
 import com.terapico.naf.baseelement.PlainText;
 
+import calculator.CalculatorService;
 import silver.SilverPriceService;
 import telecode.TeleCodeDict;
 import translation.TranslationResponse;
@@ -67,7 +70,7 @@ public class ServiceBeanTest {
 
 	}
 
-	public TranslationResponse translateAPI(String englishOrChineseString) throws URISyntaxException, Exception {
+	protected TranslationResponse translateAPI(String englishOrChineseString) throws URISyntaxException, Exception {
 
 		TranslationService service = new TranslationService();
 
@@ -92,6 +95,11 @@ public class ServiceBeanTest {
 		SilverPriceService service = new SilverPriceService();
 		return service.currentPrice();
 
+	}
+	public BigDecimal add(BigDecimal number1, BigDecimal number2)
+	{
+		//number1
+		return number1.add(number2);
 	}
 
 	public WeatherResponse today() throws URISyntaxException, Exception {
@@ -337,6 +345,14 @@ public class ServiceBeanTest {
 	private double log(double d) {
 		// TODO Auto-generated method stub
 		return Math.log10(d);
+	}
+	
+	public double expr(String expr) throws IOException{
+		
+		CalculatorService service = new CalculatorService();
+		return service.calc(expr);
+		
+		
 	}
 
 	/*

@@ -6,25 +6,32 @@
   
   <display-name>Invoke Sample</display-name>
   
-  
 
-  
-  
-  
   <servlet>
     <servlet-name>invoke</servlet-name>
     <servlet-class>com.terapico.naf.InvokeServlet</servlet-class>
     <init-param invokehelperclass='com.terapico.naf.InvokeHelper'/>
-    <init-param invokehelperclass='test.ServiceBeanTest'/>
-    
-    
+    <init-param invoketargetclass='test.ServiceBeanTest'/>
+
   </servlet>
 
   <servlet-mapping>
     <servlet-name>invoke</servlet-name>
     <url-pattern>/**/</url-pattern>
   </servlet-mapping>
-   <!-- <init-param invokehelperclass='com.terapico.naf.ObjectInvokeHelper'/> -->
+
+
+   <!-- <init-param invokehelperclass='com.terapico.naf.ObjectInvokeHelper'/> 
+  
+  for app engine 
+    <servlet-mapping>
+    <servlet-name>invoke</servlet-name>
+    <url-pattern>/naf/*</url-pattern>
+  </servlet-mapping>
+  
+  
+   
+   -->
   
   
 </web-app>

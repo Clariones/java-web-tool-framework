@@ -107,7 +107,7 @@ public class _java__lang__Double__jsp extends com.caucho.jsp.JavaPage
     String resourcePath = loader.getResourcePathSpecificFirst();
     mergePath.addClassPath(resourcePath);
     com.caucho.vfs.Depend depend;
-    depend = new com.caucho.vfs.Depend(appDir.lookup("java.lang.Double.jsp"), 6339742089111168867L, false);
+    depend = new com.caucho.vfs.Depend(appDir.lookup("java.lang.Double.jsp"), 6339768065073375075L, false);
     com.caucho.jsp.JavaPage.addDepend(_caucho_depends, depend);
   }
   private static com.caucho.el.Expr _caucho_expr_0;
@@ -116,6 +116,6 @@ public class _java__lang__Double__jsp extends com.caucho.jsp.JavaPage
   private final static char []_jsp_string1;
   static {
     _jsp_string0 = "\r\n\r\n\r\n<style>\r\n.message{\r\n	font-size:60px;\r\n}\r\n\r\n</style>\r\n\r\n<div class=\"message\">\r\n          ".toCharArray();
-    _jsp_string1 = "d\r\n</div>\r\n".toCharArray();
+    _jsp_string1 = "D\r\n</div>\r\n".toCharArray();
   }
 }

@@ -22,6 +22,7 @@ public class BaiduInstantService {
 	}
 	protected String callBaiduAPI(URI uri, String apiKey) throws Exception {				
 		
+		
 		int count=0;
 		final int retryCount=100;
 		while(true){

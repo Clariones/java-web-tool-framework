@@ -8,6 +8,9 @@ import java.net.URISyntaxException;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.gson.Gson;
 
 import baiduservicecommon.BaiduInstantService;
@@ -15,12 +18,12 @@ import baiduservicecommon.URLBuilder;
 
 public class WebTranslationService extends BaiduInstantService {
 
-	public WebTranslationResponse translate(String chineseOrEnglish) throws URISyntaxException, Exception {
+	public WebTranslationResponse translate2(String chineseOrEnglish) throws URISyntaxException, Exception {
 
 		String urlExpr = buildRequestURL(chineseOrEnglish);
 		log(urlExpr);
 		String content = callBaiduAPI(new URI(urlExpr));
-		
+		log(content);
 		
 		JsonFactory factory = new JsonFactory();
 		JsonParser  parser  = factory.createParser(content);
@@ -50,6 +53,29 @@ public class WebTranslationService extends BaiduInstantService {
 		}
 		
 		throw new IOException("Fail to translate: "+content);
+		
+		
+
+	}
+	
+	
+	public WebTranslationResponse translate(String chineseOrEnglish) throws URISyntaxException, Exception {
+
+		String urlExpr = buildRequestURL(chineseOrEnglish);
+		log(urlExpr);
+		String content = callBaiduAPI(new URI(urlExpr));
+		ObjectMapper mapper = new ObjectMapper();
+		
+		JsonNode rootNode = mapper.readValue(content, JsonNode.class);
+		TextNode resultNode=(TextNode) rootNode.with("trans_result").get("data").path(0).get("dst");
+		
+		
+		final WebTranslationResponse transResponse = new WebTranslationResponse();
+		transResponse.setSrc(chineseOrEnglish);
+		transResponse.setDst(resultNode.asText());
+		return transResponse;
+		
+		//throw new IOException("Fail to translate: "+content);
 		
 		
 

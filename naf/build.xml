@@ -1,0 +1,75 @@
+<project name="new application framework" default="compile">
+  <property name="appengine.sdk" location="/opt/appengine-java-sdk" />
+
+  <import file="${appengine.sdk}/config/user/ant-macros.xml" />
+
+  <path id="project.classpath">
+    <pathelement path="./WEB-INF/classes" />
+    <fileset dir="./WEB-INF/lib">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${appengine.sdk}/lib">
+      <include name="shared/**/*.jar" />
+    </fileset>
+  </path>
+
+  <target name="copyjars"
+      description="Copies the App Engine JARs to the WAR.">
+    <mkdir dir="./WEB-INF/lib" />
+    <copy
+        todir="./WEB-INF/lib"
+        flatten="true">
+      <fileset dir="${appengine.sdk}/lib/user">
+        <include name="**/*.jar" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile" depends="copyjars"
+      description="Compiles Java source and copies other source files to the WAR.">
+    <mkdir dir="./WEB-INF/classes" />
+    <javac
+        srcdir="./WEB-INF/gsonsrc"
+        destdir="./WEB-INF/classes"
+        classpathref="project.classpath"
+        debug="on" source="1.7"/>
+  	<javac
+        srcdir="./WEB-INF/src"
+        destdir="./WEB-INF/classes"
+        classpathref="project.classpath"
+        debug="on" source="1.7"/>
+
+  	
+  </target>
+
+  <target name="runserver" depends="compile"
+      description="Starts the development server.">
+    <dev_appserver war="./" port="8000">
+    
+    	<options>
+    	    <arg value="--jvm_flag=-Xdebug"/>
+    	    <arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999"/>
+    	    <arg value="--jvm_flag=-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=20"/>
+    		<arg value="--jvm_flag=-DsocksProxyHost=localhost"/>
+    		<arg value="--jvm_flag=-DsocksProxyPort=1080"/>
+    	    <arg value="--disable_update_check"/>
+    	    		
+    	</options>
+    
+    </dev_appserver>
+  </target>
+
+  <target name="update" depends="compile"
+      description="Uploads the application to App Engine.">
+    <appcfg action="update" war="./" >
+    	<options>
+
+    	</options>
+    </appcfg>
+  </target>
+
+  <target name="rollback" depends="compile"
+      description="Rolls back an interrupted application update.">
+    <appcfg action="rollback" war="./" />
+  </target>
+</project>

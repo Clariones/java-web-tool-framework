@@ -9,5 +9,5 @@
 </style>
 
 <div class="message">
-	java.lang.String: ${result}
+	string: ${result}
 </div>

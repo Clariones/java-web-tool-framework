@@ -121,7 +121,7 @@
 		</c:forEach>
 		
 		<c:forEach var="action" items="${result.actions}">
-			<input type="submit" class="submit" value="${action.name }" action="${action.name }"  />
+			<input type="submit" class="submit" value="${action.name}" action="${action.name }"  />
 		</c:forEach>
 		
 	</form>

@@ -12,9 +12,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
@@ -315,7 +315,7 @@ public class ExpressionBeanTool {
 
 	}
 	
-	private static Map<Method,List<String>>parameterNamesCache=new Hashtable<Method,List<String>>();
+	private static Map<Method,List<String>>parameterNamesCache=new ConcurrentHashMap<Method,List<String>>();
 	
 
 	public static List<String> getParameterNames(Method method) throws IOException {

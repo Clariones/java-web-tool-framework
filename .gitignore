@@ -1,0 +1,4 @@
+*.class
+naf/WEB-INF/work/_jsp
+naf/WEB-INF/appengine-web.xml
+

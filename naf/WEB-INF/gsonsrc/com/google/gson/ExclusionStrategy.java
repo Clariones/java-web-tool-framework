@@ -95,6 +95,7 @@ package com.google.gson;
  */
 public interface ExclusionStrategy {
 
+	
   /**
    * @param f the field object that is under test
    * @return true if the field should be ignored; otherwise false

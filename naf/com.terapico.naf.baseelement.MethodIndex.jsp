@@ -74,7 +74,7 @@ html,body{
 	<div class="toolbar" >Spring|Nucleus|JNDI</div>
 	<div class="menu" >
 
-          <c:forEach var="method" items="${result.items}">  <a href="#${method.name}" class="action">${method.name}</a><br/></c:forEach>
+          <c:forEach var="method" items="${result.items}">  <a href="#${method.name}" class="action">${method.friendName}</a><br/></c:forEach>
 	</div>
 	<div class="content" id="content">Home Info</div>
 </body>
