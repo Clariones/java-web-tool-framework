@@ -7,7 +7,7 @@ import javax.servlet.*;
 import javax.servlet.jsp.*;
 import javax.servlet.http.*;
 
-public class _java__lang__string__jsp extends com.caucho.jsp.JavaPage
+public class _java__lang__String__jsp extends com.caucho.jsp.JavaPage
 {
   private static final java.util.HashMap<String,java.lang.reflect.Method> _jsp_functionMap = new java.util.HashMap<String,java.lang.reflect.Method>();
   private boolean _caucho_isDead;
@@ -26,8 +26,8 @@ public class _java__lang__string__jsp extends com.caucho.jsp.JavaPage
     final javax.el.ELContext _jsp_env = pageContext.getELContext();
     javax.servlet.ServletConfig config = getServletConfig();
     javax.servlet.Servlet page = this;
-    response.setContentType("text/html; charset=GBK");
-    request.setCharacterEncoding("GBK");
+    response.setContentType("text/html; charset=UTF-8");
+    request.setCharacterEncoding("UTF-8");
     try {
       out.write(_jsp_string0, 0, _jsp_string0.length);
       _caucho_expr_0.print(out, _jsp_env, false);
@@ -107,7 +107,7 @@ public class _java__lang__string__jsp extends com.caucho.jsp.JavaPage
     String resourcePath = loader.getResourcePathSpecificFirst();
     mergePath.addClassPath(resourcePath);
     com.caucho.vfs.Depend depend;
-    depend = new com.caucho.vfs.Depend(appDir.lookup("java.lang.String.jsp"), -7418462677927809718L, false);
+    depend = new com.caucho.vfs.Depend(appDir.lookup("java.lang.String.jsp"), 1657200200031571765L, false);
     com.caucho.jsp.JavaPage.addDepend(_caucho_depends, depend);
   }
   private static com.caucho.el.Expr _caucho_expr_0;
@@ -115,7 +115,7 @@ public class _java__lang__string__jsp extends com.caucho.jsp.JavaPage
   private final static char []_jsp_string0;
   private final static char []_jsp_string1;
   static {
-    _jsp_string0 = "\r\n\r\n\r\n<style>\r\n.message{\r\n	font-size:20px;\r\n}\r\n\r\n</style>\r\n\r\n<div class=\"message\">\r\n	java.lang.String: ".toCharArray();
+    _jsp_string0 = "\r\n\r\n\r\n<style>\r\n.message{\r\n	font-size:20px;\r\n}\r\n\r\n</style>\r\n\r\n<div class=\"message\">\r\n	string: ".toCharArray();
     _jsp_string1 = "\r\n</div>\r\n".toCharArray();
   }
 }

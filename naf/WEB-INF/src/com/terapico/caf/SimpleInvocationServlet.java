@@ -17,28 +17,50 @@ public class SimpleInvocationServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		InvocationContext context;
+			
+			InvocationResult result=getResult(request,response);	
+			render(request,response,result);
+		
+		
+	}
+	
+	protected InvocationResult getResult(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+
 		try {
-			context = createInvocationContext(request);
+			InvocationContext context = createInvocationContext(request);
 			if(context==null){
-				throw new ServletException("The context should be prepared for call.");
+				return wrapResult(new ServletException("The context should be prepared for call."));
 			}
 			
 			InvocationResult result=invoke(context);
 			
 			if(result==null){
-				throw new ServletException("The result should not to be null.");
+				return wrapResult( new ServletException("The result should not to be null."),context);
 			}
+			return result;
 			
-			render(request,response,result);
-		} catch (InvocationException e) {
+		} catch (Throwable e) {
 			
-			throw new ServletException(e);
+			return wrapResult(e);
 		}
-		
-		
-
 	}
+	
+	protected InvocationResult wrapResult(Object actualResult, InvocationContext context){
+		
+		InvocationResult result=new SimpleInvocationResult();
+		result.setInvocationContext(context);
+		result.setActualResult(actualResult);
+		return result;
+	}
+	
+	protected InvocationResult wrapResult(Object actualResult){
+		
+		
+		return wrapResult(actualResult,null);
+	}
+	
 	protected void render(HttpServletRequest request, HttpServletResponse response, InvocationResult result) throws ServletException, IOException {
 		
 		ServletResultRenderer renderer=getResultRenderer();
@@ -63,17 +85,16 @@ public class SimpleInvocationServlet extends HttpServlet {
 	}
 	
 	
-	
+	ServletInvocationContextFactory factory;
 	
 	protected InvocationContext createInvocationContext(HttpServletRequest request) throws InvocationException
 	{
 		
-		ServletInvocationContextFactory factory=new SpringInvocationContextFactory();
-		SimpleInvocationContext context=new SimpleInvocationContext();
-		//   the form of call like  /naf/beanName/methodName/p1/p2/p3/p4/, all parameter need to be decode
+		if(factory==null){
+			factory=new SpringInvocationContextFactory();
 		
-		//Object target=lookupObject(request);
-		//context.setTargetObject(target);
+		}
+		
 
 		
 		return factory.create(request);		

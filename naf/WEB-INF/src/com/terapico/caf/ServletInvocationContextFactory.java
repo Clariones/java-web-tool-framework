@@ -339,7 +339,11 @@ public class ServletInvocationContextFactory  implements InvocationContextFactor
 
 	protected Method getMethod(HttpServletRequest request, Object targetObject, List<String> urlElements)
 			throws InvocationException {
-
+		if(urlElements.size()<start + 2){
+		
+			throw new InvocationException("Not able to get method name, the method name is not specified by the URI!");
+			
+		}
 		String methodName = urlElements.get(start + 1);
 
 		return findSingleMethod(targetObject,methodName);
