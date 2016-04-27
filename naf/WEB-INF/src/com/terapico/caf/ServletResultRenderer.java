@@ -73,7 +73,7 @@ public class ServletResultRenderer{
 
 	protected void logInfo(String message) {
 		//log.log(Level.INFO, message);
-
+		//System.out.println("Render:" + message);
 	}
 
 	protected RequestDispatcher getRenderView(HttpServlet servlet,HttpServletRequest request, InvocationResult result)
@@ -102,6 +102,7 @@ public class ServletResultRenderer{
 		Class temp = object.getClass();
 		String cachedPage=viewCache.get(temp);
 		if(cachedPage!=null){
+			logInfo("found cache for "+cachedPage);
 			return request.getRequestDispatcher(cachedPage);
 		}
 		

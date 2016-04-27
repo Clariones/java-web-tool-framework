@@ -104,10 +104,14 @@ public class SimpleInvocationServlet extends HttpServlet {
 		return new SimpleInvocationTool();
 		
 	}
+	ServletResultRenderer renderer=null;
 	protected ServletResultRenderer getResultRenderer()
 	{
 		
-		return new ServletResultRenderer();
+		if(renderer==null){
+			renderer=new ServletResultRenderer();
+		}
+		return renderer;
 	}
 	
 	
