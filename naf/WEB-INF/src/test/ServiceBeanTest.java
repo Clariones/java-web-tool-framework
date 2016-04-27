@@ -20,6 +20,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.terapico.naf.baseelement.HTMLText;
 import com.terapico.naf.baseelement.PlainText;
 
 import calculator.CalculatorService;
@@ -46,10 +47,10 @@ public class ServiceBeanTest {
 		PlainText text = new PlainText();
 
 		URLConnection conn = uri.toURL().openConnection();
-		HttpURLConnection.setFollowRedirects(false);
+		
 		if (conn instanceof HttpURLConnection) {
 			HttpURLConnection httpConn = (HttpURLConnection) conn;
-
+			httpConn.setInstanceFollowRedirects(false);
 			httpConn.setRequestMethod("HEAD");
 
 			text.append("CODE: " + httpConn.getResponseCode() + "\r\n");
@@ -115,6 +116,18 @@ public class ServiceBeanTest {
 		return service.currentPrice(白银或钯或铑或铂);
 
 	}
+	
+	public HTMLText allMetalPrice() throws URISyntaxException, Exception {
+		SilverPriceService service = new SilverPriceService();
+		String content =  service.allMetalPrice();
+		
+		
+		HTMLText text=new HTMLText();
+		text.append(content);
+		return text;
+
+	}
+	
 
 	public boolean sendEmailIfLowerThan(double value) throws URISyntaxException, Exception {
 

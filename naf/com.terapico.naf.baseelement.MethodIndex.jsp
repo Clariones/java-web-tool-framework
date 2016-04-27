@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Home Control</title>
+<title>Spring Bean Manage Console</title>
 <script src="../scripts/jquery-1.9.1.js" type="text/javascript"></script>
 <script src="../scripts/common.js" type="text/javascript"></script>
 <style>
@@ -71,7 +71,7 @@ html,body{
 </head>
 
 <body>
-	<div class="toolbar" >Spring|Nucleus|JNDI</div>
+	<div class="toolbar" >Spring Beans</div>
 	<div class="menu" >
 
           <c:forEach var="method" items="${result.items}">  <a href="#${method.name}" class="action">${method.friendName}</a><br/></c:forEach>

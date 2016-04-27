@@ -32,12 +32,12 @@
         srcdir="./WEB-INF/gsonsrc"
         destdir="./WEB-INF/classes"
         classpathref="project.classpath"
-        debug="on" source="1.7"/>
+        debug="on" target="1.7" source="1.7"/>
   	<javac
         srcdir="./WEB-INF/src"
         destdir="./WEB-INF/classes"
         classpathref="project.classpath"
-        debug="on" source="1.7"/>
+        debug="on" target="1.7" source="1.7"/>
 
   	
   </target>

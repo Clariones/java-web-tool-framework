@@ -17,6 +17,8 @@ MULT  : '*';
 DIV   : '/';
 LPAR  : '(';
 RPAR  : ')';
+LSHIFT: '<<';
+RSHIFT: '>>';
 
 input
     : setVar NL input     # ToSetVar

@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import test.ServiceBeanTest;
 
 public class ObjectInvokeServlet extends InvokeServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected InvokeHelper getInvokeHelper() throws UnknownHostException {
 		if(helper==null){
 			helper = new ObjectInvokeHelper();
@@ -23,7 +27,9 @@ public class ObjectInvokeServlet extends InvokeServlet {
 		// Object test = new PrivilegeService();
 		Object test = new ServiceBeanTest();
 
-		BaseInvokeResult result = getInvokeHelper().getResult(test, request, response);
+		ObjectInvokeHelper objectInvokeHelper=(ObjectInvokeHelper)getInvokeHelper();
+		
+		BaseInvokeResult result = objectInvokeHelper.getResult(request, response);
 
 		String accept = request.getHeader("Accept");
 
@@ -35,4 +41,7 @@ public class ObjectInvokeServlet extends InvokeServlet {
 		renderHTMLPage(result, request, response);
 
 	}
+	
+	
+	
 }

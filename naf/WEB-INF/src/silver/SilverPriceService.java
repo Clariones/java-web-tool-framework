@@ -73,6 +73,21 @@ public class SilverPriceService {
 	
 		
 	}
+	
+	
+	public String allMetalPrice() throws URISyntaxException, Exception{
+		
+		//String content=downloadContent(new URI("http://www.kitco.cn/KitcoDynamicSite/RequestHandler?requestName=getFileContent&AttributeId=SilverPGMPricesCNY"));
+		
+		
+		String urlExpr="http://www.kitco.cn/KitcoDynamicSite/RequestHandler?requestName=getFileContent&AttributeId=SilverPGMPricesCNY";
+		
+		
+		return downloadContent(new URI(urlExpr));
+		
+		
+	}
+	
 	public double currentPrice(String metalName) throws URISyntaxException, Exception{
 		
 		//String content=downloadContent(new URI("http://www.kitco.cn/KitcoDynamicSite/RequestHandler?requestName=getFileContent&AttributeId=SilverPGMPricesCNY"));

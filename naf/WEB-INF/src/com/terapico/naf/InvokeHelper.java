@@ -15,9 +15,6 @@ import com.terapico.naf.baseelement.Field;
 import com.terapico.naf.baseelement.Form;
 import com.terapico.naf.baseelement.MethodIndex;
 public class InvokeHelper {
-	
-	
-	
 	public  InvokeHelper() 
 	{
 		
