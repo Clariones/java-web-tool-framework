@@ -18,8 +18,8 @@ import com.terapico.naf.baseelement.Action;
 import com.terapico.naf.baseelement.Field;
 import com.terapico.naf.baseelement.Form;
 
-public class FormBuilder {
-	public Form buildForm(Method method) throws IOException{
+public class FormBuilder extends ReflectionTool{
+	public Form buildForm(String beanName,Method method) throws IOException{
 		Form form=new Form();	
 		Type[] methodParameterTypes=method.getGenericParameterTypes();
 		List<String> nameList=getParameterNames(method);
@@ -32,22 +32,21 @@ public class FormBuilder {
 			form.addField(field);
 		}
 
-		form.addAction(new Action(method.getName()));
+		form.addAction(new Action(beanName+"/"+method.getName()));
 		return form;
 	}
 	
-	private static Map<Method,List<String>>parameterNamesCache=new ConcurrentHashMap<Method,List<String>>();
 	
+	
+	
+	private static Map<Method,List<String>>parameterNamesCache=new ConcurrentHashMap<Method,List<String>>();
+	protected static List<String> getParameterNames(Method method) throws IOException  {	
 
-	protected static List<String> getParameterNames(Method method) throws IOException  {
-		
-		
 		List<String> cachedParameteNames=parameterNamesCache.get(method);
 		if(cachedParameteNames!=null){
 			return cachedParameteNames;
 		}
-		
-		
+
 		
 		Class<?> declaringClass = method.getDeclaringClass();
 		ClassLoader declaringClassLoader = declaringClass.getClassLoader();
@@ -108,6 +107,7 @@ public class FormBuilder {
 
 		return null;
 	}
+	@SuppressWarnings("rawtypes")
 	protected static boolean isMatch(MethodNode methodNode, Method method) {
 
 		if (!methodNode.name.equals(method.getName())) {

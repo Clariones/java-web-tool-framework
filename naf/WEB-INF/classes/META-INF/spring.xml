@@ -8,9 +8,9 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
 
 	<bean id="test" class="test.ServiceBeanTest"></bean>
-	<bean id="second" class="java.lang.String">
-		<constructor-arg value="string defined in the bean" />
-	</bean>
+	<bean id="navi" class="com.terapico.caf.NavigationService"></bean>
+
+
 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">

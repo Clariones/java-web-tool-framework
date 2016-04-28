@@ -15,13 +15,9 @@ public class SimpleInvocationServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-			
+			throws ServletException, IOException {		
 			InvocationResult result=getResult(request,response);	
 			render(request,response,result);
-		
-		
 	}
 	
 	protected InvocationResult getResult(HttpServletRequest request, HttpServletResponse response)
@@ -64,7 +60,6 @@ public class SimpleInvocationServlet extends HttpServlet {
 	protected void render(HttpServletRequest request, HttpServletResponse response, InvocationResult result) throws ServletException, IOException {
 		
 		ServletResultRenderer renderer=getResultRenderer();
-
 		renderer.render(this, request, response, result);
 	}
 	
@@ -74,7 +69,7 @@ public class SimpleInvocationServlet extends HttpServlet {
 	{
 		InvocationTool tool=getInvocationTool();
 		if(tool==null){
-			throw new ServletException("invocation tool must be configured");
+			throw new ServletException("Invocation tool must be configured");
 		}
 		try {
 			return tool.invoke(context);//TODO: build the form
@@ -91,28 +86,32 @@ public class SimpleInvocationServlet extends HttpServlet {
 	{
 		
 		if(factory==null){
-			factory=new SpringInvocationContextFactory();
-		
+			factory=InternalBeanFactory.getDefaultInvocationContextFactory();
+			//cache the reference.
 		}
-		
 
-		
 		return factory.create(request);		
 	}
+	
+	InvocationTool tool;
+	
 	protected InvocationTool getInvocationTool()
 	{
-		return new SimpleInvocationTool();
-		
-	}
-	ServletResultRenderer renderer=null;
-	protected ServletResultRenderer getResultRenderer()
-	{
-		
-		if(renderer==null){
-			renderer=new ServletResultRenderer();
+		if(tool==null){
+			tool=InternalBeanFactory.getDefaultInvocationTool();
+			//cache the reference.
 		}
-		return renderer;
+		return tool;
+		
 	}
-	
-	
+	ServletResultRenderer render;
+	protected ServletResultRenderer getResultRenderer()
+	{		
+		if(render==null){
+			render=InternalBeanFactory.getDefaultRenderer();
+			//cache the reference.
+		}
+		return render;
+	}
+
 }

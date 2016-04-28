@@ -1,41 +1,38 @@
 package com.terapico.caf;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class SpringBeanFactory implements BeanFactory{
-	AbstractApplicationContext context; 
-	public SpringBeanFactory(){
-		context = new ClassPathXmlApplicationContext("classpath*:/META-INF/spring.xml");		
-	}
+public class SpringBeanFactory extends InternalBeanFactory implements BeanFactory{
+	
 
 	
+	ClassPathXmlApplicationContext context; 
+	public SpringBeanFactory(){
+		context = new ClassPathXmlApplicationContext("classpath*:/META-INF/spring.xml");
+		
+	}
+	private String []beanNamesCache;
 	public String[] getBeanNames() {
-		// TODO Auto-generated method stub
 		
+		if(beanNamesCache==null){
+			beanNamesCache=context.getBeanDefinitionNames();
+		}
 		
-		
-		return context.getBeanDefinitionNames();
+		return beanNamesCache;
 	}
-	private static Map<String, Object> internalObjectMap = new ConcurrentHashMap<String, Object>();
-
-	static {
-		internalObjectMap.put("internaltest", new InternalTestBean());
-		internalObjectMap.put("formbuilder", new FormBuilder());
-	}
+	
+	
 	public Object getBean(String beanName)
 	{
-		Object internalObject=internalObjectMap.get(beanName);
+		Object internalObject=getInternalBean(beanName);
 		if(internalObject!=null){
 			return internalObject;
 		}
 		
 		return getObject(beanName);
-		
 	}
+	
+	
 	protected Object getObject(String objectPath) {
 		return context.getBean(objectPath);
 	}
