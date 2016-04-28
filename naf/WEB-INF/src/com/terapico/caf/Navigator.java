@@ -9,9 +9,20 @@ public class Navigator {
 	
 	List<MenuItem> menuItems;
 	List<String> beanList;
+	private String selectBeanName;
 
+
+	public String getSelectBeanName() {
+		return selectBeanName;
+	}
+
+	
+	public void setSelectBeanName(String selectBeanName) {
+		this.selectBeanName = selectBeanName;
+	}
 
 	public List<MenuItem> getMenuItems() {
+		
 		
 		if(menuItems==null){
 			menuItems=new ArrayList<MenuItem>();
@@ -21,12 +32,30 @@ public class Navigator {
 	}
 	
 	public List<String> getBeanList() {
+		
+		if(beanList==null){
+			beanList=new ArrayList<String>();
+		}
+		
 		return beanList;
 	}
 
 	public void setBeanList(List<String> beanList) {
 		this.beanList = beanList;
 	}
+	
+	public void addToBeanList(String value) {
+		getBeanList().add(value);
+	}
+	public void addToBeanList(String []values) {
+		for(String value:values){
+			getBeanList().add(value);
+		}
+		
+	}
+	
+	
+	
 	public void setBeanList(String []beanList) {
 		//this.beanList = beanList;
 	}
@@ -55,6 +84,11 @@ public class Navigator {
 	
 	public void setMenuItems(List<MenuItem> menuItems) {
 		this.menuItems = menuItems;
+	}
+
+	public void setSelectBean(String selectedBean) {
+		// TODO Auto-generated method stub
+		this.selectBeanName=selectedBean;
 	}
 	
 }

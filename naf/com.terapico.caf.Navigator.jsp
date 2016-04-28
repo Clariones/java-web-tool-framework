@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Spring Bean Manage Console</title>
+<title> ${result.selectBeanName} | Spring Bean Manage Console: </title>
 <script src="/naf/scripts/jquery-1.9.1.js" type="text/javascript"></script>
 <script src="/naf/scripts/common.js" type="text/javascript"></script>
 <style>
@@ -16,6 +16,15 @@
 	overflow:auto; 	border: 1px solid black;
 	color: white; letter-spacing:2px
 }
+
+.bean {
+		
+	font-size: 20px; text-align: left; 	padding-left: 10px;
+	padding-top: 10px; background: #111111; 	
+	overflow:auto; 	border: 1px solid black;
+	color: white; letter-spacing:2px
+}
+
 .menu {
 	width: 20%; 	 	
 	float:left; 	
@@ -71,11 +80,11 @@ html,body{
 </head>
 
 <body>
-	<div class="toolbar" >Spring Beans</div>
+	<div class="toolbar" >Spring Beans ： <c:forEach var="item" items="${result.beanList}"><a href='/naf/navi/index/${item}/' class='bean'> ${item}</a></c:forEach></div>
 	<div class="menu" >
 
           <c:forEach var="item" items="${result.menuItems}">
-            <a href="#${item.beanName}/${item.methodName}" methodName="${item.methodName}" beanName="${item.beanName }" class="action">${item.beanName}.${item.methodName}</a><br/>
+            <a href="#${item.beanName}/${item.methodName}" methodName="${item.methodName}" beanName="${item.beanName }" class="action">${item.methodName}</a><br/>
             </c:forEach>
 	</div>
 	<div class="content" id="content">Home Info</div>

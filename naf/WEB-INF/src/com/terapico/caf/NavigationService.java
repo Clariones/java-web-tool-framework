@@ -15,13 +15,17 @@ public class NavigationService extends ReflectionTool{
 		return beanFactory;
 	}
 	
-	public Navigator index(){
+	public Navigator index(String selectedBean){
 		
 		Navigator navigator=createNavigator();		
 		String []beanNames=getBeanFactory().getBeanNames();
-		for(String beanName:beanNames){
-			createItems(navigator,beanName);			
-		}
+		
+		navigator.addToBeanList(beanNames);
+		navigator.setSelectBean(selectedBean);
+		
+		//for(String beanName:beanNames){
+			createItems(navigator,selectedBean);			
+		//}
 
 		return navigator;
 		

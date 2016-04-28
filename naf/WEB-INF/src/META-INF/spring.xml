@@ -7,8 +7,9 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 	<!-- <bean/> definitions here -->
 
 
-	<bean id="test" class="test.ServiceBeanTest"></bean>
+	<bean id="tool" class="test.ServiceBeanTest"></bean>
 	<bean id="navi" class="com.terapico.caf.NavigationService"></bean>
+	<bean id="privilege" class="privilege.PrivilegeService"></bean>
 
 
 

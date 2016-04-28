@@ -7,7 +7,7 @@ import javax.servlet.*;
 import javax.servlet.jsp.*;
 import javax.servlet.http.*;
 
-public class _java__lang__String__jsp extends com.caucho.jsp.JavaPage
+public class _java__lang__string__jsp extends com.caucho.jsp.JavaPage
 {
   private static final java.util.HashMap<String,java.lang.reflect.Method> _jsp_functionMap = new java.util.HashMap<String,java.lang.reflect.Method>();
   private boolean _caucho_isDead;
