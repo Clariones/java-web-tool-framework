@@ -9,7 +9,10 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
 	<bean id="tool" class="test.ServiceBeanTest"></bean>
 	<bean id="navi" class="com.terapico.caf.NavigationService"></bean>
-	<bean id="privilege" class="privilege.PrivilegeService"></bean>
+	<bean id="privilege" class="privilege.PrivilegeService">
+		<property name="userDAO" ref="userDAO" />
+	</bean>
+	<bean id="foo" class="com.terapico.caf.InternalTestBean"></bean>
 
 
 

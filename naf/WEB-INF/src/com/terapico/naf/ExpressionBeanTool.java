@@ -274,6 +274,7 @@ public class ExpressionBeanTool {
 		return false;
 
 	}
+	
 
 	public static void invokeAndPrint(Object object, Method method)
 			throws IllegalArgumentException, InvocationTargetException {

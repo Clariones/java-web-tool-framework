@@ -1,5 +1,8 @@
 package com.terapico.caf;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class SimpleInvocationResult implements InvocationResult {
 
 	private InvocationContext invocationContext;
@@ -19,7 +22,23 @@ public class SimpleInvocationResult implements InvocationResult {
 		return actualResult;
 	}
 	
+	public Object getResultExpr() {
+		return getObjectExpr(actualResult);
+	}
 	
+	protected String getObjectExpr(Object target)
+	{
+		
+		 Gson serializer = createGsonBuilder().create();  
+		return "class: '"+target.getClass().getName()+"'\r\n"+serializer.toJson(target);
+	}
+	protected GsonBuilder createGsonBuilder()
+	{
+		
+		  return new GsonBuilder().setPrettyPrinting().
+				     setExclusionStrategies(new PropertiesExclusionStrategy());
+		
+	}
 	
 	
 

@@ -9,11 +9,6 @@ public class PrivilegeService {
 	private UserDAO userDAO;
 
 	public UserDAO getUserDAO() {
-
-		SpringBeanFactory factory = new SpringBeanFactory();
-		if (userDAO == null) {
-			userDAO = (UserDAOJDBCTemplateImpl) factory.getBean("userDAO");
-		}
 		return userDAO;
 	}
 

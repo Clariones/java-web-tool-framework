@@ -10,8 +10,7 @@
 .paramlist {
 	font-size: 20px;
 	text-align: left;
-	overflow-x: hidden;
-  overflow: auto;
+
 }
 </style>
 <script>

@@ -29,10 +29,11 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 
 	}
 
+	
 	public List<User> listUsers() {
 		// TODO Auto-generated method stub
 
-		String SQL = "select * from user_data";
+		String SQL = "select * from user_data limit 1000";
 		List<User> students = jdbcTemplateObject.query(SQL, new UserMapper());
 		return students;
 
