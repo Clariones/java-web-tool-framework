@@ -19,5 +19,8 @@ public class SimpleInvocationResult implements InvocationResult {
 		return actualResult;
 	}
 	
+	
+	
+	
 
 }

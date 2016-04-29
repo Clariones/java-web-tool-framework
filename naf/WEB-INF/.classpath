@@ -23,6 +23,6 @@
 	<classpathentry kind="lib" path="lib/spring-jdbc-3.0.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/spring-transaction-3.0.1.RELEASE-A.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-runtime-4.5.3.jar"/>
-	<classpathentry kind="lib" path="D:/resin-3.1.12/lib/javamail-141.jar"/>
+	<classpathentry kind="lib" path="lib/javamail-141.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

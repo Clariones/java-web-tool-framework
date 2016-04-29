@@ -1,7 +1,12 @@
 package com.terapico.caf;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
@@ -9,7 +14,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.terapico.naf.DateTime;
@@ -277,4 +284,7 @@ public class ReflectionTool {
 		return true;
 
 	}
+	
+	
+	
 }

@@ -1,6 +1,8 @@
 package com.terapico.caf;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.terapico.naf.baseelement.MenuItem;
@@ -10,6 +12,7 @@ public class Navigator {
 	List<MenuItem> menuItems;
 	List<String> beanList;
 	private String selectBeanName;
+	private String beanExpr;
 
 
 	public String getSelectBeanName() {
@@ -27,6 +30,13 @@ public class Navigator {
 		if(menuItems==null){
 			menuItems=new ArrayList<MenuItem>();
 		}
+		
+		Collections.sort(this.menuItems, new Comparator<MenuItem>() {
+			public int compare(MenuItem item1, MenuItem item2) {			
+				return item1.getMethodName().compareTo(item2.getMethodName());
+			}
+		});
+		
 		return menuItems;
 
 	}
@@ -37,6 +47,7 @@ public class Navigator {
 			beanList=new ArrayList<String>();
 		}
 		
+		Collections.sort(this.beanList);
 		return beanList;
 	}
 
@@ -51,7 +62,7 @@ public class Navigator {
 		for(String value:values){
 			getBeanList().add(value);
 		}
-		
+
 	}
 	
 	
@@ -90,5 +101,18 @@ public class Navigator {
 		// TODO Auto-generated method stub
 		this.selectBeanName=selectedBean;
 	}
+
+
+	public void setBeanExpr(String beanExpr) {
+		// TODO Auto-generated method stub
+		this.beanExpr=beanExpr;
+	}
+
+
+	public String getBeanExpr() {
+		return beanExpr;
+	}
+	
+	
 	
 }

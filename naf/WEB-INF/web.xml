@@ -19,21 +19,29 @@
     <servlet-name>caf</servlet-name>
     <servlet-class>com.terapico.caf.SimpleInvocationServlet</servlet-class>
 
-
   </servlet>
 
 
 
- 
   
-    <servlet-mapping>
+
+
+      <servlet-mapping>
     <servlet-name>caf</servlet-name>
     <url-pattern>/**/</url-pattern>
   </servlet-mapping>
-  
+
    <!-- <init-param invokehelperclass='com.terapico.naf.ObjectInvokeHelper'/> 
   
   for app engine 
+    
+    
+  
+      <servlet-mapping>
+    <servlet-name>caf</servlet-name>
+    <url-pattern>/naf/*</url-pattern>
+  </servlet-mapping>
+    
     
      <servlet-mapping>
     <servlet-name>invoke</servlet-name>
@@ -44,7 +52,7 @@
     <servlet-name>invoke</servlet-name>
     <url-pattern>/**/</url-pattern>
   </servlet-mapping>
-  
+
    
    -->
   

@@ -6,8 +6,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title> ${result.selectBeanName} | Spring Bean Manage Console: </title>
-<script src="/naf/scripts/jquery-1.9.1.js" type="text/javascript"></script>
-<script src="/naf/scripts/common.js" type="text/javascript"></script>
+<script src="/scripts/jquery-1.9.1.js" type="text/javascript"></script>
+<script src="/scripts/common.js" type="text/javascript"></script>
 <style>
 .toolbar {
 	width: 100%; height: 40px; 	float:left; 	
@@ -80,13 +80,17 @@ html,body{
 </head>
 
 <body>
-	<div class="toolbar" >Spring Beans ： <c:forEach var="item" items="${result.beanList}"><a href='/naf/navi/index/${item}/' class='bean'> ${item}</a></c:forEach></div>
+	<div class="toolbar" >Spring Beans [${result.selectBeanName}] ：  <c:forEach var="item" items="${result.beanList}"><a href='/naf/navi/index/${item}/' class='bean'> ${item}</a></c:forEach></div>
 	<div class="menu" >
 
           <c:forEach var="item" items="${result.menuItems}">
             <a href="#${item.beanName}/${item.methodName}" methodName="${item.methodName}" beanName="${item.beanName }" class="action">${item.methodName}</a><br/>
             </c:forEach>
 	</div>
-	<div class="content" id="content">Home Info</div>
+	<div class="content" id="content">
+	<textarea rows="40" cols="80">${result.beanExpr}</textarea>
+	
+	
+	</div>
 </body>
 </html>

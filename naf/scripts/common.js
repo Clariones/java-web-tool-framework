@@ -11,8 +11,11 @@ function fillResult(reqURI, container) {
 		$(container).html(msg);
 	});
 
+
+	
 	request.fail(function(jqXHR, textStatus, errorThrown) {
 		// alert("Request failed: " + textStatus);
+		done = true;
 		$(container).html("<div style='text-align: left' >" + jqXHR.responseText + "</div>")
 	});
 
