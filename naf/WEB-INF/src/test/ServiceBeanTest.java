@@ -35,6 +35,18 @@ import webtranslation.WebTranslationService;
 
 public class ServiceBeanTest {
 
+	
+	public ServiceBeanTest(){
+		
+		this.logInfo("service bean initiated");
+		
+	}
+	
+	private void logInfo(String string) {
+		// TODO Auto-generated method stub
+		System.out.println(string);
+	}
+
 	public Date currentTime() throws Exception {
 		return new CurrentTime();
 	}

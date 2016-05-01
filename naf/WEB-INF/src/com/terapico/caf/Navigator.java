@@ -112,6 +112,12 @@ public class Navigator {
 	public String getBeanExpr() {
 		return beanExpr;
 	}
+
+
+	public void addItems(List<MenuItem> items) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

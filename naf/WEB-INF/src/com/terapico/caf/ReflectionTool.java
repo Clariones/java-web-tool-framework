@@ -247,9 +247,16 @@ public class ReflectionTool {
 	protected List<Method> getSafeMethods( Object targetObject) {
 
 		
-		List<Method> methodList=new ArrayList<Method>();
+		
 		
 		Class clazz = targetObject.getClass();
+		return getSafeMethodsFromClass( clazz);
+
+	}
+
+	protected List<Method> getSafeMethodsFromClass( Class clazz) {
+		
+		List<Method> methodList=new ArrayList<Method>();
 		Method[] methods = clazz.getMethods();
 		
 		for (Method method : methods) {
@@ -263,7 +270,6 @@ public class ReflectionTool {
 			methodList.add(method);
 		}
 		return methodList;
-
 	}
 	protected Method[] getInternalList(Class clazz) {
 

@@ -1,5 +1,6 @@
 package com.terapico.caf;
 
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class SpringBeanFactory extends InternalBeanFactory implements BeanFactory{
@@ -18,9 +19,16 @@ public class SpringBeanFactory extends InternalBeanFactory implements BeanFactor
 			beanNamesCache=context.getBeanDefinitionNames();
 		}
 		
+		
+		
 		return beanNamesCache;
 	}
 	
+	public ConfigurableListableBeanFactory springFactory()
+	{
+		return this.context.getBeanFactory();
+		
+	}
 	
 	public Object getBean(String beanName)
 	{
