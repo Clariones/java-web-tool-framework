@@ -40,20 +40,7 @@ html,body{
 <script>
 
 
-	$(function() {
-		var cache = {};
-
-		$(".action").click(function() {
-			
-					//alert( );
-					//$("#content").text($(this).attr("href"));
-					//$("#content").text(event.target+"/"+$(this).attr("href"));
-					var reqURI =  $(this).attr("href").substring(1) + "/";
-					//$("#content").text(reqURI);
-					fillResult(reqURI,"#content");
-		});
-
-	});
+	
 
 	$(document).ready(function() {
 		//alert($(location).attr('href'));

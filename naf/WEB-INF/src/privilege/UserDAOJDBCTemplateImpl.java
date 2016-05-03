@@ -17,7 +17,7 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 		this.dataSource = dataSource;
 		this.jdbcTemplateObject = new JdbcTemplate(this.dataSource);
 		
-		jdbcTemplateObject.setFetchSize(100);
+		jdbcTemplateObject.setFetchSize(1000);
 	}
 
 	public int create(String username, String password) {
@@ -50,6 +50,7 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 			throw new UserNotFoundException("找不到ID为: "+id+" 的用户");
 		}
 
+		
 		
 	}
 

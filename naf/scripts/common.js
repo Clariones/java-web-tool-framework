@@ -1,5 +1,10 @@
+
+	
+
 function fillResult(reqURI, container) {
+
 	var done = false;
+	
 	var request = $.ajax({
 		url : "/naf/" + reqURI,
 		type : "GET",
@@ -12,7 +17,6 @@ function fillResult(reqURI, container) {
 	});
 
 
-	
 	request.fail(function(jqXHR, textStatus, errorThrown) {
 		// alert("Request failed: " + textStatus);
 		done = true;
