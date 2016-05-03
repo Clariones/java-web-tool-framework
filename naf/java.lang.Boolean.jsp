@@ -9,5 +9,5 @@
 </style>
 
 <div class="message">
-	<c:if test="${result}" >V</c:if><c:if test="${not result}" >X</c:if>
+	<c:if test="${result}" >执行成功</c:if><c:if test="${not result}" >执行失败</c:if>
 </div>

@@ -1,6 +1,7 @@
 package privilege;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -22,8 +23,9 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 	public int create(String username, String password) {
 		// TODO Auto-generated method stub
 		String SQL = "insert into user_data (id,username, password) values (?, ?, ?)";
-
-		return jdbcTemplateObject.update(SQL, System.currentTimeMillis() % 1000, username, password);
+		
+		
+		return jdbcTemplateObject.update(SQL,  UUID.randomUUID().toString(), username,password);
 		// System.out.println("Created Record Name = " + name + " Age = " +
 		// age);
 

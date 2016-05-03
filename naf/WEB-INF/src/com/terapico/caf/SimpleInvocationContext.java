@@ -1,6 +1,7 @@
 package com.terapico.caf;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 public class SimpleInvocationContext implements InvocationContext {
 	
@@ -33,6 +34,10 @@ public class SimpleInvocationContext implements InvocationContext {
 	public Method getMethodToCall() {
 		
 		return targetMethod;
+	}
+	public boolean isVoidMethod() {
+		Type returnType=getMethodToCall().getReturnType();
+		return returnType.equals(Void.TYPE);
 	}
 
 	public Object[] getParameters() {

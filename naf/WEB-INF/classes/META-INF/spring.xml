@@ -24,6 +24,10 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 		<property name="username" value="root" />
 		<property name="password" value="3123" />
 	</bean>
+<!--
+
+  -->
+
 
 	<!-- Definition for studentJDBCTemplate bean -->
 	<bean id="userDAO" class="privilege.UserDAOJDBCTemplateImpl">
