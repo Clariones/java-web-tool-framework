@@ -1,0 +1,15 @@
+{
+	"serviceType":"0",
+	"address":{"line1":"12500 Jefferson Ave","line2":"","city":"Newport News","VA","country":"US","postalCode":"23602"}
+}
+
+{
+	"verifyResult":"0"	
+}
+{
+	"verifyResult":"0",
+	"suggestAddresses":[
+		{"line1":"12500 Jefferson Ave","line2":"","city":"Newport News","VA","country":"US","postalCode":"23602-9595"},
+		{"line1":"12500 Jefferson Ave","line2":"","city":"Newport News","VA","country":"US","postalCode":"23602-9596"},
+	]
+}

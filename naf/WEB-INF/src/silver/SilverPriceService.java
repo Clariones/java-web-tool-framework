@@ -74,6 +74,14 @@ public class SilverPriceService {
 		
 	}
 	
+	public double currentGoldPrice() throws URISyntaxException, Exception{
+		
+		//String content=downloadContent(new URI("http://www.kitco.cn/KitcoDynamicSite/RequestHandler?requestName=getFileContent&AttributeId=SilverPGMPricesCNY"));
+				
+		return currentGoldPrice("Au 100g");
+	
+		
+	}
 	
 	public String allMetalPrice() throws URISyntaxException, Exception{
 		
@@ -109,6 +117,34 @@ public class SilverPriceService {
 		
 		
 		throw new IllegalArgumentException("不支持'"+metalName+"'的价格查询，仅支持白银、钯、铂、铑的人民币价格");
+		
+		
+	}
+	//Au 100g
+	
+	public double currentGoldPrice(String product) throws URISyntaxException, Exception{
+		
+		//String content=downloadContent(new URI("http://www.kitco.cn/KitcoDynamicSite/RequestHandler?requestName=getFileContent&AttributeId=SilverPGMPricesCNY"));
+		
+		//curl 'http://www.kitco.cn/KitcoDynamicSite/RequestHandler?requestName=getFileContent&AttributeId=ShangHaiPrices' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4,es-419;q=0.2,es;q=0.2' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36' -H 'Accept: */*' -H 'Referer: http://www.kitco.cn/' -H 'Cookie: JSESSIONID=73E6B3D5E40033D4EB64CB67D781FFCF; counter=762923402084; _gat=1; __gads=ID=c2daff988c27286e:T=1462288489:S=ALNI_MaFYr3fJOM6NPvzlqiFIXoKcC-faw; _ga=GA1.2.219007872.1462288487' -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' --compressed
+		String urlExpr="http://www.kitco.cn/KitcoDynamicSite/RequestHandler?requestName=getFileContent&AttributeId=ShangHaiPrices";
+		Document doc = Jsoup.connect(urlExpr).get();
+		Elements elements = doc.select("td");
+		int index=0;
+		for(Element element: elements){
+			//System.out.println(element.html());
+			String text=element.html().trim();
+			System.out.println(text);
+			if(text.contains(product)){
+				String priceExpr=elements.get(index+1).html();
+				
+				return Double.parseDouble(priceExpr);
+			}
+			index++;
+		}
+		
+		
+		throw new IllegalArgumentException("不支持'"+product+"'的价格查询，仅支持白银、钯、铂、铑的人民币价格");
 		
 		
 	}

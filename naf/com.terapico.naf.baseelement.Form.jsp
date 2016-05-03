@@ -135,10 +135,10 @@
   </div>
   
   <div class="panel-body">
-    
+    <!-- parameterName="${field.name}" parameterType="${field.type.name}" autocomplete="off" -->
     	<form class="mainform">
 		<c:forEach var="field" items="${result.fields}" varStatus="status">
-			<input id="fl${status.index}"  placeHolder="${field.name}" title="${field.name}" type="text" append="true"  parameterName="${field.name}" parameterType="${field.type.name}" autocomplete="off"/>
+			<input id="fl${status.index}"  placeHolder="${field.name}" title="${field.name}" type="text" append="true" size="30"/>
 		</c:forEach>
 		
 		<c:forEach var="action" items="${result.actions}">

@@ -17,7 +17,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.terapico.mongodb.MangoTool;
+import com.terapico.mongodb.MongoTool;
 import com.terapico.naf.parameter.Parameter;
 import com.terapico.naf.parameter.ParameterManager;
 
@@ -35,7 +35,7 @@ public class ParameterStoreTest {
 	public void test() throws Exception {
 		Object[] object1 = { new URI("http://news.163.com"), new URI("http://news.163.com"), };
 		// Parameter parameter = Parameter.newInstance(object1);
-		MangoTool.peekObject(object1[0], 10);
+		MongoTool.peekObject(object1[0], 10);
 		ParameterManager manager = new ParameterManager();
 		manager.saveParameters(object1);
 		List<Parameter> parameterList = manager.getParametersByType(URI.class);
@@ -47,7 +47,7 @@ public class ParameterStoreTest {
 		
 		coll.remove(new BasicDBObject());
 
-		DBObject basicObject = MangoTool.getDBObjectFromBean(parameterList);
+		DBObject basicObject = MongoTool.getDBObjectFromBean(parameterList);
 		//coll.insert(basicObject);
 		System.out.println(parameterList);
 		
@@ -57,7 +57,7 @@ public class ParameterStoreTest {
 
 				DBObject doc=cursor.next();
 
-				Object obj = MangoTool.getBeanFromDBObject(doc);
+				Object obj = MongoTool.getBeanFromDBObject(doc);
 				System.out.println(obj.getClass().getName() + ":" + obj);
 				
 				List list=(List)obj;
@@ -65,7 +65,7 @@ public class ParameterStoreTest {
 					
 					System.out.println(element.getClass().getName() + ":" + element);
 					Parameter p=(Parameter)element;
-					MangoTool.peekObject(p, 10);
+					MongoTool.peekObject(p, 10);
 					System.out.println(p.getValue().toString());
 				}
 				

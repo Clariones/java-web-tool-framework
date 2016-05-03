@@ -14,7 +14,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.terapico.mongodb.MangoTool;
+import com.terapico.mongodb.MongoTool;
 import com.terapico.naf.ExpressionBeanTool;
 
 public class PersistantParameterManager extends ParameterManager {
@@ -28,7 +28,7 @@ public class PersistantParameterManager extends ParameterManager {
 		// find all types first
 		// then find one by one
 
-		List<PersistantParameter> parameters = MangoTool.findAllBeans(collection);
+		List<PersistantParameter> parameters = MongoTool.findAllBeans(collection);
 		Map<Type, List<Parameter>>storedParameters=new HashMap<Type, List<Parameter>> ();
 		for (PersistantParameter parameter : parameters) {
 
@@ -76,7 +76,7 @@ public class PersistantParameterManager extends ParameterManager {
 		BasicDBObject sortCondition = new BasicDBObject();
 		sortCondition.put("lastUsedTime", -1);
 		//collection.createIndex(index);
-		List<Parameter> retList = MangoTool.findBeans(collection, query,sortCondition);
+		List<Parameter> retList = MongoTool.findBeans(collection, query,sortCondition);
 
 		return retList;
 
@@ -91,7 +91,7 @@ public class PersistantParameterManager extends ParameterManager {
 		BasicDBObject sortCondition = new BasicDBObject();
 		sortCondition.put("lastUsedTime", -1);
 		//collection.createIndex(index);
-		List<Parameter> retList = MangoTool.findBeans(collection, query,sortCondition);
+		List<Parameter> retList = MongoTool.findBeans(collection, query,sortCondition);
 
 		return retList;
 
@@ -107,7 +107,7 @@ public class PersistantParameterManager extends ParameterManager {
 		BasicDBObject sortCondition = new BasicDBObject();
 		sortCondition.put("lastUsedTime", -1);
 		//collection.createIndex(index);
-		List<Parameter> retList = MangoTool.findBeans(collection, query,sortCondition);
+		List<Parameter> retList = MongoTool.findBeans(collection, query,sortCondition);
 
 		return retList;
 
@@ -149,7 +149,7 @@ public class PersistantParameterManager extends ParameterManager {
 			logln("index: parameters.indexOf(parameter) "+index);
 			if (index < 0) {
 				// not fount, this parameter is not exist
-				DBObject newDBObject = MangoTool.getDBObjectFromBean(parameter);
+				DBObject newDBObject = MongoTool.getDBObjectFromBean(parameter);
 				this.getCollection().insert(newDBObject);
 				
 				continue;
@@ -162,7 +162,7 @@ public class PersistantParameterManager extends ParameterManager {
 			this.getCollection().remove(deleteQuery);
 			oldParameter.increaseUsedCount();
 			oldParameter.setLastUsedTime(new java.util.Date());
-			DBObject newObject = MangoTool.getDBObjectFromBean(oldParameter);
+			DBObject newObject = MongoTool.getDBObjectFromBean(oldParameter);
 			
 			this.getCollection().insert(newObject);
 

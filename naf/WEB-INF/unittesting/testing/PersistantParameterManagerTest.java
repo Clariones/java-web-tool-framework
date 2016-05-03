@@ -15,7 +15,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.terapico.mongodb.MangoTool;
+import com.terapico.mongodb.MongoTool;
 import com.terapico.naf.parameter.Parameter;
 
 public class PersistantParameterManagerTest {

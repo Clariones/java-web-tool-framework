@@ -137,6 +137,7 @@ public class NavigationService extends ReflectionTool {
 				}
 				
 				
+				
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				this.logInfo("Bean: "+beanName+" fail to load the class "+e.getMessage());
@@ -177,6 +178,28 @@ public class NavigationService extends ReflectionTool {
 
 	}
 
+	public Navigator select(String selectedBean) {
+		init();
+		
+		Navigator navigator = createNavigator();
+		String[] beanNames = getBeanFactory().getBeanNames();
+
+		navigator.addToBeanList(beanNames);
+		navigator.setSelectBean(selectedBean);
+
+		List<MenuItem> items=getMenuItemForBean(selectedBean);
+		
+		navigator.setMenuItems(items);
+		
+		
+		//navigator.setBeanExpr(beanExpr);
+		// for(String beanName:beanNames){
+		//createItems(navigator, selectedBean);
+		// }
+		
+		return navigator;
+
+	}
 
 	protected List<MenuItem> getMenuItemForBean(String selectedBean) {
 		// TODO Auto-generated method stub

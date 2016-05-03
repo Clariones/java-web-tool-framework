@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
@@ -24,6 +25,8 @@ import com.terapico.naf.baseelement.HTMLText;
 import com.terapico.naf.baseelement.PlainText;
 
 import calculator.CalculatorService;
+import chinastock.MarketLimitReport;
+import chinastock.ReportItem;
 import silver.SilverPriceService;
 import telecode.TeleCodeDict;
 import translation.TranslationResponse;
@@ -51,6 +54,16 @@ public class ServiceBeanTest {
 		return new CurrentTime();
 	}
 
+	
+	public Object notibleStocks() throws MalformedURLException
+	{
+		
+		MarketLimitReport pageReport=new MarketLimitReport();		
+		ReportItem item=pageReport.getReportItem();
+		return item;
+		
+	}
+	
 	/*
 	 * public Date getException() throws Exception{ if(true){ throw new
 	 * Exception("exception!"); } return new CurrentTime(); }
@@ -107,6 +120,11 @@ public class ServiceBeanTest {
 	public Double silverCurrentPrice() throws URISyntaxException, Exception {
 		SilverPriceService service = new SilverPriceService();
 		return service.currentPrice();
+
+	}
+	public Double glodCurrentPrice() throws URISyntaxException, Exception {
+		SilverPriceService service = new SilverPriceService();
+		return service.currentGoldPrice();
 
 	}
 	public BigDecimal add(BigDecimal number1, BigDecimal number2)

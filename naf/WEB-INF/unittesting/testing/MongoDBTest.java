@@ -13,7 +13,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
-import com.terapico.mongodb.MangoTool;
+import com.terapico.mongodb.MongoTool;
 
 public class MongoDBTest {
 
@@ -33,25 +33,25 @@ public class MongoDBTest {
 		DB db = mongoClient.getDB("mydb");
 		DBCollection coll = db.getCollection("testCollection");
 
-		DBObject basicObject = MangoTool.getDBObjectFromBean("save simple string");
+		DBObject basicObject = MongoTool.getDBObjectFromBean("save simple string");
 		coll.insert(basicObject);
 		
-		basicObject = MangoTool.getDBObjectFromBean(120);
+		basicObject = MongoTool.getDBObjectFromBean(120);
 		coll.insert(basicObject);
 		
-		basicObject = MangoTool.getDBObjectFromBean(120L);
+		basicObject = MongoTool.getDBObjectFromBean(120L);
 		coll.insert(basicObject);
 		
-		basicObject = MangoTool.getDBObjectFromBean(120.8877);
+		basicObject = MongoTool.getDBObjectFromBean(120.8877);
 		coll.insert(basicObject);
 		
-		basicObject = MangoTool.getDBObjectFromBean(120.8877D);
+		basicObject = MongoTool.getDBObjectFromBean(120.8877D);
 		coll.insert(basicObject);
 
-		basicObject = MangoTool.getDBObjectFromBean(new java.util.Date());
+		basicObject = MongoTool.getDBObjectFromBean(new java.util.Date());
 		coll.insert(basicObject);
 
-		basicObject = MangoTool.getDBObjectFromBean(new java.sql.Date(0));
+		basicObject = MongoTool.getDBObjectFromBean(new java.sql.Date(0));
 		coll.insert(basicObject);
 
 		
@@ -73,7 +73,7 @@ public class MongoDBTest {
 
 				DBObject doc=cursor.next();
 				System.out.println(doc);
-				Object obj = MangoTool.getBeanFromDBObject(doc);
+				Object obj = MongoTool.getBeanFromDBObject(doc);
 				System.out.println(obj.getClass().getName() + ":" + obj);
 			}
 		} finally {
