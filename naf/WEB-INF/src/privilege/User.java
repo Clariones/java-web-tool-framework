@@ -2,22 +2,20 @@ package privilege;
 
 public class User implements  java.io.Serializable{
 
-	protected		long	mId;
+	private static final long serialVersionUID = 1L;
+	protected		String	mId;
 	protected		String	mUsername;
 	protected		String	mPassword;
 
 	public 	User(){
 			
 	}
-	
 
 	
-
-	
-	public void setId(long id){
+	public void setId(String id){
 		this.mId = id;
 	}
-	public long getId(){
+	public String getId(){
 		return this.mId;
 	}
 	

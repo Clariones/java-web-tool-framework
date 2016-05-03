@@ -109,6 +109,7 @@ public class Navigator {
 	}
 
 
+	
 	public String getBeanExpr() {
 		return beanExpr;
 	}

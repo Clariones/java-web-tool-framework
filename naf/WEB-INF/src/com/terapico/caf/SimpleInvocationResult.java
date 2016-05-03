@@ -19,6 +19,11 @@ public class SimpleInvocationResult implements InvocationResult {
 		return invocationContext;
 	}
 	public Object getActualResult() {
+		
+		if(actualResult==null){
+			return Boolean.TRUE;
+		}
+		
 		return actualResult;
 	}
 	
@@ -26,11 +31,13 @@ public class SimpleInvocationResult implements InvocationResult {
 		return getObjectExpr(actualResult);
 	}
 	
-	protected String getObjectExpr(Object target)
-	{
-		
-		 Gson serializer = createGsonBuilder().create();  
-		return "class: '"+target.getClass().getName()+"'\r\n"+serializer.toJson(target);
+	protected String getObjectExpr(Object target) {
+		try {
+			Gson serializer = new GsonBuilder().setPrettyPrinting().create();
+			return "class: '" + target.getClass().getName() + "'\r\n" + serializer.toJson(target);
+		} catch (Throwable e) {
+			return e.getMessage();
+		}
 	}
 	protected GsonBuilder createGsonBuilder()
 	{

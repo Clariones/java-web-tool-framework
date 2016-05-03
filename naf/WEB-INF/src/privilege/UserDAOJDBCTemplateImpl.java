@@ -1,6 +1,7 @@
 package privilege;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -16,14 +17,15 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 		this.dataSource = dataSource;
 		this.jdbcTemplateObject = new JdbcTemplate(this.dataSource);
 		
-		jdbcTemplateObject.setFetchSize(100);
+		jdbcTemplateObject.setFetchSize(1000);
 	}
 
 	public int create(String username, String password) {
 		// TODO Auto-generated method stub
 		String SQL = "insert into user_data (id,username, password) values (?, ?, ?)";
-
-		return jdbcTemplateObject.update(SQL, System.currentTimeMillis() % 1000, username, password);
+		
+		
+		return jdbcTemplateObject.update(SQL,  UUID.randomUUID().toString(), username,password);
 		// System.out.println("Created Record Name = " + name + " Age = " +
 		// age);
 
@@ -48,7 +50,6 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 			throw new UserNotFoundException("找不到ID为: "+id+" 的用户");
 		}
 
-		
 	}
 
 	public void delete(Integer id) throws UserNotFoundException {

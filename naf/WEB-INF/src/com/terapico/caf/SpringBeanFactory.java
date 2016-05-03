@@ -44,4 +44,6 @@ public class SpringBeanFactory extends InternalBeanFactory implements BeanFactor
 	protected Object getObject(String objectPath) {
 		return context.getBean(objectPath);
 	}
+
+	
 }
