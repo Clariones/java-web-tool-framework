@@ -36,45 +36,61 @@ public class _com__terapico__naf__baseelement__Form__jsp extends com.caucho.jsp.
       java.lang.Object _jsp_items_1 = _caucho_expr_0.evalObject(_jsp_env);
       java.util.Iterator _jsp_iter_1 = com.caucho.jstl.rt.CoreForEachTag.getIterator(_jsp_items_1);
       _jsp_loop_0.init(0, Integer.MAX_VALUE, 1);
-      Object _jsp_status_1 = pageContext.putAttribute("status", _jsp_loop_0);
-      Object _jsp_oldVar_1 = pageContext.getAttribute("field");
+      Object _jsp_oldVar_1 = pageContext.getAttribute("action");
       while (_jsp_iter_1.hasNext()) {
         Object _jsp_i_1 = _jsp_iter_1.next();
-        pageContext.setAttribute("field", _jsp_i_1);
+        pageContext.setAttribute("action", _jsp_i_1);
         _jsp_loop_0.setCurrent(_jsp_i_1, _jsp_iter_1.hasNext());
         out.write(_jsp_string1, 0, _jsp_string1.length);
         _caucho_expr_1.print(out, _jsp_env, false);
         out.write(_jsp_string2, 0, _jsp_string2.length);
-        _caucho_expr_2.print(out, _jsp_env, false);
-        out.write(_jsp_string3, 0, _jsp_string3.length);
-        _caucho_expr_2.print(out, _jsp_env, false);
-        out.write(_jsp_string4, 0, _jsp_string4.length);
-        _caucho_expr_2.print(out, _jsp_env, false);
-        out.write(_jsp_string5, 0, _jsp_string5.length);
-        _caucho_expr_3.print(out, _jsp_env, false);
-        out.write(_jsp_string6, 0, _jsp_string6.length);
       }
-      pageContext.pageSetOrRemove("field", _jsp_oldVar_1);
-      pageContext.removeAttribute("status");
-      out.write(_jsp_string7, 0, _jsp_string7.length);
+      pageContext.pageSetOrRemove("action", _jsp_oldVar_1);
+      out.write(_jsp_string3, 0, _jsp_string3.length);
       if (_jsp_loop_0 == null)
         _jsp_loop_0 = new com.caucho.jsp.IteratorLoopSupportTag();
-      java.lang.Object _jsp_items_2 = _caucho_expr_4.evalObject(_jsp_env);
+      java.lang.Object _jsp_items_2 = _caucho_expr_2.evalObject(_jsp_env);
       java.util.Iterator _jsp_iter_2 = com.caucho.jstl.rt.CoreForEachTag.getIterator(_jsp_items_2);
       _jsp_loop_0.init(0, Integer.MAX_VALUE, 1);
-      Object _jsp_oldVar_2 = pageContext.getAttribute("action");
+      Object _jsp_status_2 = pageContext.putAttribute("status", _jsp_loop_0);
+      Object _jsp_oldVar_2 = pageContext.getAttribute("field");
       while (_jsp_iter_2.hasNext()) {
         Object _jsp_i_2 = _jsp_iter_2.next();
-        pageContext.setAttribute("action", _jsp_i_2);
+        pageContext.setAttribute("field", _jsp_i_2);
         _jsp_loop_0.setCurrent(_jsp_i_2, _jsp_iter_2.hasNext());
+        out.write(_jsp_string4, 0, _jsp_string4.length);
+        _caucho_expr_3.print(out, _jsp_env, false);
+        out.write(_jsp_string5, 0, _jsp_string5.length);
+        _caucho_expr_4.print(out, _jsp_env, false);
+        out.write(_jsp_string6, 0, _jsp_string6.length);
+        _caucho_expr_4.print(out, _jsp_env, false);
+        out.write(_jsp_string7, 0, _jsp_string7.length);
+        _caucho_expr_4.print(out, _jsp_env, false);
         out.write(_jsp_string8, 0, _jsp_string8.length);
         _caucho_expr_5.print(out, _jsp_env, false);
         out.write(_jsp_string9, 0, _jsp_string9.length);
-        _caucho_expr_6.print(out, _jsp_env, false);
-        out.write(_jsp_string10, 0, _jsp_string10.length);
       }
-      pageContext.pageSetOrRemove("action", _jsp_oldVar_2);
-      out.write(_jsp_string11, 0, _jsp_string11.length);
+      pageContext.pageSetOrRemove("field", _jsp_oldVar_2);
+      pageContext.removeAttribute("status");
+      out.write(_jsp_string10, 0, _jsp_string10.length);
+      if (_jsp_loop_0 == null)
+        _jsp_loop_0 = new com.caucho.jsp.IteratorLoopSupportTag();
+      java.lang.Object _jsp_items_3 = _caucho_expr_0.evalObject(_jsp_env);
+      java.util.Iterator _jsp_iter_3 = com.caucho.jstl.rt.CoreForEachTag.getIterator(_jsp_items_3);
+      _jsp_loop_0.init(0, Integer.MAX_VALUE, 1);
+      Object _jsp_oldVar_3 = pageContext.getAttribute("action");
+      while (_jsp_iter_3.hasNext()) {
+        Object _jsp_i_3 = _jsp_iter_3.next();
+        pageContext.setAttribute("action", _jsp_i_3);
+        _jsp_loop_0.setCurrent(_jsp_i_3, _jsp_iter_3.hasNext());
+        out.write(_jsp_string11, 0, _jsp_string11.length);
+        _caucho_expr_1.print(out, _jsp_env, false);
+        out.write(_jsp_string12, 0, _jsp_string12.length);
+        _caucho_expr_6.print(out, _jsp_env, false);
+        out.write(_jsp_string13, 0, _jsp_string13.length);
+      }
+      pageContext.pageSetOrRemove("action", _jsp_oldVar_3);
+      out.write(_jsp_string14, 0, _jsp_string14.length);
     } catch (java.lang.Throwable _jsp_e) {
       pageContext.handlePageException(_jsp_e);
     } finally {
@@ -129,12 +145,12 @@ public class _com__terapico__naf__baseelement__Form__jsp extends com.caucho.jsp.
     com.caucho.jsp.TaglibManager manager = webApp.getJspApplicationContext().getTaglibManager();
     manager.addTaglibFunctions(_jsp_functionMap, "c", "http://java.sun.com/jsp/jstl/core");
     com.caucho.jsp.PageContextImpl pageContext = new com.caucho.jsp.PageContextImpl(webApp, this);
-    _caucho_expr_0 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${result.fields}");
-    _caucho_expr_1 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${status.index}");
-    _caucho_expr_2 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${field.name}");
-    _caucho_expr_3 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${field.type.name}");
-    _caucho_expr_4 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${result.actions}");
-    _caucho_expr_5 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${action.name}");
+    _caucho_expr_0 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${result.actions}");
+    _caucho_expr_1 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${action.name}");
+    _caucho_expr_2 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${result.fields}");
+    _caucho_expr_3 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${status.index}");
+    _caucho_expr_4 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${field.name}");
+    _caucho_expr_5 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${field.type.name}");
     _caucho_expr_6 = com.caucho.jsp.JspUtil.createExpr(pageContext.getELContext(), "${action.name }");
   }
 
@@ -156,7 +172,7 @@ public class _com__terapico__naf__baseelement__Form__jsp extends com.caucho.jsp.
     String resourcePath = loader.getResourcePathSpecificFirst();
     mergePath.addClassPath(resourcePath);
     com.caucho.vfs.Depend depend;
-    depend = new com.caucho.vfs.Depend(appDir.lookup("com.terapico.naf.baseelement.Form.jsp"), -5109837062338196510L, false);
+    depend = new com.caucho.vfs.Depend(appDir.lookup("com.terapico.naf.baseelement.Form.jsp"), 8262899073153786360L, false);
     com.caucho.jsp.JavaPage.addDepend(_caucho_depends, depend);
   }
 
@@ -175,30 +191,36 @@ public class _com__terapico__naf__baseelement__Form__jsp extends com.caucho.jsp.
   private static com.caucho.el.Expr _caucho_expr_5;
   private static com.caucho.el.Expr _caucho_expr_6;
 
-  private final static char []_jsp_string10;
+  private final static char []_jsp_string13;
+  private final static char []_jsp_string14;
   private final static char []_jsp_string1;
-  private final static char []_jsp_string9;
-  private final static char []_jsp_string7;
-  private final static char []_jsp_string8;
-  private final static char []_jsp_string11;
-  private final static char []_jsp_string5;
   private final static char []_jsp_string0;
-  private final static char []_jsp_string6;
+  private final static char []_jsp_string12;
+  private final static char []_jsp_string10;
+  private final static char []_jsp_string11;
+  private final static char []_jsp_string8;
   private final static char []_jsp_string4;
   private final static char []_jsp_string3;
   private final static char []_jsp_string2;
+  private final static char []_jsp_string9;
+  private final static char []_jsp_string7;
+  private final static char []_jsp_string6;
+  private final static char []_jsp_string5;
   static {
-    _jsp_string10 = "\"  />\r\n		".toCharArray();
-    _jsp_string1 = "\r\n			\r\n			<input id=\"fl".toCharArray();
-    _jsp_string9 = "\" action=\"".toCharArray();
-    _jsp_string7 = "\r\n		\r\n		".toCharArray();
-    _jsp_string8 = "\r\n			<input type=\"submit\" class=\"submit\" value=\"".toCharArray();
-    _jsp_string11 = "\r\n		\r\n	</form>\r\n\r\n\r\n</div>\r\n\r\n<div id=\"parameters\" > Parameters </div>\r\n<div id=\"result\" >  </div>\r\n\r\n".toCharArray();
-    _jsp_string5 = "\" parameterType=\"".toCharArray();
-    _jsp_string0 = "\r\n\r\n\r\n\r\n<script type=\"text/javascript\">\r\n	$(function() {\r\n		var action=\"\";\r\n		\r\n		$(\".submit\").click(function(){\r\n			action=$(this).attr(\"action\");\r\n		});\r\n		/*\r\n		$(\":input\").dblclick(function(){		\r\n			//alert(\"sdfsdf\");	\r\n			//$( \".parameters\" ).toggle();\r\n			\r\n			var pos = $(this).position();\r\n\r\n		    // .outerWidth() takes into account border and padding.\r\n		   \r\n		    //show the menu directly over the placeholder\r\n		    \r\n		    if(!$(\"#parameters\").is(\":visible\")){\r\n		    	// var width = $(this).outerWidth();\r\n				var parameterType=$(this).attr(\"parameterType\");\r\n				var parameterName=$(this).attr(\"parameterName\");\r\n		    \r\n		    	fillResult(\"suggestParameter/\"+parameterType+\"/\"+parameterName+\"/\",\"#parameters\");\r\n		    }\r\n		    \r\n		    $(\"#parameters\").css({\r\n		        position: \"absolute\",\r\n		        top: pos.top + pos.height+\"px\",\r\n		        left: (pos.left) + \"px\",\r\n				    overflow: \"scroll\"\r\n		    }).toggle();\r\n			\r\n		\r\n		});\r\n		\r\n		$( window ).resize(function() {\r\n			 // $( \"#log\" ).append( \"<div>Handler for .resize() called.</div>\" );\r\n			var currentTargetId= $(\"#parameters\").attr(\"targetInputId\");\r\n			console.log(currentTargetId)	;\r\n			var pos = $(\"#\"+currentTargetId).position();\r\n			 $(\"#parameters\").css({\r\n			        position: \"absolute\",\r\n			        top: pos.top + pos.height+\"px\",\r\n			        left: (pos.left) + \"px\",\r\n				      overflow: \"scroll\"\r\n			   });\r\n		});\r\n	*/\r\n		\r\n		var cache = {};\r\n\r\n		$(\".mainform\").submit(function(event) {\r\n			\r\n			if(action==\"\"){\r\n				return;\r\n			}\r\n			$(\":input\").attr(\"disabled\", true);\r\n			event.preventDefault();\r\n			var parameters = \"\";\r\n			$(\"input\").each(function() {\r\n				if ($(this).attr(\"append\") == \"true\") {\r\n					parameters += encodeURIComponent($(this).val()) + \"/\";\r\n				}				\r\n			});\r\n			var reqURI =  action + \"/\" + parameters;\r\n			fillResult(reqURI,\"#result\");\r\n			$(\":input\").attr(\"disabled\", false);\r\n\r\n		});\r\n		//var currentTargetId=\"\";\r\n		 $( \"form input:text\" ).focus(function() {\r\n			 \r\n			 //currentTargetId=$(this).attr(\"id\");\r\n			 //console.log(\"form input:text clicked: \"+currentTargetId)	;\r\n			 $(\"#parameters\").attr(\"targetInputId\",$(this).attr(\"id\"));\r\n			 \r\n		});\r\n		\r\n		//\r\n\r\n\r\n	});\r\n		\r\n	$(document).ready(function() {\r\n		 $(\"form:not(.filter) :input:visible:enabled:first\").focus();\r\n	\r\n	});	\r\n		\r\n</script>\r\n\r\n\r\n\r\n<style>\r\n.form {\r\n	font-size: 20px;\r\n}\r\n#parameters {\r\n	display: none;\r\n	border: 1px solid grey; \r\n	width: 400px;\r\n	height: 400px;\r\n	overfollow:auto;\r\n	padding-left: 20px;\r\n	padding-right: 20px;\r\n	background: white;\r\n#	opacity: 0.5;\r\n	background-color:rgba(255,255,255,0.8);\r\n}\r\n</style>\r\n\r\n<div class=\"form\">\r\n	<form class=\"mainform\">\r\n		".toCharArray();
-    _jsp_string6 = "\" autocomplete=\"off\"/>\r\n		".toCharArray();
-    _jsp_string4 = "\" type=\"text\" append=\"true\"  parameterName=\"".toCharArray();
-    _jsp_string3 = "\" title=\"".toCharArray();
-    _jsp_string2 = "\"  placeHolder=\"".toCharArray();
+    _jsp_string13 = "\"  />\r\n		".toCharArray();
+    _jsp_string14 = "\r\n		\r\n	</form>\r\n    <hr/>\r\n    <div id=\"result\" >  </div>\r\n  </div>\r\n</div>\r\n\r\n\r\n<div id=\"parameters\" > Parameters </div>\r\n\r\n\r\n".toCharArray();
+    _jsp_string1 = "\r\n			".toCharArray();
+    _jsp_string0 = "\r\n\r\n\r\n\r\n<script type=\"text/javascript\">\r\n	$(function() {\r\n		var action=\"\";\r\n		\r\n		$(\".submit\").click(function(){\r\n			action=$(this).attr(\"action\");\r\n		});\r\n		/*\r\n		$(\":input\").dblclick(function(){		\r\n			//alert(\"sdfsdf\");	\r\n			//$( \".parameters\" ).toggle();\r\n			\r\n			var pos = $(this).position();\r\n\r\n		    // .outerWidth() takes into account border and padding.\r\n		   \r\n		    //show the menu directly over the placeholder\r\n		    \r\n		    if(!$(\"#parameters\").is(\":visible\")){\r\n		    	// var width = $(this).outerWidth();\r\n				var parameterType=$(this).attr(\"parameterType\");\r\n				var parameterName=$(this).attr(\"parameterName\");\r\n		    \r\n		    	fillResult(\"suggestParameter/\"+parameterType+\"/\"+parameterName+\"/\",\"#parameters\");\r\n		    }\r\n		    \r\n		    $(\"#parameters\").css({\r\n		        position: \"absolute\",\r\n		        top: pos.top + pos.height+\"px\",\r\n		        left: (pos.left) + \"px\",\r\n				    overflow: \"scroll\"\r\n		    }).toggle();\r\n			\r\n		\r\n		});\r\n		\r\n		$( window ).resize(function() {\r\n			 // $( \"#log\" ).append( \"<div>Handler for .resize() called.</div>\" );\r\n			var currentTargetId= $(\"#parameters\").attr(\"targetInputId\");\r\n			console.log(currentTargetId)	;\r\n			var pos = $(\"#\"+currentTargetId).position();\r\n			 $(\"#parameters\").css({\r\n			        position: \"absolute\",\r\n			        top: pos.top + pos.height+\"px\",\r\n			        left: (pos.left) + \"px\",\r\n				      overflow: \"scroll\"\r\n			   });\r\n		});\r\n	*/\r\n		\r\n		var cache = {};\r\n\r\n		$(\".mainform\").submit(function(event) {\r\n			\r\n			if(action==\"\"){\r\n				return;\r\n			}\r\n			$(\":input\").attr(\"disabled\", true);\r\n			event.preventDefault();\r\n			var parameters = \"\";\r\n			$(\"input\").each(function() {\r\n				if ($(this).attr(\"append\") == \"true\") {\r\n					parameters += encodeURIComponent($(this).val()) + \"/\";\r\n				}				\r\n			});\r\n			var reqURI =  action + \"/\" + parameters;\r\n			fillResult(reqURI,\"#result\");\r\n			$(\":input\").attr(\"disabled\", false);\r\n\r\n		});\r\n		//var currentTargetId=\"\";\r\n		 $( \"form input:text\" ).focus(function() {\r\n			 \r\n			 //currentTargetId=$(this).attr(\"id\");\r\n			 //console.log(\"form input:text clicked: \"+currentTargetId)	;\r\n			 $(\"#parameters\").attr(\"targetInputId\",$(this).attr(\"id\"));\r\n			 \r\n		});\r\n		\r\n		//\r\n\r\n\r\n	});\r\n		\r\n	$(document).ready(function() {\r\n		 $(\".mainform:not(.filter) :input:visible:enabled:first\").focus();\r\n		 //$(\".mainform\").elements().first().focus();\r\n	\r\n	});	\r\n		\r\n</script>\r\n\r\n\r\n\r\n<style>\r\n.form {\r\n	font-size: 20px;\r\n}\r\n#parameters {\r\n	display: none;\r\n	border: 1px solid grey; \r\n	width: 400px;\r\n	height: 400px;\r\n	overfollow:auto;\r\n	padding-left: 20px;\r\n	padding-right: 20px;\r\n	background: white;\r\n#	opacity: 0.5;\r\n	background-color:rgba(255,255,255,0.8);\r\n}\r\n</style>\r\n\r\n<div class=\"form\">\r\n\r\n\r\n\r\n\r\n\r\n</div>\r\n\r\n\r\n<div class=\"panel panel-default\">\r\n  <div class=\"panel-heading\">\r\n    <h3 class=\"panel-title\">\r\n    \r\n    ".toCharArray();
+    _jsp_string12 = "\" action=\"".toCharArray();
+    _jsp_string10 = "\r\n		\r\n		".toCharArray();
+    _jsp_string11 = "\r\n			<input type=\"submit\" class=\"submit\" value=\"".toCharArray();
+    _jsp_string8 = "\" parameterType=\"".toCharArray();
+    _jsp_string4 = "\r\n			<input id=\"fl".toCharArray();
+    _jsp_string3 = "\r\n    \r\n    </h3>\r\n  </div>\r\n  \r\n  <div class=\"panel-body\">\r\n    \r\n    	<form class=\"mainform\">\r\n		".toCharArray();
+    _jsp_string2 = "\r\n		".toCharArray();
+    _jsp_string9 = "\" autocomplete=\"off\"/>\r\n		".toCharArray();
+    _jsp_string7 = "\" type=\"text\" append=\"true\"  parameterName=\"".toCharArray();
+    _jsp_string6 = "\" title=\"".toCharArray();
+    _jsp_string5 = "\"  placeHolder=\"".toCharArray();
   }
 }

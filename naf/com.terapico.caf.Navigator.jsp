@@ -93,7 +93,9 @@
 
          
           <div class="table-responsive" id="content">
-           
+		<textarea rows="30" cols="120">${result.beanExpr}</textarea>
+	
+
           </div>
         </div>
       </div>

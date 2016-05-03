@@ -50,8 +50,6 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 			throw new UserNotFoundException("找不到ID为: "+id+" 的用户");
 		}
 
-		
-		
 	}
 
 	public void delete(Integer id) throws UserNotFoundException {

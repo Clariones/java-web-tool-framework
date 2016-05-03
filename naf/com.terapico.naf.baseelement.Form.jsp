@@ -87,7 +87,8 @@
 	});
 		
 	$(document).ready(function() {
-		 $("form:not(.filter) :input:visible:enabled:first").focus();
+		 $(".mainform:not(.filter) :input:visible:enabled:first").focus();
+		 //$(".mainform").elements().first().focus();
 	
 	});	
 		
@@ -114,9 +115,29 @@
 </style>
 
 <div class="form">
-	<form class="mainform">
+
+
+
+
+
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+    
+    <c:forEach var="action" items="${result.actions}">
+			${action.name}
+		</c:forEach>
+    
+    </h3>
+  </div>
+  
+  <div class="panel-body">
+    
+    	<form class="mainform">
 		<c:forEach var="field" items="${result.fields}" varStatus="status">
-			
 			<input id="fl${status.index}"  placeHolder="${field.name}" title="${field.name}" type="text" append="true"  parameterName="${field.name}" parameterType="${field.type.name}" autocomplete="off"/>
 		</c:forEach>
 		
@@ -125,10 +146,12 @@
 		</c:forEach>
 		
 	</form>
-
-
+    <hr/>
+    <div id="result" >  </div>
+  </div>
 </div>
 
+
 <div id="parameters" > Parameters </div>
-<div id="result" >  </div>
+
 
