@@ -12,13 +12,18 @@ public class AuthencationService {
 		return INTERNAL_TOKEN.equals(inputToken);
 	}
 	public static final String INTERNAL_TOKEN="__login__";
+	public static final String LOGOUT_TOKEN="__logout__";
+	
 	private static final String PASSWORD_PARAMETER_NAME = "__email";
 	private static final String USERNAME_PARAMETER_NAME = "__password";
 	public static String getInternalToken()
 	{
 		return INTERNAL_TOKEN;
 	}
-	
+	public static String getLogoutToken()
+	{
+		return LOGOUT_TOKEN;
+	}
 	public static String getUsernameParameterName()
 	{
 		return USERNAME_PARAMETER_NAME;
@@ -35,6 +40,16 @@ public class AuthencationService {
 		}
 		return false;
 	}
+	public boolean logout(String sessionId){
+		tearDownSession(sessionId);
+		return false;
+	}
+	protected void tearDownSession(String sessionId) {
+		// TODO Auto-generated method stub
+		ensureStore();
+		authenticatedSessions.remove(sessionId);
+	}
+
 	public LoginForm loginForm(){
 		//just the stub form, no info set
 		LoginForm loginForm=new LoginForm();
