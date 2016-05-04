@@ -8,6 +8,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
 
 	<bean id="tool" class="test.ServiceBeanTest"></bean>
+	<bean id="finance" class="test.FinacialService"></bean>
 	<bean id="navi" class="com.terapico.caf.NavigationService"></bean>
 	<bean id="privilege" class="privilege.PrivilegeService">
 		<property name="userDAO" ref="userDAO" />
