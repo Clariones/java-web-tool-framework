@@ -20,6 +20,18 @@ public class SimpleInvocationServlet extends HttpServlet {
 			render(request,response,result);
 	}
 	
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {		
+			InvocationResult result=getResult(request,response);	
+			render(request,response,result);
+	}
+	
+	protected void render(HttpServletRequest request, HttpServletResponse response, InvocationResult result) throws ServletException, IOException {
+		
+		ServletResultRenderer renderer=getResultRenderer();
+		renderer.render(this, request, response, result);
+	}
 	protected InvocationResult getResult(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
@@ -57,11 +69,7 @@ public class SimpleInvocationServlet extends HttpServlet {
 		return wrapResult(actualResult,null);
 	}
 	
-	protected void render(HttpServletRequest request, HttpServletResponse response, InvocationResult result) throws ServletException, IOException {
-		
-		ServletResultRenderer renderer=getResultRenderer();
-		renderer.render(this, request, response, result);
-	}
+	
 	
 	
 	
@@ -113,5 +121,6 @@ public class SimpleInvocationServlet extends HttpServlet {
 		}
 		return render;
 	}
+	
 
 }

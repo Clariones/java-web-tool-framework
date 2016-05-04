@@ -15,6 +15,7 @@ public class Navigator {
 	private String beanExpr;
 
 
+	
 	public String getSelectBeanName() {
 		return selectBeanName;
 	}
@@ -39,6 +40,7 @@ public class Navigator {
 		
 		return menuItems;
 
+		
 	}
 	
 	public List<String> getBeanList() {

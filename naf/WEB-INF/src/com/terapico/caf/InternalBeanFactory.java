@@ -14,23 +14,37 @@ public class InternalBeanFactory implements BeanFactory {
 	
 	
 	
-	private static Map<String, Object> internalObjectMap = new ConcurrentHashMap<String, Object>();
+	private static Map<String, Object> internalObjectMap;
 
 	
-	static {
+
+	
+	private static void init()
+	{
+		
+		if(internalObjectMap!=null){
+			return;
+		}
+		
+		
+		internalObjectMap = new ConcurrentHashMap<String, Object>();
+		
+		
 		internalObjectMap.put("internaltest", new InternalTestBean());
 		internalObjectMap.put("formbuilder", new FormBuilder());
-		internalObjectMap.put(DEFAULT_FACTORY_BEAN_NAME, new SpringBeanFactory());
+		
 		//SimpleInvocationTool
 		internalObjectMap.put(DEFAULT_INVOCATION_TOOL, new SimpleInvocationTool());
 		internalObjectMap.put(DEFAULT_INVOCATION_CONTEXT_FACTORY, new ServletInvocationContextFactory());
 		//ServletResultRenderer
 		internalObjectMap.put(DEFAULT_SERVLET_RESULT_RENDER, new ServletResultRenderer());
+		internalObjectMap.put(DEFAULT_FACTORY_BEAN_NAME, new SpringBeanFactory());
+		
 		
 	}
 	
 	public String[] getBeanNames() {
-		// TODO Auto-generated method stub		
+		init();		
 		Set<String> keySet=internalObjectMap.keySet();	
 		return keySet.toArray(new String[keySet.size()]);
 	}
@@ -43,6 +57,8 @@ public class InternalBeanFactory implements BeanFactory {
 	}
 	
 	protected static Object ensureInternalBean(String beanName){
+		
+		init();
 		Object internalObject=internalObjectMap.get(beanName);
 		if(internalObject!=null){
 			return internalObject;
@@ -51,10 +67,12 @@ public class InternalBeanFactory implements BeanFactory {
 	}
 	
 	protected static void addInternalBean(String beanName,Object bean){
+		init();
 		internalObjectMap.put(beanName,bean);
 	}
 	
 	protected static Object getInternalBean(String beanName){
+		init();
 		return internalObjectMap.get(beanName);
 	}
 	

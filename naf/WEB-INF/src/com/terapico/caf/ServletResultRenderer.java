@@ -102,7 +102,12 @@ public class ServletResultRenderer {
 	}
 
 	protected boolean isGenericResult(InvocationResult result) {
-
+		if(result==null){
+			return false;
+		}
+		if(result.getInvocationContext()==null){
+			return false;
+		}
 		Method method = result.getInvocationContext().getMethodToCall();
 		return isGenericReturnType(method);
 	}

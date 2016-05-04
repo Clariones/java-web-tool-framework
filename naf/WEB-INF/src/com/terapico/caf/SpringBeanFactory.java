@@ -9,11 +9,19 @@ public class SpringBeanFactory extends InternalBeanFactory implements BeanFactor
 	
 	ClassPathXmlApplicationContext context; 
 	public SpringBeanFactory(){
+		
+		
+	}
+	protected void ensureContext()
+	{
+		if(context!=null){return;}
 		context = new ClassPathXmlApplicationContext("classpath*:/META-INF/spring.xml");
 		
 	}
 	private String []beanNamesCache;
 	public String[] getBeanNames() {
+		
+		ensureContext();
 		
 		if(beanNamesCache==null){
 			beanNamesCache=context.getBeanDefinitionNames();
@@ -26,6 +34,7 @@ public class SpringBeanFactory extends InternalBeanFactory implements BeanFactor
 	
 	public ConfigurableListableBeanFactory springFactory()
 	{
+		ensureContext();
 		return this.context.getBeanFactory();
 		
 	}
@@ -42,6 +51,7 @@ public class SpringBeanFactory extends InternalBeanFactory implements BeanFactor
 	
 	
 	protected Object getObject(String objectPath) {
+		ensureContext();
 		return context.getBean(objectPath);
 	}
 

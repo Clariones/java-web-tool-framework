@@ -4,7 +4,7 @@
 	xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-	<!-- <bean/> definitions here -->
+	<!-- <bean/> definitions here AuthencationService-->
 
 
 	<bean id="tool" class="test.ServiceBeanTest"></bean>
@@ -12,9 +12,10 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 	<bean id="privilege" class="privilege.PrivilegeService">
 		<property name="userDAO" ref="userDAO" />
 	</bean>
-	<bean id="foo" class="com.terapico.caf.InternalTestBean"></bean>
-
-
+	<bean id="internaltest" class="com.terapico.caf.InternalTestBean"></bean>
+	
+	<bean id="auth" class="com.terapico.caf.AuthencationService"></bean>
+	
 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">

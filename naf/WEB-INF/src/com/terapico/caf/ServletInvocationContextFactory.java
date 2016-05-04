@@ -27,6 +27,17 @@ public class ServletInvocationContextFactory  extends ReflectionTool implements 
 	public void setBeaFactory(BeanFactory beaFactory) {
 		this.beanFactory = beaFactory;
 	}
+	public static final String OVERRIDE_URI="__overrideURI";
+	protected String getRequestURI(HttpServletRequest request)
+	{
+		String overrideURI=(String)request.getAttribute(OVERRIDE_URI);
+		
+		if(overrideURI!=null){
+			return overrideURI;
+		}
+		return request.getRequestURI();
+		
+	}
 	public InvocationContext create(Object input) throws InvocationException {
 		// TODO Auto-generated method stub
 
@@ -41,7 +52,7 @@ public class ServletInvocationContextFactory  extends ReflectionTool implements 
 
 		HttpServletRequest request = (HttpServletRequest) input;
 
-		List<String> urlElements = parse(request.getRequestURI());
+		List<String> urlElements = parse(getRequestURI(request));
 
 		if (urlElements.size() < start + 1) {
 			throw new InvocationException("No sufficient parameter to call");
