@@ -26,16 +26,6 @@ public class SecureAccessFilter implements Filter {
 		//HttpServletResponse  httpResponse=(HttpServletResponse)response;
 		HttpServletRequest  httpRequest=(HttpServletRequest)request;
 		
-		if(isPublicResource(httpRequest)){
-			chain.doFilter(request, response);
-			return;
-		}
-		
-		if(isAuthorizedResource(httpRequest)){
-			chain.doFilter(request, response);
-			return;
-		}
-		
 		if(isLoginRequest(httpRequest)){
 			
 			
@@ -48,6 +38,18 @@ public class SecureAccessFilter implements Filter {
 			}
 			
 		}
+		
+		if(isPublicResource(httpRequest)){
+			chain.doFilter(request, response);
+			return;
+		}
+		
+		if(isAuthorizedResource(httpRequest)){
+			chain.doFilter(request, response);
+			return;
+		}
+		
+		
 		
 		//logInfo(httpRequest.getRequestedSessionId());
 		
