@@ -26,8 +26,17 @@ public class SecureAccessFilter implements Filter {
 		//HttpServletResponse  httpResponse=(HttpServletResponse)response;
 		HttpServletRequest  httpRequest=(HttpServletRequest)request;
 		
+		
+
+		
+
+		if(isPublicResource(httpRequest)){
+			chain.doFilter(request, response);
+			return;
+		}
+		
+
 		if(isLoginRequest(httpRequest)){
-			
 			
 			String userId=httpRequest.getParameter(getAuthService().getUsernameParameterName());
 			String password=httpRequest.getParameter(getAuthService().getPasswordParameterName());
@@ -38,16 +47,28 @@ public class SecureAccessFilter implements Filter {
 			}
 			
 		}
-		
+		if(isLogoutRequest(httpRequest)){
+			//logInfo("queryString： "+httpRequest.getQueryString());
+			getAuthService().logout(httpRequest.getRequestedSessionId());
+			request.setAttribute(ServletInvocationContextFactory.OVERRIDE_URI, "/naf/auth/loginForm/");
+			
+			chain.doFilter(request, response);
+			return;
+			//chain.doFilter(request, response);
+			
+		}
+
 		if(isPublicResource(httpRequest)){
 			chain.doFilter(request, response);
 			return;
 		}
 		
+
 		if(isAuthorizedResource(httpRequest)){
 			chain.doFilter(request, response);
 			return;
 		}
+
 		
 		
 		
@@ -55,7 +76,7 @@ public class SecureAccessFilter implements Filter {
 		
 		
 		request.setAttribute(ServletInvocationContextFactory.OVERRIDE_URI, "/naf/auth/loginForm/");
-		
+
 		chain.doFilter(request, response);
 		
 	}
@@ -65,6 +86,17 @@ public class SecureAccessFilter implements Filter {
 		String value=httpRequest.getParameter(getAuthService().getInternalToken());
 
 		return value!=null;
+	}
+	
+	private boolean isLogoutRequest(HttpServletRequest httpRequest) {
+		
+		//String value=
+		String queryString=httpRequest.getQueryString();
+		if(queryString==null){
+			return false;
+		}
+		logInfo("queryString： "+queryString);
+		return queryString.contains(getAuthService().getLogoutToken());
 	}
 
 	private boolean isPublicResource(HttpServletRequest request) {
