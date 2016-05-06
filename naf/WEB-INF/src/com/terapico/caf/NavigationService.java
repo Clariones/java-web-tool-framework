@@ -15,8 +15,8 @@ import org.springframework.beans.factory.config.TypedStringValue;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.terapico.naf.baseelement.MenuItem;
-import com.terapico.naf.baseelement.PlainText;
+import com.terapico.caf.baseelement.MenuItem;
+import com.terapico.caf.baseelement.PlainText;
 
 class PropertiesExclusionStrategy implements com.google.gson.ExclusionStrategy {
 

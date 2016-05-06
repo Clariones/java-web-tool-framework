@@ -1,4 +1,4 @@
-package com.terapico.naf.baseelement;
+package com.terapico.caf.baseelement;
 
 public class HTMLText extends PlainText {
 

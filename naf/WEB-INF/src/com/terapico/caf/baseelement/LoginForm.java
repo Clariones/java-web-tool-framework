@@ -1,4 +1,4 @@
-package com.terapico.naf.baseelement;
+package com.terapico.caf.baseelement;
 
 public class LoginForm {
 	private String internalToken;

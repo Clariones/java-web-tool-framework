@@ -1,4 +1,4 @@
-package com.terapico.naf.baseelement;
+package com.terapico.caf.baseelement;
 
 import java.lang.reflect.Type;
 

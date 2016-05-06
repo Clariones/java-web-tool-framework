@@ -14,9 +14,9 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import com.terapico.naf.baseelement.Action;
-import com.terapico.naf.baseelement.Field;
-import com.terapico.naf.baseelement.Form;
+import com.terapico.caf.baseelement.Action;
+import com.terapico.caf.baseelement.Field;
+import com.terapico.caf.baseelement.Form;
 
 public class FormBuilder extends ReflectionTool{
 	public Form buildForm(String beanName,Method method) throws IOException{

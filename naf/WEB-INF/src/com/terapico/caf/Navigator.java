@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.terapico.naf.baseelement.MenuItem;
+import com.terapico.caf.baseelement.MenuItem;
 
 public class Navigator {
 	

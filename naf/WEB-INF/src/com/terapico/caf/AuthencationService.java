@@ -3,7 +3,7 @@ package com.terapico.caf;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.terapico.naf.baseelement.LoginForm;
+import com.terapico.caf.baseelement.LoginForm;
 
 public class AuthencationService {
 	
