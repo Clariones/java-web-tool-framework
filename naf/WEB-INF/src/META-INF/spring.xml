@@ -6,7 +6,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
 	
 
- <bean id="navi" class="com.terapico.caf.NavigationService"></bean>
+ 	<bean id="navi" class="com.terapico.caf.NavigationService"></bean>
 	
 	<bean id="organization" class="organization.OrganizationSerivce"></bean>
 	

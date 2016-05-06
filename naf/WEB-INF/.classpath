@@ -26,5 +26,7 @@
 	<classpathentry kind="lib" path="lib/javamail-141.jar"/>
 	<classpathentry kind="lib" path="lib/spring-data-commons-1.11.4.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/spring-data-mongodb-1.8.4.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.21.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
