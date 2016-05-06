@@ -12,6 +12,7 @@ jstack `jps |grep  'Resin$'|awk '{print $1}'`
 	
 
 
+	
 	<bean id="privilege" class="privilege.PrivilegeService">
 		<property name="userDAO" ref="userDAO" />
 	</bean>
@@ -26,5 +27,6 @@ jstack `jps |grep  'Resin$'|awk '{print $1}'`
 		<property name="username" value="root" />
 		<property name="password" value="3123" />
 	</bean>
+
 	
 	-->

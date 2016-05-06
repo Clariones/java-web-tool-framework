@@ -1,6 +1,6 @@
 package test;
 
-public class MathmaticalTool extends ServiceBeanTest {
+public class MathmaticalTool  {
 	
 	public Double abs(double x){	return Math.abs(x);}
 	public Double sin(double x){	return Math.sin(x);}

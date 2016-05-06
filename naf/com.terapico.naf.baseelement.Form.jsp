@@ -136,7 +136,7 @@
   
   <div class="panel-body">
     <!-- parameterName="${field.name}" parameterType="${field.type.name}" autocomplete="off" -->
-    	<form class="mainform">
+    <form class="mainform">
 		<c:forEach var="field" items="${result.fields}" varStatus="status">
 		<div class="col-sm-3">
 			<input id="fl${status.index}" class="form-control input-sm" placeHolder="${field.name}" title="${field.name}" type="text" append="true" />
@@ -144,10 +144,13 @@
 		</c:forEach>
 		
 		<c:forEach var="action" items="${result.actions}">
+		<div class="col-sm-2">
 			<input type="submit" class="btn btn-primary btn-sm action submit" value="${action.name}" action="${action.name }"  />
+		</div>
 		</c:forEach>
 		
 	</form>
+	<br/>
     <hr/>
     <div id="result" >  </div>
   </div>
