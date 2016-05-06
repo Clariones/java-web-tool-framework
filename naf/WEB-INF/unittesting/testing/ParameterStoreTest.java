@@ -35,7 +35,7 @@ public class ParameterStoreTest {
 	public void test() throws Exception {
 		Object[] object1 = { new URI("http://news.163.com"), new URI("http://news.163.com"), };
 		// Parameter parameter = Parameter.newInstance(object1);
-		MongoTool.peekObject(object1[0], 10);
+		//MongoTool.peekObject(object1[0], 10);
 		ParameterManager manager = new ParameterManager();
 		manager.saveParameters(object1);
 		List<Parameter> parameterList = manager.getParametersByType(URI.class);
@@ -65,7 +65,7 @@ public class ParameterStoreTest {
 					
 					System.out.println(element.getClass().getName() + ":" + element);
 					Parameter p=(Parameter)element;
-					MongoTool.peekObject(p, 10);
+					//MongoTool.peekObject(p, 10);
 					System.out.println(p.getValue().toString());
 				}
 				

@@ -1,5 +1,6 @@
 package com.terapico.caf;
 
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,10 +31,25 @@ public class SimpleInvocationResult implements InvocationResult {
 	public Object getResultExpr() {
 		return getObjectExpr(actualResult);
 	}
-	
+	class PropertiesExclusionStrategy implements com.google.gson.ExclusionStrategy {
+
+		public boolean shouldSkipField(FieldAttributes fa) {
+
+			if (fa.getName().startsWith("parent")) {
+				return true;
+			}
+			return false;
+		}
+
+		public boolean shouldSkipClass(Class<?> clazz) {
+
+			return false;
+		}
+
+	}
 	protected String getObjectExpr(Object target) {
 		try {
-			Gson serializer = new GsonBuilder().setPrettyPrinting().create();
+			Gson serializer = new GsonBuilder().setExclusionStrategies(new PropertiesExclusionStrategy()).setPrettyPrinting().create();
 			return "class: '" + target.getClass().getName() + "'\r\n" + serializer.toJson(target);
 		} catch (Throwable e) {
 			return e.getMessage();

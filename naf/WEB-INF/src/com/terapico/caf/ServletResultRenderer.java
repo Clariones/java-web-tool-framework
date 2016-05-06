@@ -64,6 +64,8 @@ public class ServletResultRenderer {
 		response.setContentType("text/html; encoding=UTF-8");
 		response.addHeader("Cache-Control", "no-cache, must-revalidate");
 		request.setAttribute("result", result.getActualResult());
+		request.setAttribute("rootResult", result);
+		
 		this.dispatchView(servlet, request, response, result);
 
 	}

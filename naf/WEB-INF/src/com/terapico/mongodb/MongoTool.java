@@ -20,7 +20,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-
+@SuppressWarnings("rawtypes")
 public class MongoTool {
 
 	
@@ -42,6 +42,7 @@ public class MongoTool {
 		return retList;		
 	}
 	
+	
 	public static  <T> List<T> findBeans(DBCollection collection,DBObject query,DBObject sortCondition) throws Exception
 	{
 		
@@ -60,7 +61,7 @@ public class MongoTool {
 		return retList;		
 	}
 	
-	public static  <T> List<T> findBeans(DBCollection collection,DBObject query) throws Exception
+	protected static  <T> List<T> findBeans(DBCollection collection,DBObject query) throws Exception
 	{
 		
 		List<T> retList=new ArrayList<T>();
@@ -82,12 +83,10 @@ public class MongoTool {
 	
 	public  static  <T> List<T> findAllBeans(DBCollection collection) throws Exception
 	{
-		
-		
 		return findBeans(collection,null);		
 	}
 	
-	public static Object findOneBean(DBCollection collection,DBObject query) throws Exception
+	protected static Object findOneBean(DBCollection collection,DBObject query) throws Exception
 	{
 		
 		
@@ -107,7 +106,7 @@ public class MongoTool {
 		
 	}
 	
-	public static void peekObject(Object object,Integer level) throws IntrospectionException, IllegalArgumentException, IllegalAccessException, InvocationTargetException{
+	protected static void peekObject(Object object,Integer level) throws IntrospectionException, IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 		level++;
 		if (object == null) {
 			level--;
@@ -213,15 +212,15 @@ public class MongoTool {
 		}
 		level--;
 	}
-	public static void showProperty(int level,String key,Object value){
+	protected static void showProperty(int level,String key,Object value){
 		repeat('\t',level-1);
 		System.out.println(key+": "+value);
 	}
-	public static void showProperty(int level,String key){
+	protected static void showProperty(int level,String key){
 		repeat('\t',level-1);
 		System.out.println(key+":");
 	}
-	public static void repeat(char ch, int times){
+	protected static void repeat(char ch, int times){
 		for(int i=0;i<times;i++)System.out.print(ch);
 	}
 	
@@ -281,7 +280,7 @@ public class MongoTool {
 	
 	
 	
-	public static boolean isComplexCollectionType(Object object) 
+	protected static boolean isComplexCollectionType(Object object) 
 	{
 		
 		if (isArrayOfComponentType(object)) {
@@ -298,7 +297,7 @@ public class MongoTool {
 		
 		
 	}
-	public static boolean isComplexCollectionByClass(Class clazz) 
+	protected static boolean isComplexCollectionByClass(Class clazz) 
 	{
 				
 		if (isArrayOfComponentClass(clazz)) {
@@ -417,6 +416,7 @@ public class MongoTool {
 		if (!object.getClass().isArray()) {
 			return false;
 		}
+		
 		Class clazz = object.getClass().getComponentType();
 		if (isBasicTypeByClass(clazz)) {
 			return false;
@@ -433,6 +433,7 @@ public class MongoTool {
 		}
 		return true;
 	}
+	@SuppressWarnings("unchecked")
 	public static Object getBeanFromDBObject(DBObject dbObject) throws Exception {
 		if (dbObject == null) {
 			throw new IllegalArgumentException("getBeanFromDBObject(BasicDBObject dbObject)'s parameter 'object' can not be null.");
@@ -491,6 +492,7 @@ public class MongoTool {
 			//return dbObject.get("value");
 			//the code is not right here, the value should be parsed into object respectively.
 			if(isTypeOfCollection(object)){
+				
 				Collection collection=(Collection)object;
 				
 				//getBeanFromDBObject
@@ -531,9 +533,6 @@ public class MongoTool {
 			if ("class".equals(propName)) {
 				continue;
 			}
-			
-			
-			
 			
 			Method writeMethod = propertyDescriptor.getWriteMethod();
 			if(writeMethod==null){

@@ -32,6 +32,7 @@ public class SimpleInvocationServlet extends HttpServlet {
 		ServletResultRenderer renderer=getResultRenderer();
 		renderer.render(this, request, response, result);
 	}
+	
 	protected InvocationResult getResult(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		

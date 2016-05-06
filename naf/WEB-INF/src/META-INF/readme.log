@@ -1,1 +1,30 @@
 jstack `jps |grep  'Resin$'|awk '{print $1}'`
+
+<!-- <bean/> definitions here AuthencationService
+	
+	<bean id="tool" class="test.ServiceBeanTest"></bean>
+	<bean id="finance" class="test.FinacialService"></bean>
+	<bean id="navi" class="com.terapico.caf.NavigationService"></bean>
+	<bean id="privilege" class="privilege.PrivilegeService">
+		<property name="userDAO" ref="userDAO" />
+	</bean>
+	<bean id="internaltest" class="com.terapico.caf.InternalTestBean"></bean>
+	
+	<bean id="auth" class="com.terapico.caf.AuthencationService"></bean>
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/privilege?characterEncoding=utf8" />
+		<property name="username" value="root" />
+		<property name="password" value="3123" />
+	</bean>
+
+
+
+	<bean id="userDAO" class="privilege.UserDAOJDBCTemplateImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	
+	-->
