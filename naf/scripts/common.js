@@ -10,7 +10,7 @@ function fillResult(reqURI, container) {
 		type : "GET",
 		dataType : "html"
 	});
-
+	
 	request.done(function(msg) {
 		done = true;
 		$(container).html(msg);

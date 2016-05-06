@@ -138,11 +138,13 @@
     <!-- parameterName="${field.name}" parameterType="${field.type.name}" autocomplete="off" -->
     	<form class="mainform">
 		<c:forEach var="field" items="${result.fields}" varStatus="status">
-			<input id="fl${status.index}"  placeHolder="${field.name}" title="${field.name}" type="text" append="true" size="30"/>
+		<div class="col-sm-3">
+			<input id="fl${status.index}" class="form-control input-sm" placeHolder="${field.name}" title="${field.name}" type="text" append="true" />
+		</div>
 		</c:forEach>
 		
 		<c:forEach var="action" items="${result.actions}">
-			<input type="submit" class="submit" value="${action.name}" action="${action.name }"  />
+			<input type="submit" class="btn btn-primary btn-sm action submit" value="${action.name}" action="${action.name }"  />
 		</c:forEach>
 		
 	</form>

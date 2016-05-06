@@ -6,9 +6,17 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
 	
 
- 	<bean id="navi" class="com.terapico.caf.NavigationService"></bean>
+ 
 	
 	<bean id="organization" class="organization.OrganizationSerivce"></bean>
+	
+	<bean id="tool" class="test.ServiceBeanTest"></bean>
+	<bean id="finance" class="test.FinacialService"></bean>
+	<bean id="navi" class="com.terapico.caf.NavigationService"></bean>
+	
+	<bean id="internaltest" class="com.terapico.caf.InternalTestBean"></bean>
+	
+	<bean id="auth" class="com.terapico.caf.AuthencationService"></bean>
 	
 
 	
