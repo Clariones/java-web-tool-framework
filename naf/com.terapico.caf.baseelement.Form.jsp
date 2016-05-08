@@ -59,7 +59,7 @@
 			if(action==""){
 				return;
 			}
-			$(".mainform :input").attr("disabled", true);
+			$(this).find(":input").attr("disabled", true);
 			event.preventDefault();
 			var parameters = "";
 			var valid=true;
@@ -76,12 +76,12 @@
 				}				
 			});
 			if(!valid){
-				$(".mainform :input").attr("disabled", false);
+				$(this).find(":input").attr("disabled", false);
 				return true;
 			}
 			var reqURI =  action + "/" + parameters;
 			fillResult(reqURI,"#result");
-			$(".mainform :input").attr("disabled", false);
+			$(this).find(":input").attr("disabled", false);
 			
 		});
 		//var currentTargetId="";
