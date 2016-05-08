@@ -100,13 +100,11 @@ public class Navigator {
 	}
 
 	public void setSelectBean(String selectedBean) {
-		// TODO Auto-generated method stub
 		this.selectBeanName=selectedBean;
 	}
 
 
 	public void setBeanExpr(String beanExpr) {
-		// TODO Auto-generated method stub
 		this.beanExpr=beanExpr;
 	}
 
@@ -116,11 +114,6 @@ public class Navigator {
 		return beanExpr;
 	}
 
-
-	public void addItems(List<MenuItem> items) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 	

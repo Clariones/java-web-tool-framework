@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 public class SimpleInvocationTool implements InvocationTool {
 
 	public InvocationResult invoke(InvocationContext context) throws InvocationException {
-		// TODO Auto-generated method stub
+
 		Method method=context.getMethodToCall();
 		Object targetObject=context.getTargetObject();
 		Object parameters[]=context.getParameters();

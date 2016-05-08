@@ -45,7 +45,7 @@ public class AuthencationService {
 		return false;
 	}
 	protected void tearDownSession(String sessionId) {
-		// TODO Auto-generated method stub
+		
 		ensureStore();
 		authenticatedSessions.remove(sessionId);
 	}

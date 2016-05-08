@@ -23,7 +23,6 @@ public class PlainText {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		if(buffer==null){
 			return "";
 		}	

@@ -3,7 +3,7 @@
 <%@page contentType="text/html; charset=UTF-8"%>
 <style>
 .message{
-	font-size:30px;
+	font-size:20px;
 	color: red;
 }
 

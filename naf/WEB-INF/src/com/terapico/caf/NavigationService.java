@@ -65,7 +65,7 @@ public class NavigationService extends ReflectionTool {
 			try {
 				definitionCache.put(beanName, createItemsForClass(beanName, internalFactory));
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
+				
 				this.logInfo("Bean: "+beanName+" fail to load the class "+e.getMessage());
 			}
 		}
@@ -73,7 +73,7 @@ public class NavigationService extends ReflectionTool {
 	}
 
 	private void logInfo(String string) {
-		// TODO Auto-generated method stub
+		
 		System.out.println(this.getClass().getName()+" "+string);
 	}
 
@@ -92,7 +92,7 @@ public class NavigationService extends ReflectionTool {
 	}
 
 	protected List<MenuItem> createItemsForClass(String beanName, ConfigurableListableBeanFactory internalFactory) throws ClassNotFoundException {
-		// TODO Auto-generated method stub
+		
 
 		BeanDefinition beanDefinition = internalFactory.getBeanDefinition(beanName);
 
@@ -139,7 +139,7 @@ public class NavigationService extends ReflectionTool {
 				
 				
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
+				
 				this.logInfo("Bean: "+beanName+" fail to load the class "+e.getMessage());
 			}
 			result.append("\r\n\r\n");
@@ -202,7 +202,7 @@ public class NavigationService extends ReflectionTool {
 	}
 
 	protected List<MenuItem> getMenuItemForBean(String selectedBean) {
-		// TODO Auto-generated method stub
+		
 		
 		List<MenuItem> items=definitionCache.get(selectedBean);
 		
