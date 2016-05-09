@@ -86,8 +86,6 @@
             <li ><a  href="#${item.beanName}/${item.methodName}" methodName="${item.methodName}" beanName="${item.beanName }" class="action">${item.methodName}</a></li>
             </c:forEach>
           
-          
-          
           </ul>
           
         </div>
@@ -101,9 +99,8 @@
 
           </div>
         </div>
-      </div>
-    </div>
-
+        </div>
+        </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

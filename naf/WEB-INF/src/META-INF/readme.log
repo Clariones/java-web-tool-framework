@@ -11,7 +11,7 @@ jstack `jps |grep  'Resin$'|awk '{print $1}'`
 	<bean id="auth" class="com.terapico.caf.AuthencationService"></bean>
 	
 
-
+<bean id="math" class="test.MathmaticalTool"></bean>
 	
 	<bean id="privilege" class="privilege.PrivilegeService">
 		<property name="userDAO" ref="userDAO" />

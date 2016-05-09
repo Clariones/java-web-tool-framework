@@ -1,0 +1,46 @@
+<web-app>
+
+
+
+
+	<display-name>New Application Framework and Spring Bean Manager
+	</display-name>
+
+
+
+	<filter>
+		<filter-name>SecureAcccessFilter</filter-name>
+		<filter-class>com.terapico.caf.SecureAccessFilter</filter-class>
+		<init-param>
+			<param-name>beanName</param-name>
+			<param-value>springBeanName</param-value>
+		</init-param>
+	</filter>
+
+
+	<filter-mapping>
+		<filter-name>SecureAcccessFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+
+
+
+	<servlet>
+		<servlet-name>caf</servlet-name>
+		<servlet-class>com.terapico.caf.SimpleInvocationServlet
+		</servlet-class>
+	</servlet>
+
+
+
+
+	<servlet-mapping>
+		<servlet-name>caf</servlet-name>
+		<url-pattern>/naf/*</url-pattern>
+	</servlet-mapping>
+
+
+
+</web-app>

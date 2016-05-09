@@ -1,86 +1,18 @@
-
 <web-app>
-   
-   
 
-  
-  <display-name>New Application Framework and Spring Bean Manager</display-name>
-  
-  
-  
-  <filter>
-   <filter-name>SecureAcccessFilter</filter-name>
-   <filter-class>com.terapico.caf.SecureAccessFilter</filter-class>
-   <init-param>
-	  <param-name>beanName</param-name>
-	  <param-value>springBeanName</param-value>
-   </init-param>
-</filter>
+	<display-name>New Application Framework and Spring Bean Manager</display-name>
 
 
+	<servlet>
+		<servlet-name>caf</servlet-name>
+		<servlet-class>com.terapico.caf.SimpleInvocationServlet
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>caf</servlet-name>
+		<url-pattern>/**/</url-pattern>
+	</servlet-mapping>
 
 
-
-
-
-
-  <servlet>
-    <servlet-name>caf</servlet-name>
-    <servlet-class>com.terapico.caf.SimpleInvocationServlet</servlet-class>
-  </servlet>  
-
-
-
-
-   <servlet-mapping>
-    <servlet-name>caf</servlet-name>
-    <url-pattern>/**/</url-pattern>
-  </servlet-mapping> 
-
-
-
-
-
-   <!-- <init-param invokehelperclass='com.terapico.naf.ObjectInvokeHelper'/> 
-  
-  for app engine 
-<filter>
-   <filter-name>SecureAcccessFilter</filter-name>
-   <filter-class>com.terapico.caf.SecureAccessFilter</filter-class>
-   <init-param>
-	  <param-name>beanName</param-name>
-	  <param-value>springBeanName</param-value>
-   </init-param>
-</filter>
-<filter-mapping>
-   <filter-name>SecureAcccessFilter</filter-name>
-   <url-pattern>/*</url-pattern>
-</filter-mapping>
-
-    <servlet-mapping>
-    <servlet-name>caf</servlet-name>
-    <url-pattern>/**/</url-pattern>
-  </servlet-mapping>
-    
-    
-    <servlet>
-    <servlet-name>invoke</servlet-name>
-    <servlet-class>com.terapico.naf.InvokeServlet</servlet-class>
-    <init-param invokehelperclass='com.terapico.naf.InvokeHelper'/>
-    <init-param invoketargetclass='test.ServiceBeanTest'/>
-
-  </servlet> 
-    
-  <servlet-mapping>
-    <servlet-name>invoke</servlet-name>
-    <url-pattern>/**/</url-pattern>
-  </servlet-mapping>
-   <filter-mapping>
-   <filter-name>SecureAcccessFilter</filter-name>
-   <url-pattern>/*</url-pattern>
-</filter-mapping>
-
-   -->
-  
-  
 </web-app>

@@ -169,8 +169,8 @@ public class NavigationService extends ReflectionTool {
 		
 		navigator.setMenuItems(items);
 		
-		
-		//navigator.setBeanExpr(beanExpr);
+		String objectExpr=getObjectExpr(getBeanFactory().getBean(selectedBean));
+		navigator.setBeanExpr(objectExpr);
 		// for(String beanName:beanNames){
 		//createItems(navigator, selectedBean);
 		// }
@@ -215,6 +215,9 @@ public class NavigationService extends ReflectionTool {
 	}
 	protected String getObjectExpr(Object target) {
 
+		if(target==null){
+			return "Can not build expression for a null bean";
+		}
 		try {
 			Gson serializer = new GsonBuilder().setPrettyPrinting().create();
 			return "class: '" + target.getClass().getName() + "'\r\n" + serializer.toJson(target);
