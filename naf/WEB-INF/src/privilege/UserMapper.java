@@ -12,6 +12,7 @@ public class UserMapper implements RowMapper<User> {
 		student.setPassword(rs.getString("password"));
 		return student;
 		
+	
 	}
 	
 }

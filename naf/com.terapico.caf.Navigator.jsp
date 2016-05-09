@@ -53,7 +53,6 @@
           </button>
           
           <div class="navbar-brand">Spring Beans [${result.selectBeanName}] ： 
-           <c:forEach var="item" items="${result.beanList}"><a href='/naf/navi/index/${item}/' class='bean'> ${item}</a></c:forEach>
           </div>
           
          
@@ -62,14 +61,18 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+           <c:forEach var="item" items="${result.beanList}"><li><a href='/naf/navi/index/${item}/' class='bean'> ${item}</a></li></c:forEach>
+          
             <li><a href="?__logout__">Logout</a></li>
             <!-- <li><a href="#">Settings</a></li>
             <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li> -->
-          </ul>
-          <form class="navbar-form navbar-right">
+            <li><a href="#">Help</a></li> 
+                      <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
           </form>
+            -->
+          </ul>
+
         </div>
       </div>
     </nav>

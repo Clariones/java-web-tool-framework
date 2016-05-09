@@ -29,6 +29,7 @@ class PropertiesExclusionStrategy implements com.google.gson.ExclusionStrategy {
 
 		return false;
 	}
+	
 
 }
 

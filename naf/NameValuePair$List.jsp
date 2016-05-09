@@ -9,17 +9,18 @@
 </style>
 
  <div class="table-responsive">
-String List!
+Name Value Pair List
 <hr/>
 
 
 <table class="table table-striped">
-<thead><tr><th>index</th><th>Value</th></thead>
+<thead><tr><th>Index#</th><th>Name</th><th>Value</th></thead>
 <tbody>
 
 	<c:forEach var="item" items="${result}" varStatus="status">
-           <tr><td> ${status.index}</td><td> ${item}</td></tr>
+           <tr><td> ${status.index}</td><td> ${item.name}</td><td> ${item.value}</td></tr>
 	</c:forEach>
-	</tbody></table>	
+	</tbody>
+	</table>	
 
   </div>

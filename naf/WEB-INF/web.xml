@@ -16,10 +16,7 @@
 	  <param-value>springBeanName</param-value>
    </init-param>
 </filter>
-<filter-mapping>
-   <filter-name>SecureAcccessFilter</filter-name>
-   <url-pattern>/*</url-pattern>
-</filter-mapping>
+
 
 
 
@@ -78,8 +75,11 @@
     <servlet-name>invoke</servlet-name>
     <url-pattern>/**/</url-pattern>
   </servlet-mapping>
+   <filter-mapping>
+   <filter-name>SecureAcccessFilter</filter-name>
+   <url-pattern>/*</url-pattern>
+</filter-mapping>
 
-   
    -->
   
   

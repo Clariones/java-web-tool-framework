@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import com.terapico.caf.baseelement.HTMLText;
+import com.terapico.caf.baseelement.NameValuePair;
 import com.terapico.caf.baseelement.PlainText;
 
 import calculator.CalculatorService;
@@ -317,44 +320,17 @@ public class ServiceBeanTest {
 		return result;
 	}
 
-	public DoubleResult valueAtTargetTime(double start, double increaseRate, double time) throws Exception {
 
-		if (Math.abs(increaseRate) < 0.000001) {
-			throw new IllegalArgumentException(
-					"calcCompoundInterest(double start, double increaseTo, double increaseRate): increaseRate can not be 0!!!");
-		}
-		DoubleResult result = new DoubleResult();
-
-		double valueAtTargetTime = start * Math.pow(1 + increaseRate, time);
-
-		result.setValue(valueAtTargetTime);
-
-		return result;
-	}
-
-	public DoubleResult valueToday(double target, double years, double increaseRate) throws Exception {
-
-		if (Math.abs(increaseRate) < 0.00000000001) {
-			throw new IllegalArgumentException(
-					"calcCompoundInterest(double start, double increaseTo, double increaseRate): increaseRate can not be 0!!!");
-		}
-		DoubleResult result = new DoubleResult();
-		double valueToday = target * Math.pow(1 - increaseRate, years);
-		// double div=log(1+increaseRate);
-		result.setValue(valueToday);
-
-		return result;
-	}
 
 	private double log(double d) {
 		// TODO Auto-generated method stub
 		return Math.log10(d);
 	}
 	
-	public double expr(String expr) throws IOException{
+	public String eval(String expr) throws IOException{
 		
 		CalculatorService service = new CalculatorService();
-		return service.calc(expr);
+		return expr+" = "+service.calc(expr);
 		
 		
 	}

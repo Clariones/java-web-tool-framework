@@ -61,6 +61,7 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 			throw new UserNotFoundException("找不到ID为: "+id+" 的用户");
 		}
 
+		
 		System.out.println("Deleted Record with ID = " + id);
 		return;
 	}
