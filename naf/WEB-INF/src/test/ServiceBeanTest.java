@@ -179,7 +179,9 @@ public class ServiceBeanTest {
 	
 	public String otherStepFromOct(long octValue,long step) {
 		// return strToTest.length();
-
+		if(step<2){
+			throw new IllegalArgumentException("The step '"+step+"' is less than 2 , not supported");
+		}
 		if(!inCloseRange(step,0L,64L)){
 			throw new IllegalArgumentException("The step '"+step+"' is greater than 64, not supported");
 		}
