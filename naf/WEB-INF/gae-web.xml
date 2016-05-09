@@ -38,7 +38,7 @@
 
 	<servlet-mapping>
 		<servlet-name>caf</servlet-name>
-		<url-pattern>/**/</url-pattern>
+		<url-pattern>/naf/*</url-pattern>
 	</servlet-mapping>
 
 
