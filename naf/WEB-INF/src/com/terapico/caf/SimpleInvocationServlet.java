@@ -81,7 +81,7 @@ public class SimpleInvocationServlet extends HttpServlet {
 			throw new ServletException("Invocation tool must be configured");
 		}
 		try {
-			return tool.invoke(context);//TODO: build the form
+			return tool.invoke(context);
 		} catch (InvocationException e) {
 			throw new ServletException(e);
 		}

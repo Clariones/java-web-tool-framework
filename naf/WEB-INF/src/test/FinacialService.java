@@ -9,7 +9,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import com.terapico.naf.baseelement.HTMLText;
+import com.terapico.caf.baseelement.HTMLText;
 
 import chinastock.MarketLimitReport;
 import chinastock.ReportItem;

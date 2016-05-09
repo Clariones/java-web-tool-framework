@@ -59,18 +59,30 @@
 			if(action==""){
 				return;
 			}
-			$(":input").attr("disabled", true);
+			$(this).find(":input").attr("disabled", true);
 			event.preventDefault();
 			var parameters = "";
-			$("input").each(function() {
+			var valid=true;
+			$(".mainform :input").each(function() {
+				//console.log("-------------"+$(this).val());
+				if ($(this).val()==""){
+					console.log("--eee-----------"+$(this).val());
+					$(this).parent().addClass("has-error");
+					//$(this).addClass("input-danger");
+					valid=false;
+				}
 				if ($(this).attr("append") == "true") {
 					parameters += encodeURIComponent($(this).val()) + "/";
 				}				
 			});
+			if(!valid){
+				$(this).find(":input").attr("disabled", false);
+				return true;
+			}
 			var reqURI =  action + "/" + parameters;
 			fillResult(reqURI,"#result");
-			$(":input").attr("disabled", false);
-
+			$(this).find(":input").attr("disabled", false);
+			
 		});
 		//var currentTargetId="";
 		 $( "form input:text" ).focus(function() {
@@ -140,12 +152,14 @@
 		<c:forEach var="field" items="${result.fields}" varStatus="status">
 		<div class="col-sm-3">
 			<input id="fl${status.index}" class="form-control input-sm" placeHolder="${field.name}" title="${field.name}" type="text" append="true" />
+			
 		</div>
 		</c:forEach>
 		
 		<c:forEach var="action" items="${result.actions}">
 		<div class="col-sm-2">
 			<input type="submit" class="btn btn-primary btn-sm action submit" value="${action.name}" action="${action.name }"  />
+			 
 		</div>
 		</c:forEach>
 		

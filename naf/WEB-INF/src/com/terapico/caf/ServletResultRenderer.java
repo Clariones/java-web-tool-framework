@@ -82,13 +82,27 @@ public class ServletResultRenderer {
 		}
 		return stringBuilder.toString();
 	}
-
+	protected void handleArgumentExcepttion(String message)
+	{
+		throw new IllegalArgumentException(message);
+	}
 	protected String getRenderKey(InvocationResult result) {
 
-		Method method = result.getInvocationContext().getMethodToCall();
-
+		if(result==null){
+			handleArgumentExcepttion("getRenderKey(InvocationResult result)： result should not be null.");
+		}
+		final InvocationContext context=result.getInvocationContext();
+		if(context==null){
+			handleArgumentExcepttion("getRenderKey(InvocationResult result)： result.getInvocationContext() should not be null.");			
+		}
+		Method method = context.getMethodToCall();
+		
+		if(method==null){
+			handleArgumentExcepttion("getRenderKey(InvocationResult result)： result.getInvocationContext().getMethodToCall() should not be null.");			
+		}
+		
 		if (!isGenericReturnType(method)) {
-			throw new IllegalStateException("Should not call  getRenderKey() when not a parameter return type");
+			handleArgumentExcepttion("Should not call  getRenderKey() when return type is not a parameterized type.");
 		}
 
 		Type type = method.getGenericReturnType();
@@ -158,7 +172,9 @@ public class ServletResultRenderer {
 			logInfo("found cache for " + cachedPage);
 			return request.getRequestDispatcher(cachedPage);
 		}
-
+		//这个代码是根据类信息找到一个合适的渲染视图，如果找不到相应的视图，
+		//就从尝试从父类中找到一个视图
+		//通过一个循环实现了递归调用，节约了栈空间
 		while (temp != null) {
 			String jsp = "/" + temp.getName() + ".jsp";
 			logInfo("trying to find: " + jsp);

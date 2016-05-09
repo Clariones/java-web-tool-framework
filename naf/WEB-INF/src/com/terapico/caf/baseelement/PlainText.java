@@ -1,4 +1,4 @@
-package com.terapico.naf.baseelement;
+package com.terapico.caf.baseelement;
 
 public class PlainText {
 	private StringBuilder buffer;
@@ -23,7 +23,6 @@ public class PlainText {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		if(buffer==null){
 			return "";
 		}	

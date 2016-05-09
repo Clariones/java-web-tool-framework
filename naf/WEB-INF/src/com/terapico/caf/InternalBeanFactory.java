@@ -52,7 +52,6 @@ public class InternalBeanFactory implements BeanFactory {
 	
 	
 	public Object getBean(String beanName) {
-		// TODO Auto-generated method stub
 		return getInternalBean(beanName);
 	}
 	

@@ -10,11 +10,7 @@ public class SpringInvocationContextFactory extends ServletInvocationContextFact
 	}
 
 	
-	public String[] getBeanNames() {
-		// TODO Auto-generated method stub
-		
-		
-		
+	public String[] getBeanNames() {		
 		return context.getBeanDefinitionNames();
 	}
 	protected Object getBean(String beanName)

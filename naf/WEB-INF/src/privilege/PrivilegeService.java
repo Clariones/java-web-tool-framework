@@ -2,8 +2,7 @@ package privilege;
 
 import java.util.List;
 
-import com.terapico.naf.baseelement.MessageBox;
-import com.terapico.naf.spring.SpringBeanFactory;
+import com.terapico.caf.baseelement.MessageBox;
 
 public class PrivilegeService {
 	private UserDAO userDAO;
