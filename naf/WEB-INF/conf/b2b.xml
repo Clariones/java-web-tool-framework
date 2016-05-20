@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='GBK'?>
+<root>
+
+	<buyer_company name='Aaxis - ' price_list="price9900"/>
+	<seller_company name='Snake Co. '/>
+	
+	<shipping_address 
+		line1="1900 AVE OF THE STARTS - " line2="Suite 555 - " city="Century City - " state="CA" country="US"/>
+	<billing_address company="$(buyer_company)" 
+		line1="1900 AVE OF THE STARTS - " line2="Suite 555 - " city="Century City - " state="CA" country="US"/>
+	<employee name="Philip" company="$(buyer_company)"/>
+	<role role_name='manager' />
+	<assignment user='$(employee)' access='#(access)' assigned_date='2019-1-1'/>
+	
+	<access role='$(role)' />
+	<order buyer="$(buyer_company)" seller="$(seller_company)" title="order title - " total_amount="300.88" type="order"/>
+	<line_item biz_order="$(order)" sku_id="SKU" sku_name="iPhone - " amount="23.97" quantity="10"/>
+	<shipping_group name="shipping to this address" biz_order="$(order)" address="$(shipping_address)" amount="5.99"/>
+	<payment_group name="visa card ending - " biz_order="$(order)" card_number="4111 1111 1111 - " billing_address="$(billing_address)"/>
+	<csr email="philip_chang@174.com" role="$(role)" company="$(seller_company)"></csr>
+	
+</root>
+ 

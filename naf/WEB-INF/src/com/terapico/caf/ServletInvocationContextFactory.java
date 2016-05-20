@@ -68,12 +68,13 @@ public class ServletInvocationContextFactory  extends ReflectionTool implements 
 		if (targetMethod == null) {
 			throw new InvocationException("Not able to find the target method to call： " +request.getRequestURI());
 		}
-		
-		if(!hasSuffientParameters(urlElements,targetMethod)){
-			return buildFormContext(getBeanName(urlElements),targetMethod);
+		if(!hasRightNumberOfParameters(urlElements,targetMethod)){
+			Object []parameters=this.getCandidateParameters(urlElements);
+			return buildFormContext(getBeanName(urlElements),targetMethod,parameters);
 		}
 	
 		Object[] parameters = this.getParameters(request, targetObject, urlElements, targetMethod);
+		
 
 		SimpleInvocationContext context = new SimpleInvocationContext();
 		context.setTargetObject(targetObject);
@@ -82,7 +83,7 @@ public class ServletInvocationContextFactory  extends ReflectionTool implements 
 		return context;
 
 	}
-	protected InvocationContext buildFormContext(String beanName,Method targetMethod) throws InvocationException {
+	protected InvocationContext buildFormContext(String beanName,Method targetMethod,Object[] parameters) throws InvocationException {
 		
 		SimpleInvocationContext context = new SimpleInvocationContext();
 		Object formBuilder =getBean(formBuilderBeanName);
@@ -97,10 +98,10 @@ public class ServletInvocationContextFactory  extends ReflectionTool implements 
 		}
 		
 		context.setTargetMethod(method);
-		context.setParameters(new Object[]{beanName,targetMethod});
+		context.setParameters(new Object[]{beanName,targetMethod,parameters});
 		return context;
 	}
-	protected boolean hasSuffientParameters(List<String> urlElements,Method targetMethod)
+	protected boolean hasRightNumberOfParameters(List<String> urlElements,Method targetMethod)
 	{
 		int size=urlElements.size();
 		Type [] parameterTypes=targetMethod.getGenericParameterTypes();
@@ -123,6 +124,17 @@ public class ServletInvocationContextFactory  extends ReflectionTool implements 
 	}
 	protected Object getBean(String beanName) {
 		return this.getBeaFactory().getBean(beanName);
+	}
+	
+	protected Object[] getCandidateParameters(List<String> urlElements) {
+
+		
+		// Object [] parameters=new String[urlElements.size()-start-2];
+		Object elements[] = urlElements.toArray();
+		Object[] parameters = Arrays.copyOfRange(elements, start+2, urlElements.size());
+
+		return parameters;
+
 	}
 	
 	protected Object[] getParameters(HttpServletRequest request, Object targetObject, List<String> urlElements,

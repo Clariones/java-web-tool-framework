@@ -124,6 +124,14 @@ public class ServletResultRenderer {
 		if(result.getInvocationContext()==null){
 			return false;
 		}
+		if(result.getActualResult()==null){
+			return false;
+		}
+		if(result.getActualResult() instanceof Throwable){
+			return false;
+		}
+		
+		
 		Method method = result.getInvocationContext().getMethodToCall();
 		return isGenericReturnType(method);
 	}

@@ -1,0 +1,333 @@
+=================Excute Report @Fri May 20 13:00:03 CST 2016========================
+
+
+employee
+
+
+csr.role
+
+Info: Add virtual field [csrs(es)] to <role>
+	csr.role
+
+
+billing_address
+
+
+shipping_address
+
+
+order
+
+
+payment_group.order
+
+Info: Add virtual field [payment_groups(es)] to <order>
+	payment_group.biz_order
+
+
+order.seller_company
+
+Info: Add virtual field [orders(es)] to <seller_company>
+	order.seller
+
+
+payment_group
+
+
+shipping_group.order
+
+Info: Add virtual field [shipping_groups(es)] to <order>
+	shipping_group.biz_order
+
+
+billing_address.buyer_company
+
+Info: Add virtual field [billing_addresss(es)] to <buyer_company>
+	billing_address.company
+
+
+csr.seller_company
+
+Info: Add virtual field [csrs(es)] to <seller_company>
+	csr.company
+
+
+order.buyer_company
+
+Info: Add virtual field [orders(es)] to <buyer_company>
+	order.buyer
+
+
+payment_group.billing_address
+
+Info: Add virtual field [payment_groups(es)] to <billing_address>
+	payment_group.billing_address
+
+
+shipping_group.shipping_address
+
+Info: Add virtual field [shipping_groups(es)] to <shipping_address>
+	shipping_group.address
+
+
+access
+
+
+assignment.access
+
+Info: Add virtual field [assignments(es)] to <access>
+	assignment.access
+
+
+employee.buyer_company
+
+Info: Add virtual field [employees(es)] to <buyer_company>
+	employee.company
+
+
+shipping_group
+
+
+line_item
+
+
+assignment
+
+
+role
+
+
+buyer_company
+
+
+line_item.order
+
+Info: Add virtual field [line_items(es)] to <order>
+	line_item.biz_order
+
+
+csr
+
+
+access.role
+
+Info: Add virtual field [accesss(es)] to <role>
+	access.role_name
+
+
+seller_company
+
+
+assignment.employee
+
+Info: Add virtual field [assignments(es)] to <employee>
+	assignment.user
+
+
+**************************************************
+
+buyer_company{
+	fields(4){
+		string	id('buyer_company0000001');
+		string	name('Aaxis - ');
+		string	price_list('price9900');
+		int	version('10');
+	}
+	references field(3){
+		billing_address	company;
+		order	buyer;
+		employee	company;
+	}
+	vitual fields(0){
+	}
+}
+
+seller_company{
+	fields(3){
+		string	id('seller_company0000001');
+		string	name('Snake Co. ');
+		int	version('10');
+	}
+	references field(2){
+		order	seller;
+		csr	company;
+	}
+	vitual fields(0){
+	}
+}
+
+shipping_address{
+	fields(7){
+		string	id('shipping_address0000001');
+		string	line1('1900 AVE OF THE STARTS - ');
+		string	line2('Suite 555 - ');
+		string	city('Century City - ');
+		string	state('CA');
+		string	country('US');
+		int	version('10');
+	}
+	references field(1){
+		shipping_group	address;
+	}
+	vitual fields(0){
+	}
+}
+
+billing_address{
+	fields(8){
+		string	id('billing_address0000001');
+		buyer_company	company('$(object)');
+		string	line1('1900 AVE OF THE STARTS - ');
+		string	line2('Suite 555 - ');
+		string	city('Century City - ');
+		string	state('CA');
+		string	country('US');
+		int	version('10');
+	}
+	references field(1){
+		payment_group	billing_address;
+	}
+	vitual fields(0){
+	}
+}
+
+employee{
+	fields(4){
+		string	id('employee0000001');
+		string	name('Philip');
+		buyer_company	company('$(object)');
+		int	version('10');
+	}
+	references field(1){
+		assignment	user;
+	}
+	vitual fields(0){
+	}
+}
+
+role{
+	fields(3){
+		string	id('role0000001');
+		string	role_name('manager');
+		int	version('10');
+	}
+	references field(2){
+		csr	role;
+		access	role_name;
+	}
+	vitual fields(0){
+	}
+}
+
+assignment{
+	fields(5){
+		string	id('assignment0000001');
+		employee	user('$(object)');
+		access	access('$(object)');
+		date	assigned_date('2019-1-1');
+		int	version('10');
+	}
+	references field(0){
+	}
+	vitual fields(0){
+	}
+}
+
+access{
+	fields(3){
+		string	id('access0000001');
+		role	role_name('$(object)');
+		int	version('10');
+	}
+	references field(1){
+		assignment	access;
+	}
+	vitual fields(0){
+	}
+}
+
+order{
+	fields(7){
+		string	id('order0000001');
+		buyer_company	buyer('$(object)');
+		seller_company	seller('$(object)');
+		string	title('order title - ');
+		double	total_amount('300.88');
+		string	type('order');
+		int	version('10');
+	}
+	references field(3){
+		payment_group	biz_order;
+		shipping_group	biz_order;
+		line_item	biz_order;
+	}
+	vitual fields(0){
+	}
+}
+
+line_item{
+	fields(7){
+		string	id('line_item0000001');
+		order	biz_order('$(object)');
+		string	sku_id('SKU');
+		string	sku_name('iPhone - ');
+		double	amount('23.97');
+		int	quantity('10');
+		int	version('10');
+	}
+	references field(0){
+	}
+	vitual fields(0){
+	}
+}
+
+shipping_group{
+	fields(6){
+		string	id('shipping_group0000001');
+		string	name('shipping to this address');
+		order	biz_order('$(object)');
+		shipping_address	address('$(object)');
+		double	amount('5.99');
+		int	version('10');
+	}
+	references field(0){
+	}
+	vitual fields(0){
+	}
+}
+
+payment_group{
+	fields(6){
+		string	id('payment_group0000001');
+		string	name('visa card ending - ');
+		order	biz_order('$(object)');
+		string	card_number('4111 1111 1111 - ');
+		billing_address	billing_address('$(object)');
+		int	version('10');
+	}
+	references field(0){
+	}
+	vitual fields(0){
+	}
+}
+
+csr{
+	fields(5){
+		string	id('csr0000001');
+		string_email	email('philip_chang@174.com');
+		role	role('$(object)');
+		seller_company	company('$(object)');
+		int	version('10');
+	}
+	references field(0){
+	}
+	vitual fields(0){
+	}
+}
+
+
+=================================End Report=================================
+
+
+
+

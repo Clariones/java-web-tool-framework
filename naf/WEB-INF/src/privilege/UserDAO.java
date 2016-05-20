@@ -7,11 +7,11 @@ public interface UserDAO {
 
 	public List<User> listUsers();
 
-	public User getUser(Integer 编号) throws UserNotFoundException;
+	public User getUser(String 编号) throws UserNotFoundException;
 
-	public void delete(Integer 编号) throws UserNotFoundException;
+	public void delete(String 编号) throws UserNotFoundException;
 
 	public int deleteAll();
 
-	public void update(Integer 编号, String 密码) throws UserNotFoundException;
+	public void updatePassword(String 编号, String 密码, int version) throws UserNotFoundException;
 }

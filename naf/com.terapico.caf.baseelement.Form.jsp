@@ -151,7 +151,9 @@
     <form class="mainform">
 		<c:forEach var="field" items="${result.fields}" varStatus="status">
 		<div class="col-sm-3">
-			<input id="fl${status.index}" class="form-control input-sm" placeHolder="${field.name}" title="${field.name}" type="text" append="true" />
+			<input id="fl${status.index}" class="form-control input-sm" 
+			placeHolder="${field.name}" value="${field.defaultValue}"
+			title="${field.name}" type="text" append="true" />
 			
 		</div>
 		</c:forEach>

@@ -19,15 +19,21 @@ import com.terapico.caf.baseelement.Field;
 import com.terapico.caf.baseelement.Form;
 
 public class FormBuilder extends ReflectionTool{
-	public Form buildForm(String beanName,Method method) throws IOException{
+	public Form buildForm(String beanName,Method method, Object []presetParameters) throws IOException{
 		Form form=new Form();	
 		Type[] methodParameterTypes=method.getGenericParameterTypes();
 		List<String> nameList=getParameterNames(method);
+		int presetParametersLength=presetParameters.length;
 		for(int i=0;i<methodParameterTypes.length;i++){
 			Field field=new Field();
 			String name=nameList.get(i);
 			field.setLabel(name);
 			field.setName(name);
+			if(i<presetParametersLength){
+				field.setDefaultValue(presetParameters[i].toString());
+			}
+			
+			
 			field.setType(methodParameterTypes[i]);
 			form.addField(field);
 		}
