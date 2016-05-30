@@ -1,0 +1,8 @@
+<%@ page isELIgnored="false"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page contentType="text/html; charset=UTF-8"%>
+
+
+curl 'http://localhost:8080/naf/orders/load/O000005/__all__/' -H 'Cookie: JSESSIONID=abc0VWq2GprXQcKgRpEtv' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4,es-419;q=0.2,es;q=0.2' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36' -H 'Accept: text/html, */*; q=0.01' -H 'Referer: http://localhost:8080/naf/navi/index/orders/' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' --compressed

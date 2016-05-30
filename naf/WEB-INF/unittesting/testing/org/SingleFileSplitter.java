@@ -77,7 +77,8 @@ public class SingleFileSplitter {
 			if(destFile.exists()){
 				destFile.delete();
 			}
-			destFile.getParentFile().mkdirs();
+			boolean result=destFile.getParentFile().mkdirs();
+			//System.out.println("file created: "+ result);
 			out = new BufferedWriter(new FileWriter(destFile));
 			log("save to file: "+destFile.getAbsolutePath());
 			
@@ -107,7 +108,7 @@ public class SingleFileSplitter {
 	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		doSplit("b2b","/opt/resin-3.1.2/webapps/naf/WEB-INF/");
+		doSplit("b2b","/opt/resin-3.1.12/webapps/naf/WEB-INF/");
 	}
 
 }

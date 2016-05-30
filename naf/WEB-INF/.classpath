@@ -8,26 +8,25 @@
 	<classpathentry kind="lib" path="lib/jsdk-15.jar"/>
 	<classpathentry kind="lib" path="lib/asm-all-4.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/spring-aop-3.0.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-beans-3.0.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-context-3.0.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-core-3.0.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.12.jar"/>
-	<classpathentry kind="lib" path="lib/spring-asm-3.0.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-expression-3.0.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/mongo-java-driver-2.12.2.jar"/>
 	<classpathentry kind="lib" path="lib/jsoup-1.8.3.jar" sourcepath="lib/jsoup-1.8.3-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-annotations-2.7.3.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-core-2.7.3.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-databind-2.7.3.jar"/>
-	<classpathentry kind="lib" path="lib/spring-jdbc-3.0.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-transaction-3.0.1.RELEASE-A.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-runtime-4.5.3.jar"/>
 	<classpathentry kind="lib" path="lib/javamail-141.jar"/>
-	<classpathentry kind="lib" path="lib/spring-data-commons-1.11.4.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-data-mongodb-1.8.4.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.21.jar"/>
 	<classpathentry kind="lib" path="lib/commons-dbcp-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/spring-aop-4.2.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/spring-beans-4.2.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/spring-context-4.2.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/spring-core-4.2.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/spring-expression-4.2.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/spring-jdbc-4.2.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/spring-tx-4.2.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/Users/Philip/java-web-tool-framework/naf/WEB-INF/lib/mysql-connector-java-5.1.25-bin.jar"/>
+	<classpathentry kind="lib" path="lib/commons-pool-1.4.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

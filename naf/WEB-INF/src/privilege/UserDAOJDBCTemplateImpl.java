@@ -149,6 +149,8 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 		System.out.println(ret[0]);
 		System.out.println(ret[1]);
 
+		
+		
 	}
 
 	public int deleteAll() {
@@ -156,7 +158,7 @@ public class UserDAOJDBCTemplateImpl implements UserDAO {
 		return jdbcTemplateObject.update(SQL);
 	}
 	protected int getVersion(String id){
-		int version=jdbcTemplateObject.queryForInt("select version from user_data where id=?",id);
+		int version=jdbcTemplateObject.queryForObject("select version from user_data where id=?",Integer.class,id);
 		return version;
 	}
 	public void updatePassword(String id, String password, int version) throws UserNotFoundException {

@@ -94,9 +94,20 @@ public abstract class CommonJDBCTemplateDAO {
 	}
 	protected String getIdFormat()
 	{
-		return this.getName().toUpperCase()+"%06d";
+		return getShortName(this.getName())+"%06d";
 	}
 	
+	
+	public static String getShortName(String name) {
+		String ar[] = name.split("_");
+		String ret = ar[0].substring(0, 1).toUpperCase();
+
+		for (int i = 1; i < ar.length; i++) {
+			ret +=ar[i].substring(0, 1).toUpperCase();
+				
+		}
+		return ret;
+	}
 	protected String getIdColumnName()
 	{
 		return "id";
@@ -112,13 +123,25 @@ public abstract class CommonJDBCTemplateDAO {
 	protected String getTableName(){
 		return this.getName()+"_data";
 	}
+	protected String getDeleteSQL() {
+		// TODO Auto-generated method stub
+		//return new String[]{"name","bize_order","card_number","billing_address"};
+		StringBuilder stringBuilder=new StringBuilder();
+		stringBuilder.append("delete from  ");
+		stringBuilder.append(this.getTableName());
+		stringBuilder.append(" where id= ? and version =?;");
+			
+		return stringBuilder.toString();
+		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"；
+		
+	}
 	protected String getCreateSQL() {
 		// TODO Auto-generated method stub
 		//return new String[]{"name","bize_order","card_number","billing_address"};
 		StringBuilder stringBuilder=new StringBuilder();
 		stringBuilder.append("insert into ");
 		stringBuilder.append(this.getTableName());
-		stringBuilder.append("(id");
+		stringBuilder.append("(id,");
 		stringBuilder.append(join());
 		stringBuilder.append(",version)values(?,");
 		stringBuilder.append(getCreateParametersPlaceHolders());
@@ -135,9 +158,9 @@ public abstract class CommonJDBCTemplateDAO {
 		StringBuilder stringBuilder=new StringBuilder();
 		stringBuilder.append("update ");
 		stringBuilder.append(this.getTableName());
-		stringBuilder.append("set ");
+		stringBuilder.append(" set ");
 		stringBuilder.append(joinUpdate());
-		stringBuilder.append("version = version+1 ");
+		stringBuilder.append(",version = version+1 ");
 		
 		stringBuilder.append("where id=? and version=?");
 		
@@ -152,7 +175,7 @@ public abstract class CommonJDBCTemplateDAO {
 		// TODO Auto-generated method stub
 		StringBuilder stringBuilder=new StringBuilder();
 		int length=getNormalColumnNames().length;
-		for(int i=0;i<length-1;i++ ){//version is an constant
+		for(int i=0;i<length;i++ ){//version is an constant
 			if(i>0){
 				stringBuilder.append(",");
 			}

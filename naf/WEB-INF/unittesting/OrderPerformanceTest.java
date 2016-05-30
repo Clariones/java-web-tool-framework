@@ -1,13 +1,20 @@
-import static org.junit.Assert.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Test;
 
+import com.terapico.b2b.buyercompany.BuyerCompany;
+import com.terapico.b2b.lineitem.LineItem;
+import com.terapico.b2b.order.Order;
+import com.terapico.b2b.order.OrderJDBCTemplateDAO;
+import com.terapico.b2b.order.OrderNotFoundException;
+import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2btemplate.OrderDAOImpl;
 import com.terapico.caf.SpringBeanFactory;
 
 public class OrderPerformanceTest {
 
-	@Test
+	
 	public void test() {
 		//fail("Not yet implemented");
 		
@@ -15,10 +22,118 @@ public class OrderPerformanceTest {
 		
 		OrderDAOImpl order=(OrderDAOImpl)factory.getBean("order");
 		
-		while(true){
-			order.loadOrder("ORDER000001");
-		}
+		/*
+		Order o=order.loadOrder("O000001");
+		System.out.print(o.toString());
+		*/
+		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
+		
+		
+		
 		
 	}
+	
+	public void test1() throws OrderNotFoundException {
+		//fail("Not yet implemented");
+		
+		SpringBeanFactory factory=new SpringBeanFactory();
+		
+		
+		
+		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
+		
+		System.out.println(gorder);
+		Set<String> options= new HashSet<String>();
+		//options.add("lineItemList");
+		System.out.println(System.currentTimeMillis());
+		
+		for(int i=0;i<10000;i++){
+			Order order = gorder.load("O000001", options);
+				
+		}
+		System.out.println(System.currentTimeMillis());
+		
+		//System.out.println(order.toString());
+		//System.out.println(order.getLineItemList());
+	}
+	
+	public void test2() throws OrderNotFoundException {
+		//fail("Not yet implemented");
+		
+		SpringBeanFactory factory=new SpringBeanFactory();
+		
+		
+		
+		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
+		
+		System.out.println(gorder);
+		Set<String> options= new HashSet<String>();
+		//options.add("lineItemList");
+		System.out.println(System.currentTimeMillis());
+		
+		Order order=gorder.load("O000001", options);
+		
+		order.setTitle("No title");
+		order.setType("quote");
+		gorder.save(order, options);
+		
+		System.out.println(System.currentTimeMillis());
+		
+		//System.out.println(order.toString());
+		//System.out.println(order.getLineItemList());
+	}
+	
+	//@Test
+	public void testDelete() throws Exception {
+		//fail("Not yet implemented");
+		
+		SpringBeanFactory factory=new SpringBeanFactory();
+		
+		
+		
+		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
+		
+		System.out.println(gorder);
+		Set<String> options= new HashSet<String>();
+		//options.add("lineItemList");
+		System.out.println(System.currentTimeMillis());
+		
+		gorder.delete("O000011",10);
+		
+		
+		
+		//System.out.println(order.toString());
+		//System.out.println(order.getLineItemList());
+	}
+	
+	
+	
+	@Test
+	public void testClone() throws Exception {
+		//fail("Not yet implemented");
+		
+		SpringBeanFactory factory=new SpringBeanFactory();
+		
+		
+		
+		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
+		
+		System.out.println(gorder);
+		Set<String> options= new HashSet<String>();
+		options.add("lineItemList");
+		System.out.println(System.currentTimeMillis());
+		
+		//gorder.delete("O000011",10);
+		
+		
+		Order order = gorder.clone("O000003", options);
+		
+		
+		
+		
+		System.out.println(order.toString());
+		//System.out.println(order.getLineItemList());
+	}
+	
 
 }
