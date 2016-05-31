@@ -9,9 +9,6 @@ import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.role.Role;
 import com.terapico.b2b.sellercompany.SellerCompany;
 
-import com.terapico.b2b.sellercompany.SellerCompanyMapper;
-import com.terapico.b2b.role.RoleMapper;
-
 import com.terapico.b2b.role.RoleDAO;
 import com.terapico.b2b.sellercompany.SellerCompanyDAO;
 
@@ -37,13 +34,13 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 
 		
 
-	public CustSvcRep load(String custSvcRepId,Set<String> options) throws CustSvcRepNotFoundException{
+	public CustSvcRep load(String custSvcRepId,Set<String> options) throws Exception{
 		return loadInternalCustSvcRep(custSvcRepId, options);
 	}
 	public CustSvcRep save(CustSvcRep custSvcRep,Set<String> options){
 		return saveInternalCustSvcRep(custSvcRep,options);
 	}
-	public CustSvcRep clone(String custSvcRepId,Set<String> options) throws CustSvcRepNotFoundException{
+	public CustSvcRep clone(String custSvcRepId,Set<String> options) throws Exception{
 		CustSvcRep newCustSvcRep = load(custSvcRepId, options);
 		newCustSvcRep.setVersion(0);
 		
@@ -147,14 +144,16 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		
 	
 
-
+	protected CustSvcRepMapper getMapper(){
+		return new CustSvcRepMapper();
+	}
 	protected CustSvcRep extractCustSvcRep(String custSvcRepId){
 		String SQL = "select * from cust_svc_rep_data where id=?";	
-		CustSvcRep custSvcRep = getJdbcTemplateObject().queryForObject(SQL, new Object[]{custSvcRepId},new CustSvcRepMapper());
+		CustSvcRep custSvcRep = getJdbcTemplateObject().queryForObject(SQL, new Object[]{custSvcRepId}, getMapper());
 		return custSvcRep;
 	}
 
-	protected CustSvcRep loadInternalCustSvcRep(String custSvcRepId, Set<String> loadOptions){
+	protected CustSvcRep loadInternalCustSvcRep(String custSvcRepId, Set<String> loadOptions) throws Exception{
 		
 		CustSvcRep custSvcRep = extractCustSvcRep(custSvcRepId);
  	
@@ -174,14 +173,13 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
 	 
 
- 	protected CustSvcRep extractRole(CustSvcRep custSvcRep){
- 		
- 		String SQL = "select * from role_data where id=?";
-		Role role = getJdbcTemplateObject().queryForObject(SQL, new Object[]{custSvcRep.getRole().getId()},new RoleMapper());
+ 	protected CustSvcRep extractRole(CustSvcRep custSvcRep) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		Role role = getRoleDAO().load(custSvcRep.getRole().getId(),options);
 		if(role != null){
 			custSvcRep.setRole(role);
 		}
-		
 		
  		
  		return custSvcRep;
@@ -189,20 +187,42 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  		
   
 
- 	protected CustSvcRep extractCompany(CustSvcRep custSvcRep){
- 		
- 		String SQL = "select * from seller_company_data where id=?";
-		SellerCompany company = getJdbcTemplateObject().queryForObject(SQL, new Object[]{custSvcRep.getCompany().getId()},new SellerCompanyMapper());
+ 	protected CustSvcRep extractCompany(CustSvcRep custSvcRep) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		SellerCompany company = getSellerCompanyDAO().load(custSvcRep.getCompany().getId(),options);
 		if(company != null){
 			custSvcRep.setCompany(company);
 		}
-		
 		
  		
  		return custSvcRep;
  	}
  		
  
+		
+		
+  	
+ 	public List<CustSvcRep> findCustSvcRepByRole(String roleId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where role = ?";
+		List<CustSvcRep> custSvcRepList = getJdbcTemplateObject().query(SQL, new Object[]{roleId}, getMapper());
+		
+ 	
+ 		return custSvcRepList;
+ 	}
+  	
+ 	public List<CustSvcRep> findCustSvcRepByCompany(String sellerCompanyId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where company = ?";
+		List<CustSvcRep> custSvcRepList = getJdbcTemplateObject().query(SQL, new Object[]{sellerCompanyId}, getMapper());
+		
+ 	
+ 		return custSvcRepList;
+ 	}
+ 	
+		
+		
 		
 	
 
@@ -391,15 +411,7 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
  
 		
- 	
- 	public List<CustSvcRep> findCustSvcRepByRole(String roleId){
- 		return new ArrayList<CustSvcRep>();
- 	}//find end
-  	
- 	public List<CustSvcRep> findCustSvcRepByCompany(String sellerCompanyId){
- 		return new ArrayList<CustSvcRep>();
- 	}//find end
- 
+
 }
 
 

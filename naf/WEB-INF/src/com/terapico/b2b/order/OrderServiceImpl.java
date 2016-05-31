@@ -17,7 +17,7 @@ public class OrderServiceImpl {
 	public void setOrderDAO(OrderDAO orderDAO) {
 		this.orderDAO = orderDAO;
 	}
-	public Order load(String orderId,String [] optionsArray) throws OrderNotFoundException {
+	public Order load(String orderId,String [] optionsArray) throws Exception {
 		Set<String> options=new HashSet<String>();
 		options.addAll(Arrays.asList(optionsArray));
 		return orderDAO.load(orderId, options);

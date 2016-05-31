@@ -9,9 +9,6 @@ import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 import com.terapico.b2b.billingaddress.BillingAddress;
 
-import com.terapico.b2b.order.OrderMapper;
-import com.terapico.b2b.billingaddress.BillingAddressMapper;
-
 import com.terapico.b2b.billingaddress.BillingAddressDAO;
 import com.terapico.b2b.order.OrderDAO;
 
@@ -37,13 +34,13 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 
 		
 
-	public PaymentGroup load(String paymentGroupId,Set<String> options) throws PaymentGroupNotFoundException{
+	public PaymentGroup load(String paymentGroupId,Set<String> options) throws Exception{
 		return loadInternalPaymentGroup(paymentGroupId, options);
 	}
 	public PaymentGroup save(PaymentGroup paymentGroup,Set<String> options){
 		return saveInternalPaymentGroup(paymentGroup,options);
 	}
-	public PaymentGroup clone(String paymentGroupId,Set<String> options) throws PaymentGroupNotFoundException{
+	public PaymentGroup clone(String paymentGroupId,Set<String> options) throws Exception{
 		PaymentGroup newPaymentGroup = load(paymentGroupId, options);
 		newPaymentGroup.setVersion(0);
 		
@@ -147,14 +144,16 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 	
 
-
+	protected PaymentGroupMapper getMapper(){
+		return new PaymentGroupMapper();
+	}
 	protected PaymentGroup extractPaymentGroup(String paymentGroupId){
 		String SQL = "select * from payment_group_data where id=?";	
-		PaymentGroup paymentGroup = getJdbcTemplateObject().queryForObject(SQL, new Object[]{paymentGroupId},new PaymentGroupMapper());
+		PaymentGroup paymentGroup = getJdbcTemplateObject().queryForObject(SQL, new Object[]{paymentGroupId}, getMapper());
 		return paymentGroup;
 	}
 
-	protected PaymentGroup loadInternalPaymentGroup(String paymentGroupId, Set<String> loadOptions){
+	protected PaymentGroup loadInternalPaymentGroup(String paymentGroupId, Set<String> loadOptions) throws Exception{
 		
 		PaymentGroup paymentGroup = extractPaymentGroup(paymentGroupId);
  	
@@ -174,14 +173,13 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	
 	 
 
- 	protected PaymentGroup extractBizOrder(PaymentGroup paymentGroup){
- 		
- 		String SQL = "select * from order_data where id=?";
-		Order bizOrder = getJdbcTemplateObject().queryForObject(SQL, new Object[]{paymentGroup.getBizOrder().getId()},new OrderMapper());
+ 	protected PaymentGroup extractBizOrder(PaymentGroup paymentGroup) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		Order bizOrder = getOrderDAO().load(paymentGroup.getBizOrder().getId(),options);
 		if(bizOrder != null){
 			paymentGroup.setBizOrder(bizOrder);
 		}
-		
 		
  		
  		return paymentGroup;
@@ -189,20 +187,42 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
  		
   
 
- 	protected PaymentGroup extractBillingAddress(PaymentGroup paymentGroup){
- 		
- 		String SQL = "select * from billing_address_data where id=?";
-		BillingAddress billingAddress = getJdbcTemplateObject().queryForObject(SQL, new Object[]{paymentGroup.getBillingAddress().getId()},new BillingAddressMapper());
+ 	protected PaymentGroup extractBillingAddress(PaymentGroup paymentGroup) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		BillingAddress billingAddress = getBillingAddressDAO().load(paymentGroup.getBillingAddress().getId(),options);
 		if(billingAddress != null){
 			paymentGroup.setBillingAddress(billingAddress);
 		}
-		
 		
  		
  		return paymentGroup;
  	}
  		
  
+		
+		
+  	
+ 	public List<PaymentGroup> findPaymentGroupByBizOrder(String orderId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where biz_order = ?";
+		List<PaymentGroup> paymentGroupList = getJdbcTemplateObject().query(SQL, new Object[]{orderId}, getMapper());
+		
+ 	
+ 		return paymentGroupList;
+ 	}
+  	
+ 	public List<PaymentGroup> findPaymentGroupByBillingAddress(String billingAddressId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where billing_address = ?";
+		List<PaymentGroup> paymentGroupList = getJdbcTemplateObject().query(SQL, new Object[]{billingAddressId}, getMapper());
+		
+ 	
+ 		return paymentGroupList;
+ 	}
+ 	
+		
+		
 		
 	
 
@@ -393,15 +413,7 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	
  
 		
- 	
- 	public List<PaymentGroup> findPaymentGroupByBizOrder(String orderId){
- 		return new ArrayList<PaymentGroup>();
- 	}//find end
-  	
- 	public List<PaymentGroup> findPaymentGroupByBillingAddress(String billingAddressId){
- 		return new ArrayList<PaymentGroup>();
- 	}//find end
- 
+
 }
 
 

@@ -8,8 +8,6 @@ import java.util.HashSet;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
-import com.terapico.b2b.shippinggroup.ShippingGroupMapper;
-
 import com.terapico.b2b.shippinggroup.ShippingGroupDAO;
 
 public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implements ShippingAddressDAO{
@@ -35,13 +33,13 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 			
 		
 
-	public ShippingAddress load(String shippingAddressId,Set<String> options) throws ShippingAddressNotFoundException{
+	public ShippingAddress load(String shippingAddressId,Set<String> options) throws Exception{
 		return loadInternalShippingAddress(shippingAddressId, options);
 	}
 	public ShippingAddress save(ShippingAddress shippingAddress,Set<String> options){
 		return saveInternalShippingAddress(shippingAddress,options);
 	}
-	public ShippingAddress clone(String shippingAddressId,Set<String> options) throws ShippingAddressNotFoundException{
+	public ShippingAddress clone(String shippingAddressId,Set<String> options) throws Exception{
 		ShippingAddress newShippingAddress = load(shippingAddressId, options);
 		newShippingAddress.setVersion(0);
 		
@@ -134,14 +132,16 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 		
 	
 
-
+	protected ShippingAddressMapper getMapper(){
+		return new ShippingAddressMapper();
+	}
 	protected ShippingAddress extractShippingAddress(String shippingAddressId){
 		String SQL = "select * from shipping_address_data where id=?";	
-		ShippingAddress shippingAddress = getJdbcTemplateObject().queryForObject(SQL, new Object[]{shippingAddressId},new ShippingAddressMapper());
+		ShippingAddress shippingAddress = getJdbcTemplateObject().queryForObject(SQL, new Object[]{shippingAddressId}, getMapper());
 		return shippingAddress;
 	}
 
-	protected ShippingAddress loadInternalShippingAddress(String shippingAddressId, Set<String> loadOptions){
+	protected ShippingAddress loadInternalShippingAddress(String shippingAddressId, Set<String> loadOptions) throws Exception{
 		
 		ShippingAddress shippingAddress = extractShippingAddress(shippingAddressId);
 
@@ -159,8 +159,7 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 		
 	protected ShippingAddress extractShippingGroupList(ShippingAddress shippingAddress){
 		
-		String SQL = "select * from shipping_group_data where address = ?";
-		List<ShippingGroup> shippingGroupList = getJdbcTemplateObject().query(SQL, new Object[]{shippingAddress.getId()},new ShippingGroupMapper());
+		List<ShippingGroup> shippingGroupList = getShippingGroupDAO().findShippingGroupByAddress(shippingAddress.getId());
 		if(shippingGroupList != null){
 			shippingAddress.setShippingGroupList(shippingGroupList);
 		}
@@ -168,6 +167,11 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 		return shippingAddress;
 	
 	}	
+		
+		
+ 	
+		
+		
 		
 	
 

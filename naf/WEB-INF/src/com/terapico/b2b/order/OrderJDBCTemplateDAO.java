@@ -12,12 +12,6 @@ import com.terapico.b2b.paymentgroup.PaymentGroup;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
-import com.terapico.b2b.sellercompany.SellerCompanyMapper;
-import com.terapico.b2b.shippinggroup.ShippingGroupMapper;
-import com.terapico.b2b.lineitem.LineItemMapper;
-import com.terapico.b2b.buyercompany.BuyerCompanyMapper;
-import com.terapico.b2b.paymentgroup.PaymentGroupMapper;
-
 import com.terapico.b2b.shippinggroup.ShippingGroupDAO;
 import com.terapico.b2b.lineitem.LineItemDAO;
 import com.terapico.b2b.paymentgroup.PaymentGroupDAO;
@@ -103,13 +97,13 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 			
 		
 
-	public Order load(String orderId,Set<String> options) throws OrderNotFoundException{
+	public Order load(String orderId,Set<String> options) throws Exception{
 		return loadInternalOrder(orderId, options);
 	}
 	public Order save(Order order,Set<String> options){
 		return saveInternalOrder(order,options);
 	}
-	public Order clone(String orderId,Set<String> options) throws OrderNotFoundException{
+	public Order clone(String orderId,Set<String> options) throws Exception{
 		Order newOrder = load(orderId, options);
 		newOrder.setVersion(0);
 		
@@ -282,14 +276,16 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	
 
-
+	protected OrderMapper getMapper(){
+		return new OrderMapper();
+	}
 	protected Order extractOrder(String orderId){
 		String SQL = "select * from order_data where id=?";	
-		Order order = getJdbcTemplateObject().queryForObject(SQL, new Object[]{orderId},new OrderMapper());
+		Order order = getJdbcTemplateObject().queryForObject(SQL, new Object[]{orderId}, getMapper());
 		return order;
 	}
 
-	protected Order loadInternalOrder(String orderId, Set<String> loadOptions){
+	protected Order loadInternalOrder(String orderId, Set<String> loadOptions) throws Exception{
 		
 		Order order = extractOrder(orderId);
  	
@@ -321,14 +317,13 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	
 	 
 
- 	protected Order extractBuyer(Order order){
- 		
- 		String SQL = "select * from buyer_company_data where id=?";
-		BuyerCompany buyer = getJdbcTemplateObject().queryForObject(SQL, new Object[]{order.getBuyer().getId()},new BuyerCompanyMapper());
+ 	protected Order extractBuyer(Order order) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		BuyerCompany buyer = getBuyerCompanyDAO().load(order.getBuyer().getId(),options);
 		if(buyer != null){
 			order.setBuyer(buyer);
 		}
-		
 		
  		
  		return order;
@@ -336,14 +331,13 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  		
   
 
- 	protected Order extractSeller(Order order){
- 		
- 		String SQL = "select * from seller_company_data where id=?";
-		SellerCompany seller = getJdbcTemplateObject().queryForObject(SQL, new Object[]{order.getSeller().getId()},new SellerCompanyMapper());
+ 	protected Order extractSeller(Order order) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		SellerCompany seller = getSellerCompanyDAO().load(order.getSeller().getId(),options);
 		if(seller != null){
 			order.setSeller(seller);
 		}
-		
 		
  		
  		return order;
@@ -353,8 +347,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	protected Order extractLineItemList(Order order){
 		
-		String SQL = "select * from line_item_data where biz_order = ?";
-		List<LineItem> lineItemList = getJdbcTemplateObject().query(SQL, new Object[]{order.getId()},new LineItemMapper());
+		List<LineItem> lineItemList = getLineItemDAO().findLineItemByBizOrder(order.getId());
 		if(lineItemList != null){
 			order.setLineItemList(lineItemList);
 		}
@@ -365,8 +358,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	protected Order extractShippingGroupList(Order order){
 		
-		String SQL = "select * from shipping_group_data where biz_order = ?";
-		List<ShippingGroup> shippingGroupList = getJdbcTemplateObject().query(SQL, new Object[]{order.getId()},new ShippingGroupMapper());
+		List<ShippingGroup> shippingGroupList = getShippingGroupDAO().findShippingGroupByBizOrder(order.getId());
 		if(shippingGroupList != null){
 			order.setShippingGroupList(shippingGroupList);
 		}
@@ -377,8 +369,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	protected Order extractPaymentGroupList(Order order){
 		
-		String SQL = "select * from payment_group_data where biz_order = ?";
-		List<PaymentGroup> paymentGroupList = getJdbcTemplateObject().query(SQL, new Object[]{order.getId()},new PaymentGroupMapper());
+		List<PaymentGroup> paymentGroupList = getPaymentGroupDAO().findPaymentGroupByBizOrder(order.getId());
 		if(paymentGroupList != null){
 			order.setPaymentGroupList(paymentGroupList);
 		}
@@ -386,6 +377,29 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		return order;
 	
 	}	
+		
+		
+  	
+ 	public List<Order> findOrderByBuyer(String buyerCompanyId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where buyer = ?";
+		List<Order> orderList = getJdbcTemplateObject().query(SQL, new Object[]{buyerCompanyId}, getMapper());
+		
+ 	
+ 		return orderList;
+ 	}
+  	
+ 	public List<Order> findOrderBySeller(String sellerCompanyId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where seller = ?";
+		List<Order> orderList = getJdbcTemplateObject().query(SQL, new Object[]{sellerCompanyId}, getMapper());
+		
+ 	
+ 		return orderList;
+ 	}
+ 	
+		
+		
 		
 	
 
@@ -638,15 +652,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	
 	}
 		
- 	
- 	public List<Order> findOrderByBuyer(String buyerCompanyId){
- 		return new ArrayList<Order>();
- 	}//find end
-  	
- 	public List<Order> findOrderBySeller(String sellerCompanyId){
- 		return new ArrayList<Order>();
- 	}//find end
- 
+
 }
 
 

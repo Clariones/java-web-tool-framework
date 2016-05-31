@@ -6,8 +6,8 @@ import java.util.Set;
 public interface AssignmentDAO{
 
 	
-	public Assignment load(String assignmentId,Set<String> options) throws AssignmentNotFoundException;
-	public Assignment clone(String assignmentId,Set<String> options) throws AssignmentNotFoundException;
+	public Assignment load(String assignmentId,Set<String> options) throws Exception;
+	public Assignment clone(String assignmentId,Set<String> options) throws Exception;
 	
 	public Assignment save(Assignment assignment,Set<String> options);
 	public List<Assignment> saveList(List<Assignment> assignmentList,Set<String> options);

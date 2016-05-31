@@ -9,9 +9,6 @@ import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.employee.Employee;
 
-import com.terapico.b2b.employee.EmployeeMapper;
-import com.terapico.b2b.access.AccessMapper;
-
 import com.terapico.b2b.employee.EmployeeDAO;
 import com.terapico.b2b.access.AccessDAO;
 
@@ -37,13 +34,13 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 
 		
 
-	public Assignment load(String assignmentId,Set<String> options) throws AssignmentNotFoundException{
+	public Assignment load(String assignmentId,Set<String> options) throws Exception{
 		return loadInternalAssignment(assignmentId, options);
 	}
 	public Assignment save(Assignment assignment,Set<String> options){
 		return saveInternalAssignment(assignment,options);
 	}
-	public Assignment clone(String assignmentId,Set<String> options) throws AssignmentNotFoundException{
+	public Assignment clone(String assignmentId,Set<String> options) throws Exception{
 		Assignment newAssignment = load(assignmentId, options);
 		newAssignment.setVersion(0);
 		
@@ -147,14 +144,16 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		
 	
 
-
+	protected AssignmentMapper getMapper(){
+		return new AssignmentMapper();
+	}
 	protected Assignment extractAssignment(String assignmentId){
 		String SQL = "select * from assignment_data where id=?";	
-		Assignment assignment = getJdbcTemplateObject().queryForObject(SQL, new Object[]{assignmentId},new AssignmentMapper());
+		Assignment assignment = getJdbcTemplateObject().queryForObject(SQL, new Object[]{assignmentId}, getMapper());
 		return assignment;
 	}
 
-	protected Assignment loadInternalAssignment(String assignmentId, Set<String> loadOptions){
+	protected Assignment loadInternalAssignment(String assignmentId, Set<String> loadOptions) throws Exception{
 		
 		Assignment assignment = extractAssignment(assignmentId);
  	
@@ -174,14 +173,13 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
 	 
 
- 	protected Assignment extractUser(Assignment assignment){
- 		
- 		String SQL = "select * from employee_data where id=?";
-		Employee user = getJdbcTemplateObject().queryForObject(SQL, new Object[]{assignment.getUser().getId()},new EmployeeMapper());
+ 	protected Assignment extractUser(Assignment assignment) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		Employee user = getEmployeeDAO().load(assignment.getUser().getId(),options);
 		if(user != null){
 			assignment.setUser(user);
 		}
-		
 		
  		
  		return assignment;
@@ -189,20 +187,42 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  		
   
 
- 	protected Assignment extractAccess(Assignment assignment){
- 		
- 		String SQL = "select * from access_data where id=?";
-		Access access = getJdbcTemplateObject().queryForObject(SQL, new Object[]{assignment.getAccess().getId()},new AccessMapper());
+ 	protected Assignment extractAccess(Assignment assignment) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		Access access = getAccessDAO().load(assignment.getAccess().getId(),options);
 		if(access != null){
 			assignment.setAccess(access);
 		}
-		
 		
  		
  		return assignment;
  	}
  		
  
+		
+		
+  	
+ 	public List<Assignment> findAssignmentByUser(String employeeId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where user = ?";
+		List<Assignment> assignmentList = getJdbcTemplateObject().query(SQL, new Object[]{employeeId}, getMapper());
+		
+ 	
+ 		return assignmentList;
+ 	}
+  	
+ 	public List<Assignment> findAssignmentByAccess(String accessId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where access = ?";
+		List<Assignment> assignmentList = getJdbcTemplateObject().query(SQL, new Object[]{accessId}, getMapper());
+		
+ 	
+ 		return assignmentList;
+ 	}
+ 	
+		
+		
 		
 	
 
@@ -391,15 +411,7 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
  
 		
- 	
- 	public List<Assignment> findAssignmentByUser(String employeeId){
- 		return new ArrayList<Assignment>();
- 	}//find end
-  	
- 	public List<Assignment> findAssignmentByAccess(String accessId){
- 		return new ArrayList<Assignment>();
- 	}//find end
- 
+
 }
 
 

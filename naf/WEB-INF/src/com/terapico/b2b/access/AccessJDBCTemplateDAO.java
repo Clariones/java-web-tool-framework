@@ -9,9 +9,6 @@ import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.role.Role;
 import com.terapico.b2b.assignment.Assignment;
 
-import com.terapico.b2b.assignment.AssignmentMapper;
-import com.terapico.b2b.role.RoleMapper;
-
 import com.terapico.b2b.role.RoleDAO;
 import com.terapico.b2b.assignment.AssignmentDAO;
 
@@ -47,13 +44,13 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 			
 		
 
-	public Access load(String accessId,Set<String> options) throws AccessNotFoundException{
+	public Access load(String accessId,Set<String> options) throws Exception{
 		return loadInternalAccess(accessId, options);
 	}
 	public Access save(Access access,Set<String> options){
 		return saveInternalAccess(access,options);
 	}
-	public Access clone(String accessId,Set<String> options) throws AccessNotFoundException{
+	public Access clone(String accessId,Set<String> options) throws Exception{
 		Access newAccess = load(accessId, options);
 		newAccess.setVersion(0);
 		
@@ -163,14 +160,16 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 		
 	
 
-
+	protected AccessMapper getMapper(){
+		return new AccessMapper();
+	}
 	protected Access extractAccess(String accessId){
 		String SQL = "select * from access_data where id=?";	
-		Access access = getJdbcTemplateObject().queryForObject(SQL, new Object[]{accessId},new AccessMapper());
+		Access access = getJdbcTemplateObject().queryForObject(SQL, new Object[]{accessId}, getMapper());
 		return access;
 	}
 
-	protected Access loadInternalAccess(String accessId, Set<String> loadOptions){
+	protected Access loadInternalAccess(String accessId, Set<String> loadOptions) throws Exception{
 		
 		Access access = extractAccess(accessId);
  	
@@ -190,14 +189,13 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 	
 	 
 
- 	protected Access extractRole(Access access){
- 		
- 		String SQL = "select * from role_data where id=?";
-		Role role = getJdbcTemplateObject().queryForObject(SQL, new Object[]{access.getRole().getId()},new RoleMapper());
+ 	protected Access extractRole(Access access) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		Role role = getRoleDAO().load(access.getRole().getId(),options);
 		if(role != null){
 			access.setRole(role);
 		}
-		
 		
  		
  		return access;
@@ -207,8 +205,7 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 		
 	protected Access extractAssignmentList(Access access){
 		
-		String SQL = "select * from assignment_data where access = ?";
-		List<Assignment> assignmentList = getJdbcTemplateObject().query(SQL, new Object[]{access.getId()},new AssignmentMapper());
+		List<Assignment> assignmentList = getAssignmentDAO().findAssignmentByAccess(access.getId());
 		if(assignmentList != null){
 			access.setAssignmentList(assignmentList);
 		}
@@ -216,6 +213,20 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 		return access;
 	
 	}	
+		
+		
+  	
+ 	public List<Access> findAccessByRole(String roleId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where role = ?";
+		List<Access> accessList = getJdbcTemplateObject().query(SQL, new Object[]{roleId}, getMapper());
+		
+ 	
+ 		return accessList;
+ 	}
+ 	
+		
+		
 		
 	
 
@@ -398,11 +409,7 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 	
 	}
 		
- 	
- 	public List<Access> findAccessByRole(String roleId){
- 		return new ArrayList<Access>();
- 	}//find end
- 
+
 }
 
 

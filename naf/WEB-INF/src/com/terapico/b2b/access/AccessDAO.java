@@ -6,8 +6,8 @@ import java.util.Set;
 public interface AccessDAO{
 
 	
-	public Access load(String accessId,Set<String> options) throws AccessNotFoundException;
-	public Access clone(String accessId,Set<String> options) throws AccessNotFoundException;
+	public Access load(String accessId,Set<String> options) throws Exception;
+	public Access clone(String accessId,Set<String> options) throws Exception;
 	
 	public Access save(Access access,Set<String> options);
 	public List<Access> saveList(List<Access> accessList,Set<String> options);

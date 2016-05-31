@@ -9,9 +9,6 @@ import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.assignment.Assignment;
 
-import com.terapico.b2b.buyercompany.BuyerCompanyMapper;
-import com.terapico.b2b.assignment.AssignmentMapper;
-
 import com.terapico.b2b.assignment.AssignmentDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
 
@@ -47,13 +44,13 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 			
 		
 
-	public Employee load(String employeeId,Set<String> options) throws EmployeeNotFoundException{
+	public Employee load(String employeeId,Set<String> options) throws Exception{
 		return loadInternalEmployee(employeeId, options);
 	}
 	public Employee save(Employee employee,Set<String> options){
 		return saveInternalEmployee(employee,options);
 	}
-	public Employee clone(String employeeId,Set<String> options) throws EmployeeNotFoundException{
+	public Employee clone(String employeeId,Set<String> options) throws Exception{
 		Employee newEmployee = load(employeeId, options);
 		newEmployee.setVersion(0);
 		
@@ -163,14 +160,16 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 		
 	
 
-
+	protected EmployeeMapper getMapper(){
+		return new EmployeeMapper();
+	}
 	protected Employee extractEmployee(String employeeId){
 		String SQL = "select * from employee_data where id=?";	
-		Employee employee = getJdbcTemplateObject().queryForObject(SQL, new Object[]{employeeId},new EmployeeMapper());
+		Employee employee = getJdbcTemplateObject().queryForObject(SQL, new Object[]{employeeId}, getMapper());
 		return employee;
 	}
 
-	protected Employee loadInternalEmployee(String employeeId, Set<String> loadOptions){
+	protected Employee loadInternalEmployee(String employeeId, Set<String> loadOptions) throws Exception{
 		
 		Employee employee = extractEmployee(employeeId);
  	
@@ -190,14 +189,13 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	
 	 
 
- 	protected Employee extractCompany(Employee employee){
- 		
- 		String SQL = "select * from buyer_company_data where id=?";
-		BuyerCompany company = getJdbcTemplateObject().queryForObject(SQL, new Object[]{employee.getCompany().getId()},new BuyerCompanyMapper());
+ 	protected Employee extractCompany(Employee employee) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		BuyerCompany company = getBuyerCompanyDAO().load(employee.getCompany().getId(),options);
 		if(company != null){
 			employee.setCompany(company);
 		}
-		
 		
  		
  		return employee;
@@ -207,8 +205,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 		
 	protected Employee extractAssignmentList(Employee employee){
 		
-		String SQL = "select * from assignment_data where user = ?";
-		List<Assignment> assignmentList = getJdbcTemplateObject().query(SQL, new Object[]{employee.getId()},new AssignmentMapper());
+		List<Assignment> assignmentList = getAssignmentDAO().findAssignmentByUser(employee.getId());
 		if(assignmentList != null){
 			employee.setAssignmentList(assignmentList);
 		}
@@ -216,6 +213,20 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 		return employee;
 	
 	}	
+		
+		
+  	
+ 	public List<Employee> findEmployeeByCompany(String buyerCompanyId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where company = ?";
+		List<Employee> employeeList = getJdbcTemplateObject().query(SQL, new Object[]{buyerCompanyId}, getMapper());
+		
+ 	
+ 		return employeeList;
+ 	}
+ 	
+		
+		
 		
 	
 
@@ -400,11 +411,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	
 	}
 		
- 	
- 	public List<Employee> findEmployeeByCompany(String buyerCompanyId){
- 		return new ArrayList<Employee>();
- 	}//find end
- 
+
 }
 
 

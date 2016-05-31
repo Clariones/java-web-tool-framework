@@ -6,8 +6,8 @@ import java.util.Set;
 public interface RoleDAO{
 
 	
-	public Role load(String roleId,Set<String> options) throws RoleNotFoundException;
-	public Role clone(String roleId,Set<String> options) throws RoleNotFoundException;
+	public Role load(String roleId,Set<String> options) throws Exception;
+	public Role clone(String roleId,Set<String> options) throws Exception;
 	
 	public Role save(Role role,Set<String> options);
 	public List<Role> saveList(List<Role> roleList,Set<String> options);

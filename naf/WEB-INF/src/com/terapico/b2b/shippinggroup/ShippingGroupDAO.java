@@ -6,8 +6,8 @@ import java.util.Set;
 public interface ShippingGroupDAO{
 
 	
-	public ShippingGroup load(String shippingGroupId,Set<String> options) throws ShippingGroupNotFoundException;
-	public ShippingGroup clone(String shippingGroupId,Set<String> options) throws ShippingGroupNotFoundException;
+	public ShippingGroup load(String shippingGroupId,Set<String> options) throws Exception;
+	public ShippingGroup clone(String shippingGroupId,Set<String> options) throws Exception;
 	
 	public ShippingGroup save(ShippingGroup shippingGroup,Set<String> options);
 	public List<ShippingGroup> saveList(List<ShippingGroup> shippingGroupList,Set<String> options);

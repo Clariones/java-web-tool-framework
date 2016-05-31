@@ -9,9 +9,6 @@ import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
 
-import com.terapico.b2b.access.AccessMapper;
-import com.terapico.b2b.custsvcrep.CustSvcRepMapper;
-
 import com.terapico.b2b.custsvcrep.CustSvcRepDAO;
 import com.terapico.b2b.access.AccessDAO;
 
@@ -57,13 +54,13 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 			
 		
 
-	public Role load(String roleId,Set<String> options) throws RoleNotFoundException{
+	public Role load(String roleId,Set<String> options) throws Exception{
 		return loadInternalRole(roleId, options);
 	}
 	public Role save(Role role,Set<String> options){
 		return saveInternalRole(role,options);
 	}
-	public Role clone(String roleId,Set<String> options) throws RoleNotFoundException{
+	public Role clone(String roleId,Set<String> options) throws Exception{
 		Role newRole = load(roleId, options);
 		newRole.setVersion(0);
 		
@@ -179,14 +176,16 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		
 	
 
-
+	protected RoleMapper getMapper(){
+		return new RoleMapper();
+	}
 	protected Role extractRole(String roleId){
 		String SQL = "select * from role_data where id=?";	
-		Role role = getJdbcTemplateObject().queryForObject(SQL, new Object[]{roleId},new RoleMapper());
+		Role role = getJdbcTemplateObject().queryForObject(SQL, new Object[]{roleId}, getMapper());
 		return role;
 	}
 
-	protected Role loadInternalRole(String roleId, Set<String> loadOptions){
+	protected Role loadInternalRole(String roleId, Set<String> loadOptions) throws Exception{
 		
 		Role role = extractRole(roleId);
 
@@ -208,8 +207,7 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		
 	protected Role extractAccessList(Role role){
 		
-		String SQL = "select * from access_data where role = ?";
-		List<Access> accessList = getJdbcTemplateObject().query(SQL, new Object[]{role.getId()},new AccessMapper());
+		List<Access> accessList = getAccessDAO().findAccessByRole(role.getId());
 		if(accessList != null){
 			role.setAccessList(accessList);
 		}
@@ -220,8 +218,7 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		
 	protected Role extractCustSvcRepList(Role role){
 		
-		String SQL = "select * from cust_svc_rep_data where role = ?";
-		List<CustSvcRep> custSvcRepList = getJdbcTemplateObject().query(SQL, new Object[]{role.getId()},new CustSvcRepMapper());
+		List<CustSvcRep> custSvcRepList = getCustSvcRepDAO().findCustSvcRepByRole(role.getId());
 		if(custSvcRepList != null){
 			role.setCustSvcRepList(custSvcRepList);
 		}
@@ -229,6 +226,11 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		return role;
 	
 	}	
+		
+		
+ 	
+		
+		
 		
 	
 

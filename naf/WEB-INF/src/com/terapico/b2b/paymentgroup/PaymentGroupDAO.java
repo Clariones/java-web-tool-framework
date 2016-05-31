@@ -6,8 +6,8 @@ import java.util.Set;
 public interface PaymentGroupDAO{
 
 	
-	public PaymentGroup load(String paymentGroupId,Set<String> options) throws PaymentGroupNotFoundException;
-	public PaymentGroup clone(String paymentGroupId,Set<String> options) throws PaymentGroupNotFoundException;
+	public PaymentGroup load(String paymentGroupId,Set<String> options) throws Exception;
+	public PaymentGroup clone(String paymentGroupId,Set<String> options) throws Exception;
 	
 	public PaymentGroup save(PaymentGroup paymentGroup,Set<String> options);
 	public List<PaymentGroup> saveList(List<PaymentGroup> paymentGroupList,Set<String> options);

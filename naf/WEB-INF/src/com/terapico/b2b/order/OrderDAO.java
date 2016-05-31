@@ -6,8 +6,8 @@ import java.util.Set;
 public interface OrderDAO{
 
 	
-	public Order load(String orderId,Set<String> options) throws OrderNotFoundException;
-	public Order clone(String orderId,Set<String> options) throws OrderNotFoundException;
+	public Order load(String orderId,Set<String> options) throws Exception;
+	public Order clone(String orderId,Set<String> options) throws Exception;
 	
 	public Order save(Order order,Set<String> options);
 	public List<Order> saveList(List<Order> orderList,Set<String> options);

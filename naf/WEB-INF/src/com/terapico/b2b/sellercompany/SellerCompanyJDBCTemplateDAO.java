@@ -9,9 +9,6 @@ import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
 
-import com.terapico.b2b.custsvcrep.CustSvcRepMapper;
-import com.terapico.b2b.order.OrderMapper;
-
 import com.terapico.b2b.custsvcrep.CustSvcRepDAO;
 import com.terapico.b2b.order.OrderDAO;
 
@@ -57,13 +54,13 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 			
 		
 
-	public SellerCompany load(String sellerCompanyId,Set<String> options) throws SellerCompanyNotFoundException{
+	public SellerCompany load(String sellerCompanyId,Set<String> options) throws Exception{
 		return loadInternalSellerCompany(sellerCompanyId, options);
 	}
 	public SellerCompany save(SellerCompany sellerCompany,Set<String> options){
 		return saveInternalSellerCompany(sellerCompany,options);
 	}
-	public SellerCompany clone(String sellerCompanyId,Set<String> options) throws SellerCompanyNotFoundException{
+	public SellerCompany clone(String sellerCompanyId,Set<String> options) throws Exception{
 		SellerCompany newSellerCompany = load(sellerCompanyId, options);
 		newSellerCompany.setVersion(0);
 		
@@ -179,14 +176,16 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		
 	
 
-
+	protected SellerCompanyMapper getMapper(){
+		return new SellerCompanyMapper();
+	}
 	protected SellerCompany extractSellerCompany(String sellerCompanyId){
 		String SQL = "select * from seller_company_data where id=?";	
-		SellerCompany sellerCompany = getJdbcTemplateObject().queryForObject(SQL, new Object[]{sellerCompanyId},new SellerCompanyMapper());
+		SellerCompany sellerCompany = getJdbcTemplateObject().queryForObject(SQL, new Object[]{sellerCompanyId}, getMapper());
 		return sellerCompany;
 	}
 
-	protected SellerCompany loadInternalSellerCompany(String sellerCompanyId, Set<String> loadOptions){
+	protected SellerCompany loadInternalSellerCompany(String sellerCompanyId, Set<String> loadOptions) throws Exception{
 		
 		SellerCompany sellerCompany = extractSellerCompany(sellerCompanyId);
 
@@ -208,8 +207,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		
 	protected SellerCompany extractOrderList(SellerCompany sellerCompany){
 		
-		String SQL = "select * from order_data where seller = ?";
-		List<Order> orderList = getJdbcTemplateObject().query(SQL, new Object[]{sellerCompany.getId()},new OrderMapper());
+		List<Order> orderList = getOrderDAO().findOrderBySeller(sellerCompany.getId());
 		if(orderList != null){
 			sellerCompany.setOrderList(orderList);
 		}
@@ -220,8 +218,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		
 	protected SellerCompany extractCustSvcRepList(SellerCompany sellerCompany){
 		
-		String SQL = "select * from cust_svc_rep_data where company = ?";
-		List<CustSvcRep> custSvcRepList = getJdbcTemplateObject().query(SQL, new Object[]{sellerCompany.getId()},new CustSvcRepMapper());
+		List<CustSvcRep> custSvcRepList = getCustSvcRepDAO().findCustSvcRepByCompany(sellerCompany.getId());
 		if(custSvcRepList != null){
 			sellerCompany.setCustSvcRepList(custSvcRepList);
 		}
@@ -229,6 +226,11 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		return sellerCompany;
 	
 	}	
+		
+		
+ 	
+		
+		
 		
 	
 

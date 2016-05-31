@@ -8,8 +8,6 @@ import java.util.HashSet;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
-import com.terapico.b2b.order.OrderMapper;
-
 import com.terapico.b2b.order.OrderDAO;
 
 public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements LineItemDAO{
@@ -25,13 +23,13 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 
 		
 
-	public LineItem load(String lineItemId,Set<String> options) throws LineItemNotFoundException{
+	public LineItem load(String lineItemId,Set<String> options) throws Exception{
 		return loadInternalLineItem(lineItemId, options);
 	}
 	public LineItem save(LineItem lineItem,Set<String> options){
 		return saveInternalLineItem(lineItem,options);
 	}
-	public LineItem clone(String lineItemId,Set<String> options) throws LineItemNotFoundException{
+	public LineItem clone(String lineItemId,Set<String> options) throws Exception{
 		LineItem newLineItem = load(lineItemId, options);
 		newLineItem.setVersion(0);
 		
@@ -118,14 +116,16 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		
 	
 
-
+	protected LineItemMapper getMapper(){
+		return new LineItemMapper();
+	}
 	protected LineItem extractLineItem(String lineItemId){
 		String SQL = "select * from line_item_data where id=?";	
-		LineItem lineItem = getJdbcTemplateObject().queryForObject(SQL, new Object[]{lineItemId},new LineItemMapper());
+		LineItem lineItem = getJdbcTemplateObject().queryForObject(SQL, new Object[]{lineItemId}, getMapper());
 		return lineItem;
 	}
 
-	protected LineItem loadInternalLineItem(String lineItemId, Set<String> loadOptions){
+	protected LineItem loadInternalLineItem(String lineItemId, Set<String> loadOptions) throws Exception{
 		
 		LineItem lineItem = extractLineItem(lineItemId);
  	
@@ -141,20 +141,33 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	
 	 
 
- 	protected LineItem extractBizOrder(LineItem lineItem){
- 		
- 		String SQL = "select * from order_data where id=?";
-		Order bizOrder = getJdbcTemplateObject().queryForObject(SQL, new Object[]{lineItem.getBizOrder().getId()},new OrderMapper());
+ 	protected LineItem extractBizOrder(LineItem lineItem) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		Order bizOrder = getOrderDAO().load(lineItem.getBizOrder().getId(),options);
 		if(bizOrder != null){
 			lineItem.setBizOrder(bizOrder);
 		}
-		
 		
  		
  		return lineItem;
  	}
  		
  
+		
+		
+  	
+ 	public List<LineItem> findLineItemByBizOrder(String orderId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where biz_order = ?";
+		List<LineItem> lineItemList = getJdbcTemplateObject().query(SQL, new Object[]{orderId}, getMapper());
+		
+ 	
+ 		return lineItemList;
+ 	}
+ 	
+		
+		
 		
 	
 
@@ -325,11 +338,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	
  
 		
- 	
- 	public List<LineItem> findLineItemByBizOrder(String orderId){
- 		return new ArrayList<LineItem>();
- 	}//find end
- 
+
 }
 
 

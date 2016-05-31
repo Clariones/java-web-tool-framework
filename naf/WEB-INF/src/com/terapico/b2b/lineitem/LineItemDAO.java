@@ -6,8 +6,8 @@ import java.util.Set;
 public interface LineItemDAO{
 
 	
-	public LineItem load(String lineItemId,Set<String> options) throws LineItemNotFoundException;
-	public LineItem clone(String lineItemId,Set<String> options) throws LineItemNotFoundException;
+	public LineItem load(String lineItemId,Set<String> options) throws Exception;
+	public LineItem clone(String lineItemId,Set<String> options) throws Exception;
 	
 	public LineItem save(LineItem lineItem,Set<String> options);
 	public List<LineItem> saveList(List<LineItem> lineItemList,Set<String> options);

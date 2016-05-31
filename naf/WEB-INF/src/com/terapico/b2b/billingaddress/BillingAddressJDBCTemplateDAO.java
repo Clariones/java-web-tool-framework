@@ -9,9 +9,6 @@ import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
 
-import com.terapico.b2b.buyercompany.BuyerCompanyMapper;
-import com.terapico.b2b.paymentgroup.PaymentGroupMapper;
-
 import com.terapico.b2b.paymentgroup.PaymentGroupDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
 
@@ -47,13 +44,13 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 			
 		
 
-	public BillingAddress load(String billingAddressId,Set<String> options) throws BillingAddressNotFoundException{
+	public BillingAddress load(String billingAddressId,Set<String> options) throws Exception{
 		return loadInternalBillingAddress(billingAddressId, options);
 	}
 	public BillingAddress save(BillingAddress billingAddress,Set<String> options){
 		return saveInternalBillingAddress(billingAddress,options);
 	}
-	public BillingAddress clone(String billingAddressId,Set<String> options) throws BillingAddressNotFoundException{
+	public BillingAddress clone(String billingAddressId,Set<String> options) throws Exception{
 		BillingAddress newBillingAddress = load(billingAddressId, options);
 		newBillingAddress.setVersion(0);
 		
@@ -163,14 +160,16 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 		
 	
 
-
+	protected BillingAddressMapper getMapper(){
+		return new BillingAddressMapper();
+	}
 	protected BillingAddress extractBillingAddress(String billingAddressId){
 		String SQL = "select * from billing_address_data where id=?";	
-		BillingAddress billingAddress = getJdbcTemplateObject().queryForObject(SQL, new Object[]{billingAddressId},new BillingAddressMapper());
+		BillingAddress billingAddress = getJdbcTemplateObject().queryForObject(SQL, new Object[]{billingAddressId}, getMapper());
 		return billingAddress;
 	}
 
-	protected BillingAddress loadInternalBillingAddress(String billingAddressId, Set<String> loadOptions){
+	protected BillingAddress loadInternalBillingAddress(String billingAddressId, Set<String> loadOptions) throws Exception{
 		
 		BillingAddress billingAddress = extractBillingAddress(billingAddressId);
  	
@@ -190,14 +189,13 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 	
 	 
 
- 	protected BillingAddress extractCompany(BillingAddress billingAddress){
- 		
- 		String SQL = "select * from buyer_company_data where id=?";
-		BuyerCompany company = getJdbcTemplateObject().queryForObject(SQL, new Object[]{billingAddress.getCompany().getId()},new BuyerCompanyMapper());
+ 	protected BillingAddress extractCompany(BillingAddress billingAddress) throws Exception{
+
+		Set<String> options = new HashSet<String>();
+		BuyerCompany company = getBuyerCompanyDAO().load(billingAddress.getCompany().getId(),options);
 		if(company != null){
 			billingAddress.setCompany(company);
 		}
-		
 		
  		
  		return billingAddress;
@@ -207,8 +205,7 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 		
 	protected BillingAddress extractPaymentGroupList(BillingAddress billingAddress){
 		
-		String SQL = "select * from payment_group_data where billing_address = ?";
-		List<PaymentGroup> paymentGroupList = getJdbcTemplateObject().query(SQL, new Object[]{billingAddress.getId()},new PaymentGroupMapper());
+		List<PaymentGroup> paymentGroupList = getPaymentGroupDAO().findPaymentGroupByBillingAddress(billingAddress.getId());
 		if(paymentGroupList != null){
 			billingAddress.setPaymentGroupList(paymentGroupList);
 		}
@@ -216,6 +213,20 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 		return billingAddress;
 	
 	}	
+		
+		
+  	
+ 	public List<BillingAddress> findBillingAddressByCompany(String buyerCompanyId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where company = ?";
+		List<BillingAddress> billingAddressList = getJdbcTemplateObject().query(SQL, new Object[]{buyerCompanyId}, getMapper());
+		
+ 	
+ 		return billingAddressList;
+ 	}
+ 	
+		
+		
 		
 	
 
@@ -408,11 +419,7 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 	
 	}
 		
- 	
- 	public List<BillingAddress> findBillingAddressByCompany(String buyerCompanyId){
- 		return new ArrayList<BillingAddress>();
- 	}//find end
- 
+
 }
 
 

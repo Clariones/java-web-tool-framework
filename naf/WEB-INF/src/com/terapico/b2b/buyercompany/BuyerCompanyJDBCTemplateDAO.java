@@ -10,10 +10,6 @@ import com.terapico.b2b.order.Order;
 import com.terapico.b2b.billingaddress.BillingAddress;
 import com.terapico.b2b.employee.Employee;
 
-import com.terapico.b2b.employee.EmployeeMapper;
-import com.terapico.b2b.order.OrderMapper;
-import com.terapico.b2b.billingaddress.BillingAddressMapper;
-
 import com.terapico.b2b.employee.EmployeeDAO;
 import com.terapico.b2b.billingaddress.BillingAddressDAO;
 import com.terapico.b2b.order.OrderDAO;
@@ -79,13 +75,13 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 			
 		
 
-	public BuyerCompany load(String buyerCompanyId,Set<String> options) throws BuyerCompanyNotFoundException{
+	public BuyerCompany load(String buyerCompanyId,Set<String> options) throws Exception{
 		return loadInternalBuyerCompany(buyerCompanyId, options);
 	}
 	public BuyerCompany save(BuyerCompany buyerCompany,Set<String> options){
 		return saveInternalBuyerCompany(buyerCompany,options);
 	}
-	public BuyerCompany clone(String buyerCompanyId,Set<String> options) throws BuyerCompanyNotFoundException{
+	public BuyerCompany clone(String buyerCompanyId,Set<String> options) throws Exception{
 		BuyerCompany newBuyerCompany = load(buyerCompanyId, options);
 		newBuyerCompany.setVersion(0);
 		
@@ -224,14 +220,16 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 	
 
-
+	protected BuyerCompanyMapper getMapper(){
+		return new BuyerCompanyMapper();
+	}
 	protected BuyerCompany extractBuyerCompany(String buyerCompanyId){
 		String SQL = "select * from buyer_company_data where id=?";	
-		BuyerCompany buyerCompany = getJdbcTemplateObject().queryForObject(SQL, new Object[]{buyerCompanyId},new BuyerCompanyMapper());
+		BuyerCompany buyerCompany = getJdbcTemplateObject().queryForObject(SQL, new Object[]{buyerCompanyId}, getMapper());
 		return buyerCompany;
 	}
 
-	protected BuyerCompany loadInternalBuyerCompany(String buyerCompanyId, Set<String> loadOptions){
+	protected BuyerCompany loadInternalBuyerCompany(String buyerCompanyId, Set<String> loadOptions) throws Exception{
 		
 		BuyerCompany buyerCompany = extractBuyerCompany(buyerCompanyId);
 
@@ -257,8 +255,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 	protected BuyerCompany extractBillingAddressList(BuyerCompany buyerCompany){
 		
-		String SQL = "select * from billing_address_data where company = ?";
-		List<BillingAddress> billingAddressList = getJdbcTemplateObject().query(SQL, new Object[]{buyerCompany.getId()},new BillingAddressMapper());
+		List<BillingAddress> billingAddressList = getBillingAddressDAO().findBillingAddressByCompany(buyerCompany.getId());
 		if(billingAddressList != null){
 			buyerCompany.setBillingAddressList(billingAddressList);
 		}
@@ -269,8 +266,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 	protected BuyerCompany extractEmployeeList(BuyerCompany buyerCompany){
 		
-		String SQL = "select * from employee_data where company = ?";
-		List<Employee> employeeList = getJdbcTemplateObject().query(SQL, new Object[]{buyerCompany.getId()},new EmployeeMapper());
+		List<Employee> employeeList = getEmployeeDAO().findEmployeeByCompany(buyerCompany.getId());
 		if(employeeList != null){
 			buyerCompany.setEmployeeList(employeeList);
 		}
@@ -281,8 +277,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 	protected BuyerCompany extractOrderList(BuyerCompany buyerCompany){
 		
-		String SQL = "select * from order_data where buyer = ?";
-		List<Order> orderList = getJdbcTemplateObject().query(SQL, new Object[]{buyerCompany.getId()},new OrderMapper());
+		List<Order> orderList = getOrderDAO().findOrderByBuyer(buyerCompany.getId());
 		if(orderList != null){
 			buyerCompany.setOrderList(orderList);
 		}
@@ -290,6 +285,11 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		return buyerCompany;
 	
 	}	
+		
+		
+ 	
+		
+		
 		
 	
 

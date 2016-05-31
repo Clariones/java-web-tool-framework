@@ -1,43 +1,16 @@
-=================Excute Report @Fri May 20 13:00:03 CST 2016========================
+=================Excute Report @Wed Jun 01 00:37:40 CST 2016========================
 
 
-employee
+buyer_company
 
 
-csr.role
-
-Info: Add virtual field [csrs(es)] to <role>
-	csr.role
-
-
-billing_address
+seller_company
 
 
 shipping_address
 
 
-order
-
-
-payment_group.order
-
-Info: Add virtual field [payment_groups(es)] to <order>
-	payment_group.biz_order
-
-
-order.seller_company
-
-Info: Add virtual field [orders(es)] to <seller_company>
-	order.seller
-
-
-payment_group
-
-
-shipping_group.order
-
-Info: Add virtual field [shipping_groups(es)] to <order>
-	shipping_group.biz_order
+billing_address
 
 
 billing_address.buyer_company
@@ -46,37 +19,7 @@ Info: Add virtual field [billing_addresss(es)] to <buyer_company>
 	billing_address.company
 
 
-csr.seller_company
-
-Info: Add virtual field [csrs(es)] to <seller_company>
-	csr.company
-
-
-order.buyer_company
-
-Info: Add virtual field [orders(es)] to <buyer_company>
-	order.buyer
-
-
-payment_group.billing_address
-
-Info: Add virtual field [payment_groups(es)] to <billing_address>
-	payment_group.billing_address
-
-
-shipping_group.shipping_address
-
-Info: Add virtual field [shipping_groups(es)] to <shipping_address>
-	shipping_group.address
-
-
-access
-
-
-assignment.access
-
-Info: Add virtual field [assignments(es)] to <access>
-	assignment.access
+employee
 
 
 employee.buyer_company
@@ -85,19 +28,49 @@ Info: Add virtual field [employees(es)] to <buyer_company>
 	employee.company
 
 
-shipping_group
-
-
-line_item
+role
 
 
 assignment
 
 
-role
+assignment.employee
+
+Info: Add virtual field [assignments(es)] to <employee>
+	assignment.user
 
 
-buyer_company
+assignment.access
+
+Info: Add virtual field [assignments(es)] to <access>
+	assignment.access
+
+
+access
+
+
+access.role
+
+Info: Add virtual field [accesss(es)] to <role>
+	access.role
+
+
+order
+
+
+order.buyer_company
+
+Info: Add virtual field [orders(es)] to <buyer_company>
+	order.buyer
+
+
+order.seller_company
+
+Info: Add virtual field [orders(es)] to <seller_company>
+	order.seller
+
+
+line_item
 
 
 line_item.order
@@ -106,22 +79,49 @@ Info: Add virtual field [line_items(es)] to <order>
 	line_item.biz_order
 
 
-csr
+shipping_group
 
 
-access.role
+shipping_group.order
 
-Info: Add virtual field [accesss(es)] to <role>
-	access.role_name
-
-
-seller_company
+Info: Add virtual field [shipping_groups(es)] to <order>
+	shipping_group.biz_order
 
 
-assignment.employee
+shipping_group.shipping_address
 
-Info: Add virtual field [assignments(es)] to <employee>
-	assignment.user
+Info: Add virtual field [shipping_groups(es)] to <shipping_address>
+	shipping_group.address
+
+
+payment_group
+
+
+payment_group.order
+
+Info: Add virtual field [payment_groups(es)] to <order>
+	payment_group.biz_order
+
+
+payment_group.billing_address
+
+Info: Add virtual field [payment_groups(es)] to <billing_address>
+	payment_group.billing_address
+
+
+cust_svc_rep
+
+
+cust_svc_rep.role
+
+Info: Add virtual field [cust_svc_reps(es)] to <role>
+	cust_svc_rep.role
+
+
+cust_svc_rep.seller_company
+
+Info: Add virtual field [cust_svc_reps(es)] to <seller_company>
+	cust_svc_rep.company
 
 
 **************************************************
@@ -135,8 +135,8 @@ buyer_company{
 	}
 	references field(3){
 		billing_address	company;
-		order	buyer;
 		employee	company;
+		order	buyer;
 	}
 	vitual fields(0){
 	}
@@ -150,7 +150,7 @@ seller_company{
 	}
 	references field(2){
 		order	seller;
-		csr	company;
+		cust_svc_rep	company;
 	}
 	vitual fields(0){
 	}
@@ -212,8 +212,8 @@ role{
 		int	version('10');
 	}
 	references field(2){
-		csr	role;
-		access	role_name;
+		access	role;
+		cust_svc_rep	role;
 	}
 	vitual fields(0){
 	}
@@ -236,7 +236,7 @@ assignment{
 access{
 	fields(3){
 		string	id('access0000001');
-		role	role_name('$(object)');
+		role	role('$(object)');
 		int	version('10');
 	}
 	references field(1){
@@ -257,9 +257,9 @@ order{
 		int	version('10');
 	}
 	references field(3){
-		payment_group	biz_order;
-		shipping_group	biz_order;
 		line_item	biz_order;
+		shipping_group	biz_order;
+		payment_group	biz_order;
 	}
 	vitual fields(0){
 	}
@@ -311,9 +311,9 @@ payment_group{
 	}
 }
 
-csr{
+cust_svc_rep{
 	fields(5){
-		string	id('csr0000001');
+		string	id('cust_svc_rep0000001');
 		string_email	email('philip_chang@174.com');
 		role	role('$(object)');
 		seller_company	company('$(object)');
@@ -327,6 +327,10 @@ csr{
 
 
 =================================End Report=================================
+
+
+
+
 
 
 
