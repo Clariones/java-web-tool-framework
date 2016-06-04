@@ -27,9 +27,21 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		return loadInternalLineItem(lineItemId, options);
 	}
 	public LineItem save(LineItem lineItem,Set<String> options){
+		
+		String methodName="save(LineItem lineItem,Set<String> options){";
+		
+		assertMethodArgumentNotNull(lineItem, methodName, "lineItem");
+		assertMethodArgumentNotNull(options, methodName, "options");
+		
 		return saveInternalLineItem(lineItem,options);
 	}
 	public LineItem clone(String lineItemId,Set<String> options) throws Exception{
+	
+		String methodName="clone(String lineItemId,Set<String> options)";
+		
+		assertMethodArgumentNotNull(lineItemId, methodName, "lineItemId");
+		assertMethodArgumentNotNull(options, methodName, "options");
+		
 		LineItem newLineItem = load(lineItemId, options);
 		newLineItem.setVersion(0);
 		
@@ -40,6 +52,12 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		return newLineItem;
 	}
 	public void delete(String lineItemId, int version) throws Exception{
+	
+		String methodName="delete(String lineItemId, int version)";
+		assertMethodArgumentNotNull(lineItemId, methodName, "lineItemId");
+		assertMethodIntArgumentGreaterThan(version,0, methodName, "options");
+		
+	
 		String SQL=this.getDeleteSQL();
 		Object [] parameters=new Object[]{lineItemId,version};
 		int affectedNumber = getJdbcTemplateObject().update(SQL,parameters);
@@ -56,10 +74,10 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 				throw new LineItemVersionChangedException("The object version has been changed, please reload to delete");
 			}
 			if(count < 1){
-				throw new LineItemNotFoundException("The object alread has been deleted.");
+				throw new LineItemNotFoundException("The "+this.getTableName()+"("+lineItemId+") has already been deleted.");
 			}
 			if(count > 1){
-				throw new IllegalStateException("The database PRIMARY KEY constraint has been damaged, please fix it.");
+				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
 			}
 		
 		}
@@ -70,7 +88,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"biz_order","sku_id","sku_name","amount","quantity"};
+		return new String[]{"biz_order","sku_id","sku_name","amount","quantity","x"};
 	}
 	@Override
 	protected String getName() {
@@ -174,6 +192,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	protected LineItem saveLineItem(LineItem  lineItem){
 	
 		String SQL=this.getSaveLineItemSQL(lineItem);
+		//FIXME: how about when an item has been updated more than MAX_INT?
 		Object [] parameters = getSaveLineItemParameters(lineItem);
 		int affectedNumber = getJdbcTemplateObject().update(SQL,parameters);
 		if(affectedNumber != 1){
@@ -275,7 +294,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  		return prepareCreateLineItemParameters(lineItem);
  	}
  	protected Object[] prepareUpdateLineItemParameters(LineItem lineItem){
- 		Object[] parameters = new Object[7];
+ 		Object[] parameters = new Object[8];
   	
  		if(lineItem.getBizOrder() != null){
  			parameters[0] = lineItem.getBizOrder().getId();
@@ -284,14 +303,15 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  		parameters[1] = lineItem.getSkuId();
  		parameters[2] = lineItem.getSkuName();
  		parameters[3] = lineItem.getAmount();
- 		parameters[4] = lineItem.getQuantity();		
- 		parameters[5] = lineItem.getId();
- 		parameters[6] = lineItem.getVersion();
+ 		parameters[4] = lineItem.getQuantity();
+ 		parameters[5] = lineItem.getX();		
+ 		parameters[6] = lineItem.getId();
+ 		parameters[7] = lineItem.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateLineItemParameters(LineItem lineItem){
-		Object[] parameters = new Object[6];
+		Object[] parameters = new Object[7];
 		String newLineItemId=getNextId();
 		lineItem.setId(newLineItemId);
 		parameters[0] =  lineItem.getId();
@@ -304,7 +324,8 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  		parameters[2] = lineItem.getSkuId();
  		parameters[3] = lineItem.getSkuName();
  		parameters[4] = lineItem.getAmount();
- 		parameters[5] = lineItem.getQuantity();		
+ 		parameters[5] = lineItem.getQuantity();
+ 		parameters[6] = lineItem.getX();		
  				
  		return parameters;
  	}
@@ -338,7 +359,56 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	
  
 		
-
+	protected void assertMethodArgumentNotNull(Object object, String method, String parameterName){
+		if(object == null){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud NOT be null");
+		}
+	}
+	protected void assertMethodIntArgumentGreaterThan(int value, int targetValue,String method, String parameterName){
+		if(value <= targetValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud greater than " + targetValue +" but it is: "+ value);
+		}
+	}
+	protected void assertMethodIntArgumentLessThan(int value, int targetValue,String method, String parameterName){
+		if(value >= targetValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud less than " + targetValue +" but it is: "+ value);
+		}
+	}
+	
+	protected void assertMethodIntArgumentInClosedRange(int value, int startValue, int endValue, String method, String parameterName){
+		
+		if(startValue>endValue){
+			throw new IllegalArgumentException("When calling the check method, please note your parameter, endValue < startValue");
+		}
+	
+		if(value < startValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
+		}
+		if(value > endValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
+		}
+	}
+	protected void assertMethodStringArgumentLengthInClosedRange(String value, int lengthMin, int lengthMax, String method, String parameterName){
+		
+		if(lengthMin < 0){
+			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin should not less than 0");
+		}
+		
+		if(lengthMin > lengthMax){
+			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin less or equal lengthMax");
+		}
+		
+		if(value == null){		
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is null");
+		}
+		if(value.length() < lengthMin){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
+		}
+		if(value.length() > lengthMax){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
+		}
+	}
+	
 }
 
 

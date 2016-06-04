@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url"	value="jdbc:mysql://localhost:3306/b2b?characterEncoding=utf8" />
+		<property name="username" value="root" />
+		<property name="password" value="0254891276" />
+	</bean>
+
+	
+	<bean id="buyerCompanyDAO" class="com.terapico.b2b.buyercompany.BuyerCompanyJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="billingAddressDAO" ref="billingAddressDAO" />
+		<property name="employeeDAO" ref="employeeDAO" />
+		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+	
+	<bean id="sellerCompanyDAO" class="com.terapico.b2b.sellercompany.SellerCompanyJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="orderDAO" ref="orderDAO" />
+		<property name="custSvcRepDAO" ref="custSvcRepDAO" />
+	</bean>	
+	
+	
+	<bean id="shippingAddressDAO" class="com.terapico.b2b.shippingaddress.ShippingAddressJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="shippingGroupDAO" ref="shippingGroupDAO" />
+	</bean>	
+	
+	
+	<bean id="billingAddressDAO" class="com.terapico.b2b.billingaddress.BillingAddressJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+		<property name="paymentGroupDAO" ref="paymentGroupDAO" />
+	</bean>	
+	
+	
+	<bean id="employeeDAO" class="com.terapico.b2b.employee.EmployeeJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+		<property name="assignmentDAO" ref="assignmentDAO" />
+	</bean>	
+	
+	
+	<bean id="roleDAO" class="com.terapico.b2b.role.RoleJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="accessDAO" ref="accessDAO" />
+		<property name="custSvcRepDAO" ref="custSvcRepDAO" />
+	</bean>	
+	
+	
+	<bean id="assignmentDAO" class="com.terapico.b2b.assignment.AssignmentJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="employeeDAO" ref="employeeDAO" />
+ 		<property name="accessDAO" ref="accessDAO" />
+	</bean>	
+	
+	
+	<bean id="accessDAO" class="com.terapico.b2b.access.AccessJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="roleDAO" ref="roleDAO" />
+		<property name="assignmentDAO" ref="assignmentDAO" />
+	</bean>	
+	
+	
+	<bean id="orderDAO" class="com.terapico.b2b.order.OrderJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+ 		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+		<property name="lineItemDAO" ref="lineItemDAO" />
+		<property name="shippingGroupDAO" ref="shippingGroupDAO" />
+		<property name="paymentGroupDAO" ref="paymentGroupDAO" />
+	</bean>	
+	
+	
+	<bean id="lineItemDAO" class="com.terapico.b2b.lineitem.LineItemJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+	
+	<bean id="shippingGroupDAO" class="com.terapico.b2b.shippinggroup.ShippingGroupJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="orderDAO" ref="orderDAO" />
+ 		<property name="shippingAddressDAO" ref="shippingAddressDAO" />
+	</bean>	
+	
+	
+	<bean id="paymentGroupDAO" class="com.terapico.b2b.paymentgroup.PaymentGroupJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="orderDAO" ref="orderDAO" />
+ 		<property name="billingAddressDAO" ref="billingAddressDAO" />
+	</bean>	
+	
+	
+	<bean id="custSvcRepDAO" class="com.terapico.b2b.custsvcrep.CustSvcRepJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="roleDAO" ref="roleDAO" />
+ 		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+	</bean>	
+	
+
+
+
+</beans>
+
+
+
+

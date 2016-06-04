@@ -7,9 +7,6 @@ import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
 
 public class BillingAddressMapper implements RowMapper<BillingAddress>{
-
-
-
 	
 	public BillingAddress mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		BillingAddress billingAddress =new BillingAddress();
@@ -17,7 +14,8 @@ public class BillingAddressMapper implements RowMapper<BillingAddress>{
 		
 		billingAddress.setId(rs.getString("id"));
 		 		
- 		billingAddress.setCompany(createEmptyCompany(rs.getString("company")));billingAddress.setLine1(rs.getString("line1"));
+ 		billingAddress.setCompany(createEmptyCompany(rs.getString("company")));
+ 		billingAddress.setLine1(rs.getString("line1"));
 		billingAddress.setLine2(rs.getString("line2"));
 		billingAddress.setCity(rs.getString("city"));
 		billingAddress.setState(rs.getString("state"));

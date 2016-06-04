@@ -8,9 +8,6 @@ import com.terapico.b2b.billingaddress.BillingAddress;
 import com.terapico.b2b.employee.Employee;
 
 public class BuyerCompanyMapper implements RowMapper<BuyerCompany>{
-
-
-
 	
 	public BuyerCompany mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		BuyerCompany buyerCompany =new BuyerCompany();

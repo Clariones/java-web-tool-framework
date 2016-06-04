@@ -7,9 +7,6 @@ import com.terapico.b2b.order.Order;
 import com.terapico.b2b.shippingaddress.ShippingAddress;
 
 public class ShippingGroupMapper implements RowMapper<ShippingGroup>{
-
-
-
 	
 	public ShippingGroup mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		ShippingGroup shippingGroup =new ShippingGroup();
@@ -18,8 +15,10 @@ public class ShippingGroupMapper implements RowMapper<ShippingGroup>{
 		shippingGroup.setId(rs.getString("id"));
 		shippingGroup.setName(rs.getString("name"));
 		 		
- 		shippingGroup.setBizOrder(createEmptyBizOrder(rs.getString("biz_order"))); 		
- 		shippingGroup.setAddress(createEmptyAddress(rs.getString("address")));shippingGroup.setAmount(rs.getDouble("amount"));
+ 		shippingGroup.setBizOrder(createEmptyBizOrder(rs.getString("biz_order")));
+ 		 		
+ 		shippingGroup.setAddress(createEmptyAddress(rs.getString("address")));
+ 		shippingGroup.setAmount(rs.getDouble("amount"));
 		shippingGroup.setVersion(rs.getInt("version"));
 		
 

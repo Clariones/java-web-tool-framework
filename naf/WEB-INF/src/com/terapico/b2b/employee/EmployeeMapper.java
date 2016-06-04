@@ -7,9 +7,6 @@ import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.assignment.Assignment;
 
 public class EmployeeMapper implements RowMapper<Employee>{
-
-
-
 	
 	public Employee mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		Employee employee =new Employee();
@@ -18,7 +15,8 @@ public class EmployeeMapper implements RowMapper<Employee>{
 		employee.setId(rs.getString("id"));
 		employee.setName(rs.getString("name"));
 		 		
- 		employee.setCompany(createEmptyCompany(rs.getString("company")));employee.setVersion(rs.getInt("version"));
+ 		employee.setCompany(createEmptyCompany(rs.getString("company")));
+ 		employee.setVersion(rs.getInt("version"));
 		
 
 		return employee;

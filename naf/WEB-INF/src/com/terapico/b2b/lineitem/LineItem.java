@@ -18,6 +18,7 @@ public class LineItem implements  java.io.Serializable{
 	protected		String	mSkuName;
 	protected		double	mAmount;
 	protected		int	mxQuantity;
+	protected		String	mX;
 	protected		int	mxVersion;
 	
 	
@@ -27,7 +28,7 @@ public class LineItem implements  java.io.Serializable{
 
 	}
 	
-	public 	LineItem(String	id,Order	biz_order,String	sku_id,String	sku_name,double	amount,int	quantity,int	version)
+	public 	LineItem(String	id,Order	biz_order,String	sku_id,String	sku_name,double	amount,int	quantity,String	x,int	version)
 	{
 		setId(id);
 		setBizOrder(biz_order);
@@ -35,6 +36,7 @@ public class LineItem implements  java.io.Serializable{
 		setSkuName(sku_name);
 		setAmount(amount);
 		setQuantity(quantity);
+		setX(x);
 		setVersion(version);	
 	}
 	
@@ -82,6 +84,13 @@ public class LineItem implements  java.io.Serializable{
 		return this.mxQuantity;
 	}
 	
+	public void setX(String x){
+		this.mX = x;
+	}
+	public String getX(){
+		return this.mX;
+	}
+	
 	public void setVersion(int version){
 		this.mxVersion = version;
 	}
@@ -100,6 +109,7 @@ public class LineItem implements  java.io.Serializable{
 		stringBuilder.append("\tsku_name='"+getSkuName()+"';");
 		stringBuilder.append("\tamount='"+getAmount()+"';");
 		stringBuilder.append("\tquantity='"+getQuantity()+"';");
+		stringBuilder.append("\tx='"+getX()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

@@ -108,7 +108,8 @@ public class SingleFileSplitter {
 	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		doSplit("b2b","/opt/resin-3.1.12/webapps/naf/WEB-INF/");
+		//doSplit("b2b","/opt/resin-3.1.12/webapps/naf/WEB-INF/");
+		doSplit("cms","/opt/resin-3.1.12/webapps/naf/WEB-INF/");
 	}
 
 }

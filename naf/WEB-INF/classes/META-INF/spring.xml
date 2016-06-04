@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	
 	<bean id="organization" class="organization.OrganizationSerivce"></bean>
@@ -18,42 +18,10 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 	<bean id="userDAO" class="privilege.UserDAOJDBCTemplateImpl">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
-	<bean id="order" class="com.terapico.b2btemplate.OrderDAOImpl">
-		<property name="dataSource" ref="b2bDataSource" />
-	</bean>
-	<bean id="gitem" class="com.terapico.b2b.lineitem.LineItemJDBCTemplateDAO">
-		<property name="dataSource" ref="b2bDataSource" />
-	</bean>
-	<bean id="orderDAO" class="com.terapico.b2b.order.OrderJDBCTemplateDAO">
-		<property name="dataSource" ref="b2bDataSource" />
-		<property name="lineItemDAO" ref="gitem" />
-		
-	</bean>
-	<bean id="orders" class="com.terapico.b2b.order.OrderServiceImpl">
-		<property name="orderDAO" ref="orderDAO" />
-		
-	</bean>
-	
-	
-	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url"	value="jdbc:mysql://localhost:3306/privilege?characterEncoding=utf8" />
-		<property name="username" value="root" />
-		<property name="password" value="0254891276" />
-	</bean>
 
 
+	
 
-
-	<bean id="b2bDataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url"	value="jdbc:mysql://localhost:3306/b2b?characterEncoding=utf8" />
-		<property name="username" value="root" />
-		<property name="password" value="0254891276" />
-		<property name="initialSize" value="3"/>
-	</bean>
 
 </beans>
 

@@ -34,7 +34,7 @@ public class OrderServiceImpl {
 		 lineItemDAO.delete(lineItemId, version);
 		 
 	}
-	public Order submit(String orderId,String [] optionsArray) throws OrderNotFoundException {
+	public Order submit(String orderId,String [] optionsArray) throws Exception {
 		Set<String> options=new HashSet<String>();
 		options.addAll(Arrays.asList(optionsArray));
 		return orderDAO.load(orderId, options);

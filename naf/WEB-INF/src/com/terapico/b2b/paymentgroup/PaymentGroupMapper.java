@@ -7,9 +7,6 @@ import com.terapico.b2b.order.Order;
 import com.terapico.b2b.billingaddress.BillingAddress;
 
 public class PaymentGroupMapper implements RowMapper<PaymentGroup>{
-
-
-
 	
 	public PaymentGroup mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		PaymentGroup paymentGroup =new PaymentGroup();
@@ -18,9 +15,11 @@ public class PaymentGroupMapper implements RowMapper<PaymentGroup>{
 		paymentGroup.setId(rs.getString("id"));
 		paymentGroup.setName(rs.getString("name"));
 		 		
- 		paymentGroup.setBizOrder(createEmptyBizOrder(rs.getString("biz_order")));paymentGroup.setCardNumber(rs.getString("card_number"));
+ 		paymentGroup.setBizOrder(createEmptyBizOrder(rs.getString("biz_order")));
+ 		paymentGroup.setCardNumber(rs.getString("card_number"));
 		 		
- 		paymentGroup.setBillingAddress(createEmptyBillingAddress(rs.getString("billing_address")));paymentGroup.setVersion(rs.getInt("version"));
+ 		paymentGroup.setBillingAddress(createEmptyBillingAddress(rs.getString("billing_address")));
+ 		paymentGroup.setVersion(rs.getInt("version"));
 		
 
 		return paymentGroup;

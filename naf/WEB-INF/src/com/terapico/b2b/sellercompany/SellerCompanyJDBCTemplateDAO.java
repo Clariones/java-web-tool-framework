@@ -58,9 +58,21 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		return loadInternalSellerCompany(sellerCompanyId, options);
 	}
 	public SellerCompany save(SellerCompany sellerCompany,Set<String> options){
+		
+		String methodName="save(SellerCompany sellerCompany,Set<String> options){";
+		
+		assertMethodArgumentNotNull(sellerCompany, methodName, "sellerCompany");
+		assertMethodArgumentNotNull(options, methodName, "options");
+		
 		return saveInternalSellerCompany(sellerCompany,options);
 	}
 	public SellerCompany clone(String sellerCompanyId,Set<String> options) throws Exception{
+	
+		String methodName="clone(String sellerCompanyId,Set<String> options)";
+		
+		assertMethodArgumentNotNull(sellerCompanyId, methodName, "sellerCompanyId");
+		assertMethodArgumentNotNull(options, methodName, "options");
+		
 		SellerCompany newSellerCompany = load(sellerCompanyId, options);
 		newSellerCompany.setVersion(0);
 		
@@ -85,6 +97,12 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		return newSellerCompany;
 	}
 	public void delete(String sellerCompanyId, int version) throws Exception{
+	
+		String methodName="delete(String sellerCompanyId, int version)";
+		assertMethodArgumentNotNull(sellerCompanyId, methodName, "sellerCompanyId");
+		assertMethodIntArgumentGreaterThan(version,0, methodName, "options");
+		
+	
 		String SQL=this.getDeleteSQL();
 		Object [] parameters=new Object[]{sellerCompanyId,version};
 		int affectedNumber = getJdbcTemplateObject().update(SQL,parameters);
@@ -101,10 +119,10 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 				throw new SellerCompanyVersionChangedException("The object version has been changed, please reload to delete");
 			}
 			if(count < 1){
-				throw new SellerCompanyNotFoundException("The object alread has been deleted.");
+				throw new SellerCompanyNotFoundException("The "+this.getTableName()+"("+sellerCompanyId+") has already been deleted.");
 			}
 			if(count > 1){
-				throw new IllegalStateException("The database PRIMARY KEY constraint has been damaged, please fix it.");
+				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
 			}
 		
 		}
@@ -237,6 +255,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	protected SellerCompany saveSellerCompany(SellerCompany  sellerCompany){
 	
 		String SQL=this.getSaveSellerCompanySQL(sellerCompany);
+		//FIXME: how about when an item has been updated more than MAX_INT?
 		Object [] parameters = getSaveSellerCompanyParameters(sellerCompany);
 		int affectedNumber = getJdbcTemplateObject().update(SQL,parameters);
 		if(affectedNumber != 1){
@@ -411,7 +430,56 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	
 	}
 		
-
+	protected void assertMethodArgumentNotNull(Object object, String method, String parameterName){
+		if(object == null){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud NOT be null");
+		}
+	}
+	protected void assertMethodIntArgumentGreaterThan(int value, int targetValue,String method, String parameterName){
+		if(value <= targetValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud greater than " + targetValue +" but it is: "+ value);
+		}
+	}
+	protected void assertMethodIntArgumentLessThan(int value, int targetValue,String method, String parameterName){
+		if(value >= targetValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud less than " + targetValue +" but it is: "+ value);
+		}
+	}
+	
+	protected void assertMethodIntArgumentInClosedRange(int value, int startValue, int endValue, String method, String parameterName){
+		
+		if(startValue>endValue){
+			throw new IllegalArgumentException("When calling the check method, please note your parameter, endValue < startValue");
+		}
+	
+		if(value < startValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
+		}
+		if(value > endValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
+		}
+	}
+	protected void assertMethodStringArgumentLengthInClosedRange(String value, int lengthMin, int lengthMax, String method, String parameterName){
+		
+		if(lengthMin < 0){
+			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin should not less than 0");
+		}
+		
+		if(lengthMin > lengthMax){
+			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin less or equal lengthMax");
+		}
+		
+		if(value == null){		
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is null");
+		}
+		if(value.length() < lengthMin){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
+		}
+		if(value.length() > lengthMax){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
+		}
+	}
+	
 }
 
 

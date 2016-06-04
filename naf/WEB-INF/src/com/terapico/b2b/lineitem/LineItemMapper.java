@@ -6,9 +6,6 @@ import org.springframework.jdbc.core.RowMapper;
 import com.terapico.b2b.order.Order;
 
 public class LineItemMapper implements RowMapper<LineItem>{
-
-
-
 	
 	public LineItem mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		LineItem lineItem =new LineItem();
@@ -16,10 +13,12 @@ public class LineItemMapper implements RowMapper<LineItem>{
 		
 		lineItem.setId(rs.getString("id"));
 		 		
- 		lineItem.setBizOrder(createEmptyBizOrder(rs.getString("biz_order")));lineItem.setSkuId(rs.getString("sku_id"));
+ 		lineItem.setBizOrder(createEmptyBizOrder(rs.getString("biz_order")));
+ 		lineItem.setSkuId(rs.getString("sku_id"));
 		lineItem.setSkuName(rs.getString("sku_name"));
 		lineItem.setAmount(rs.getDouble("amount"));
 		lineItem.setQuantity(rs.getInt("quantity"));
+		lineItem.setX(rs.getString("x"));
 		lineItem.setVersion(rs.getInt("version"));
 		
 

@@ -7,9 +7,6 @@ import com.terapico.b2b.role.Role;
 import com.terapico.b2b.assignment.Assignment;
 
 public class AccessMapper implements RowMapper<Access>{
-
-
-
 	
 	public Access mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		Access access =new Access();
@@ -17,7 +14,8 @@ public class AccessMapper implements RowMapper<Access>{
 		
 		access.setId(rs.getString("id"));
 		 		
- 		access.setRole(createEmptyRole(rs.getString("role")));access.setVersion(rs.getInt("version"));
+ 		access.setRole(createEmptyRole(rs.getString("role")));
+ 		access.setVersion(rs.getInt("version"));
 		
 
 		return access;

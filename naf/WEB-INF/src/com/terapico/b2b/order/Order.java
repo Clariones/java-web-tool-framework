@@ -22,6 +22,7 @@ public class Order implements  java.io.Serializable{
 	protected		String	mTitle;
 	protected		double	mTotalAmount;
 	protected		String	mType;
+	protected		boolean	mMarkAsDelete;
 	protected		int	mxVersion;
 	
 	
@@ -34,7 +35,7 @@ public class Order implements  java.io.Serializable{
 
 	}
 	
-	public 	Order(String	id,BuyerCompany	buyer,SellerCompany	seller,String	title,double	total_amount,String	type,int	version)
+	public 	Order(String	id,BuyerCompany	buyer,SellerCompany	seller,String	title,double	total_amount,String	type,boolean	mark_as_delete,int	version)
 	{
 		setId(id);
 		setBuyer(buyer);
@@ -42,6 +43,7 @@ public class Order implements  java.io.Serializable{
 		setTitle(title);
 		setTotalAmount(total_amount);
 		setType(type);
+		setMarkAsDelete(mark_as_delete);
 		setVersion(version);
 		this.mLineItemList = new ArrayList<LineItem>();
 		this.mShippingGroupList = new ArrayList<ShippingGroup>();
@@ -90,6 +92,13 @@ public class Order implements  java.io.Serializable{
 	}
 	public String getType(){
 		return this.mType;
+	}
+	
+	public void setMarkAsDelete(boolean mark_as_delete){
+		this.mMarkAsDelete = mark_as_delete;
+	}
+	public boolean getMarkAsDelete(){
+		return this.mMarkAsDelete;
 	}
 	
 	public void setVersion(int version){
@@ -215,6 +224,7 @@ public class Order implements  java.io.Serializable{
 		stringBuilder.append("\ttitle='"+getTitle()+"';");
 		stringBuilder.append("\ttotal_amount='"+getTotalAmount()+"';");
 		stringBuilder.append("\ttype='"+getType()+"';");
+		stringBuilder.append("\tmark_as_delete='"+getMarkAsDelete()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

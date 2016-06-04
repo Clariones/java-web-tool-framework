@@ -10,9 +10,6 @@ import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
 public class OrderMapper implements RowMapper<Order>{
-
-
-
 	
 	public Order mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		Order order =new Order();
@@ -20,10 +17,13 @@ public class OrderMapper implements RowMapper<Order>{
 		
 		order.setId(rs.getString("id"));
 		 		
- 		order.setBuyer(createEmptyBuyer(rs.getString("buyer"))); 		
- 		order.setSeller(createEmptySeller(rs.getString("seller")));order.setTitle(rs.getString("title"));
+ 		order.setBuyer(createEmptyBuyer(rs.getString("buyer")));
+ 		 		
+ 		order.setSeller(createEmptySeller(rs.getString("seller")));
+ 		order.setTitle(rs.getString("title"));
 		order.setTotalAmount(rs.getDouble("total_amount"));
 		order.setType(rs.getString("type"));
+		order.setMarkAsDelete(rs.getBoolean("mark_as_delete"));
 		order.setVersion(rs.getInt("version"));
 		
 

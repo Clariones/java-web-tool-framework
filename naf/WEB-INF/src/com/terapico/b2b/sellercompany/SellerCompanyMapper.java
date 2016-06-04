@@ -7,9 +7,6 @@ import com.terapico.b2b.order.Order;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
 
 public class SellerCompanyMapper implements RowMapper<SellerCompany>{
-
-
-
 	
 	public SellerCompany mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		SellerCompany sellerCompany =new SellerCompany();

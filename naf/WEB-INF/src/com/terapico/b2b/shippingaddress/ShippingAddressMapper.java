@@ -6,9 +6,6 @@ import org.springframework.jdbc.core.RowMapper;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
 public class ShippingAddressMapper implements RowMapper<ShippingAddress>{
-
-
-
 	
 	public ShippingAddress mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		ShippingAddress shippingAddress =new ShippingAddress();

@@ -7,9 +7,6 @@ import com.terapico.b2b.access.Access;
 import com.terapico.b2b.employee.Employee;
 
 public class AssignmentMapper implements RowMapper<Assignment>{
-
-
-
 	
 	public Assignment mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		Assignment assignment =new Assignment();
@@ -17,8 +14,10 @@ public class AssignmentMapper implements RowMapper<Assignment>{
 		
 		assignment.setId(rs.getString("id"));
 		 		
- 		assignment.setUser(createEmptyUser(rs.getString("user"))); 		
- 		assignment.setAccess(createEmptyAccess(rs.getString("access")));assignment.setAssignedDate(rs.getDate("assigned_date"));
+ 		assignment.setUser(createEmptyUser(rs.getString("user")));
+ 		 		
+ 		assignment.setAccess(createEmptyAccess(rs.getString("access")));
+ 		assignment.setAssignedDate(rs.getDate("assigned_date"));
 		assignment.setVersion(rs.getInt("version"));
 		
 

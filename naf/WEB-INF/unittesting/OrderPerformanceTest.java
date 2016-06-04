@@ -33,7 +33,7 @@ public class OrderPerformanceTest {
 		
 	}
 	
-	public void test1() throws OrderNotFoundException {
+	public void test1() throws Exception {
 		//fail("Not yet implemented");
 		
 		SpringBeanFactory factory=new SpringBeanFactory();
@@ -57,7 +57,7 @@ public class OrderPerformanceTest {
 		//System.out.println(order.getLineItemList());
 	}
 	
-	public void test2() throws OrderNotFoundException {
+	public void test2() throws Exception {
 		//fail("Not yet implemented");
 		
 		SpringBeanFactory factory=new SpringBeanFactory();

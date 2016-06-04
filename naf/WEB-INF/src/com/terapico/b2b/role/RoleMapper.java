@@ -7,9 +7,6 @@ import com.terapico.b2b.access.Access;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
 
 public class RoleMapper implements RowMapper<Role>{
-
-
-
 	
 	public Role mapRow(ResultSet rs, int rowNumber) throws SQLException{
 		Role role =new Role();
