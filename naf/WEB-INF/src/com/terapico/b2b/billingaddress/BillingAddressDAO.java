@@ -13,6 +13,7 @@ public interface BillingAddressDAO{
 	public List<BillingAddress> saveList(List<BillingAddress> billingAddressList,Set<String> options);
 	
 	public void delete(String billingAddressId, int version) throws Exception;
+	public int deleteAll() throws Exception;
  	public List<BillingAddress> findBillingAddressByCompany(String buyerCompanyId);
  }
 

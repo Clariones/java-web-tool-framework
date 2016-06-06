@@ -79,6 +79,16 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 		
 		return newAccess;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String accessId, int version) throws Exception{
 	
 		String methodName="delete(String accessId, int version)";

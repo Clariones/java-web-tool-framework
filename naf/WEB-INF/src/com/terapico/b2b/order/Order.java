@@ -10,6 +10,7 @@ import org.xml.sax.Attributes;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.lineitem.LineItem;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
+import com.terapico.b2b.action.Action;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
@@ -29,6 +30,7 @@ public class Order implements  java.io.Serializable{
 	protected		List<LineItem> mLineItemList;
 	protected		List<ShippingGroup> mShippingGroupList;
 	protected		List<PaymentGroup> mPaymentGroupList;
+	protected		List<Action> mActionList;
 	
 		
 	public 	Order(){
@@ -47,7 +49,8 @@ public class Order implements  java.io.Serializable{
 		setVersion(version);
 		this.mLineItemList = new ArrayList<LineItem>();
 		this.mShippingGroupList = new ArrayList<ShippingGroup>();
-		this.mPaymentGroupList = new ArrayList<PaymentGroup>();	
+		this.mPaymentGroupList = new ArrayList<PaymentGroup>();
+		this.mActionList = new ArrayList<Action>();	
 	}
 	
 
@@ -207,6 +210,41 @@ public class Order implements  java.io.Serializable{
 	
 	public  void removePaymentGroup(PaymentGroup payment_group){
 		getPaymentGroupList().remove(payment_group);
+	}
+	
+	
+	
+	
+	
+	public  List<Action> getActionList(){
+		if(this.mActionList == null){
+			this.mActionList = new ArrayList<Action>();
+		}
+		return this.mActionList;	
+	}
+	public  void setActionList(List<Action> actionList){
+		for( Action action:actionList){
+			action.setBo(this);
+		}
+		
+		
+		this.mActionList = actionList;
+		
+	}
+	
+	public  void addAction(Action action){
+		action.setBo(this);
+		getActionList().add(action);
+	}
+	public  void addActions(List<Action> actionList){
+		for( Action action:actionList){
+			action.setBo(this);
+		}
+		getActionList().addAll(actionList);
+	}
+	
+	public  void removeAction(Action action){
+		getActionList().remove(action);
 	}
 	
 	

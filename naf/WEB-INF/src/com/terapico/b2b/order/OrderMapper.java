@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.lineitem.LineItem;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
+import com.terapico.b2b.action.Action;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 

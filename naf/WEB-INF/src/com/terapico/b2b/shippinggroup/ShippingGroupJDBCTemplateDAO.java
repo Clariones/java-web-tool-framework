@@ -62,6 +62,16 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		
 		return newShippingGroup;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String shippingGroupId, int version) throws Exception{
 	
 		String methodName="delete(String shippingGroupId, int version)";

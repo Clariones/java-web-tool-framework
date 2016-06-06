@@ -74,6 +74,7 @@
 		<property name="lineItemDAO" ref="lineItemDAO" />
 		<property name="shippingGroupDAO" ref="shippingGroupDAO" />
 		<property name="paymentGroupDAO" ref="paymentGroupDAO" />
+		<property name="actionDAO" ref="actionDAO" />
 	</bean>	
 	
 	
@@ -101,6 +102,12 @@
 		<property name="dataSource" ref="dataSource" />
  		<property name="roleDAO" ref="roleDAO" />
  		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+	</bean>	
+	
+	
+	<bean id="actionDAO" class="com.terapico.b2b.action.ActionJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="orderDAO" ref="orderDAO" />
 	</bean>	
 	
 

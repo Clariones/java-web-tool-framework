@@ -52,29 +52,24 @@
             <span class="icon-bar"></span>
           </button>
           
-          <div class="navbar-brand">Spring Beans [${result.selectBeanName}] ： 
+          <div class="navbar-brand">Spring Beans [${result.selectBeanName}] ：
+           
           </div>
           
-         
-          
-          
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-           <c:forEach var="item" items="${result.beanList}"><li><a href='/naf/navi/index/${item}/' class='bean'> ${item}</a></li></c:forEach>
-          
-            <li><a href="?__logout__">Logout</a></li>
-            <!-- <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li> 
-                      <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-            -->
-          </ul>
 
         </div>
-      </div>
+      
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+           
+            <li><a href="?__logout__">Logout</a></li>
+           
+            
+          </ul>
+          
+        </div>
+        </div>
+     
     </nav>
 
     <div class="container-fluid">
@@ -87,6 +82,12 @@
             </c:forEach>
           
           </ul>
+          <hr/>
+          <ul class="nav nav-sidebar">
+           <c:forEach var="item" items="${result.beanList}"><li><a href='/naf/navi/index/${item}/' class='bean'> ${item}</a></li></c:forEach>
+            
+          </ul>
+          
           
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

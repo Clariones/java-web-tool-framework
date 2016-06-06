@@ -13,6 +13,7 @@ public interface BuyerCompanyDAO{
 	public List<BuyerCompany> saveList(List<BuyerCompany> buyerCompanyList,Set<String> options);
 	
 	public void delete(String buyerCompanyId, int version) throws Exception;
+	public int deleteAll() throws Exception;
 }
 
 

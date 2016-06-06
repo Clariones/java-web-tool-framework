@@ -68,6 +68,16 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 		
 		return newShippingAddress;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String shippingAddressId, int version) throws Exception{
 	
 		String methodName="delete(String shippingAddressId, int version)";

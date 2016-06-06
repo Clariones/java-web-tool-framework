@@ -15,7 +15,7 @@ public class SpringBeanFactory extends InternalBeanFactory implements BeanFactor
 	protected void ensureContext()
 	{
 		if(context!=null){return;}
-		context = new ClassPathXmlApplicationContext(new String[]{"classpath*:/META-INF/spring.xml","classpath*:/META-INF/cms.xml"});
+		context = new ClassPathXmlApplicationContext(new String[]{"classpath*:/META-INF/spring.xml","classpath*:/META-INF/b2b-manual.xml"});
 		
 	}
 	private String []beanNamesCache;

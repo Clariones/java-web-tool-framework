@@ -124,6 +124,16 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 		return newBuyerCompany;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String buyerCompanyId, int version) throws Exception{
 	
 		String methodName="delete(String buyerCompanyId, int version)";

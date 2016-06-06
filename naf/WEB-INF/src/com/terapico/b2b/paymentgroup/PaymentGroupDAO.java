@@ -13,6 +13,7 @@ public interface PaymentGroupDAO{
 	public List<PaymentGroup> saveList(List<PaymentGroup> paymentGroupList,Set<String> options);
 	
 	public void delete(String paymentGroupId, int version) throws Exception;
+	public int deleteAll() throws Exception;
  	public List<PaymentGroup> findPaymentGroupByBizOrder(String orderId);
   	public List<PaymentGroup> findPaymentGroupByBillingAddress(String billingAddressId);
  }

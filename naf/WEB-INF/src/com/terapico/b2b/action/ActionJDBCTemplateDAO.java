@@ -1,5 +1,5 @@
 
-package com.terapico.b2b.lineitem;
+package com.terapico.b2b.action;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import com.terapico.b2b.order.Order;
 
 import com.terapico.b2b.order.OrderDAO;
 
-public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements LineItemDAO{
+public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements ActionDAO{
  
  	
  	private  OrderDAO  orderDAO;
@@ -23,33 +23,33 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 
 		
 
-	public LineItem load(String lineItemId,Set<String> options) throws Exception{
-		return loadInternalLineItem(lineItemId, options);
+	public Action load(String actionId,Set<String> options) throws Exception{
+		return loadInternalAction(actionId, options);
 	}
-	public LineItem save(LineItem lineItem,Set<String> options){
+	public Action save(Action action,Set<String> options){
 		
-		String methodName="save(LineItem lineItem,Set<String> options){";
+		String methodName="save(Action action,Set<String> options){";
 		
-		assertMethodArgumentNotNull(lineItem, methodName, "lineItem");
+		assertMethodArgumentNotNull(action, methodName, "action");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
-		return saveInternalLineItem(lineItem,options);
+		return saveInternalAction(action,options);
 	}
-	public LineItem clone(String lineItemId,Set<String> options) throws Exception{
+	public Action clone(String actionId,Set<String> options) throws Exception{
 	
-		String methodName="clone(String lineItemId,Set<String> options)";
+		String methodName="clone(String actionId,Set<String> options)";
 		
-		assertMethodArgumentNotNull(lineItemId, methodName, "lineItemId");
+		assertMethodArgumentNotNull(actionId, methodName, "actionId");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
-		LineItem newLineItem = load(lineItemId, options);
-		newLineItem.setVersion(0);
+		Action newAction = load(actionId, options);
+		newAction.setVersion(0);
 		
 		
 		
-		saveInternalLineItem(newLineItem,options);
+		saveInternalAction(newAction,options);
 		
-		return newLineItem;
+		return newAction;
 	}
 	public int deleteAll() throws Exception{
 	
@@ -61,15 +61,15 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		
 	
 	}
-	public void delete(String lineItemId, int version) throws Exception{
+	public void delete(String actionId, int version) throws Exception{
 	
-		String methodName="delete(String lineItemId, int version)";
-		assertMethodArgumentNotNull(lineItemId, methodName, "lineItemId");
+		String methodName="delete(String actionId, int version)";
+		assertMethodArgumentNotNull(actionId, methodName, "actionId");
 		assertMethodIntArgumentGreaterThan(version,0, methodName, "options");
 		
 	
 		String SQL=this.getDeleteSQL();
-		Object [] parameters=new Object[]{lineItemId,version};
+		Object [] parameters=new Object[]{actionId,version};
 		int affectedNumber = getJdbcTemplateObject().update(SQL,parameters);
 		if(affectedNumber == 1){
 			return ; //Delete successfully
@@ -78,13 +78,13 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 			// two suitations here, this object has been deleted; or
 			// the version has been changed, the client should reload it and ensure this can be deleted
 			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{lineItemId};
+			parameters=new Object[]{actionId};
 			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
 			if(count == 1){
-				throw new LineItemVersionChangedException("The object version has been changed, please reload to delete");
+				throw new ActionVersionChangedException("The object version has been changed, please reload to delete");
 			}
 			if(count < 1){
-				throw new LineItemNotFoundException("The "+this.getTableName()+"("+lineItemId+") has already been deleted.");
+				throw new ActionNotFoundException("The "+this.getTableName()+"("+actionId+") has already been deleted.");
 			}
 			if(count > 1){
 				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
@@ -98,12 +98,12 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"biz_order","sku_id","sku_name","amount","quantity","x"};
+		return new String[]{"name","internal_name","bo"};
 	}
 	@Override
 	protected String getName() {
 		
-		return "line_item";
+		return "action";
 	}
 	
 	
@@ -124,18 +124,18 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	}
 
  
- 	//private boolean extractBizOrderEnabled = true;
- 	private static final String BIZORDER = "bizOrder";
- 	protected boolean isExtractBizOrderEnabled(Set<String> options){
+ 	//private boolean extractBoEnabled = true;
+ 	private static final String BO = "bo";
+ 	protected boolean isExtractBoEnabled(Set<String> options){
  		
-	 	return checkOptions(options, BIZORDER);
+	 	return checkOptions(options, BO);
  	}
  	
  	
- 	//private boolean saveBizOrderEnabled = true;
- 	protected boolean isSaveBizOrderEnabled(Set<String> options){
+ 	//private boolean saveBoEnabled = true;
+ 	protected boolean isSaveBoEnabled(Set<String> options){
 	 	
- 		return checkOptions(options, BIZORDER);
+ 		return checkOptions(options, BO);
  	}
  	
 
@@ -144,54 +144,54 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		
 	
 
-	protected LineItemMapper getMapper(){
-		return new LineItemMapper();
+	protected ActionMapper getMapper(){
+		return new ActionMapper();
 	}
-	protected LineItem extractLineItem(String lineItemId){
-		String SQL = "select * from line_item_data where id=?";	
-		LineItem lineItem = getJdbcTemplateObject().queryForObject(SQL, new Object[]{lineItemId}, getMapper());
-		return lineItem;
+	protected Action extractAction(String actionId){
+		String SQL = "select * from action_data where id=?";	
+		Action action = getJdbcTemplateObject().queryForObject(SQL, new Object[]{actionId}, getMapper());
+		return action;
 	}
 
-	protected LineItem loadInternalLineItem(String lineItemId, Set<String> loadOptions) throws Exception{
+	protected Action loadInternalAction(String actionId, Set<String> loadOptions) throws Exception{
 		
-		LineItem lineItem = extractLineItem(lineItemId);
+		Action action = extractAction(actionId);
  	
- 		if(isExtractBizOrderEnabled(loadOptions)){
-	 		extractBizOrder(lineItem);
+ 		if(isExtractBoEnabled(loadOptions)){
+	 		extractBo(action);
  		}
  
 		
-		return lineItem;
+		return action;
 		
 	}
 	
 	
 	 
 
- 	protected LineItem extractBizOrder(LineItem lineItem) throws Exception{
+ 	protected Action extractBo(Action action) throws Exception{
 
 		Set<String> options = new HashSet<String>();
-		Order bizOrder = getOrderDAO().load(lineItem.getBizOrder().getId(),options);
-		if(bizOrder != null){
-			lineItem.setBizOrder(bizOrder);
+		Order bo = getOrderDAO().load(action.getBo().getId(),options);
+		if(bo != null){
+			action.setBo(bo);
 		}
 		
  		
- 		return lineItem;
+ 		return action;
  	}
  		
  
 		
 		
   	
- 	public List<LineItem> findLineItemByBizOrder(String orderId){
+ 	public List<Action> findActionByBo(String orderId){
  	
- 		String SQL = "select * from "+this.getTableName()+" where biz_order = ?";
-		List<LineItem> lineItemList = getJdbcTemplateObject().query(SQL, new Object[]{orderId}, getMapper());
+ 		String SQL = "select * from "+this.getTableName()+" where bo = ?";
+		List<Action> actionList = getJdbcTemplateObject().query(SQL, new Object[]{orderId}, getMapper());
 		
  	
- 		return lineItemList;
+ 		return actionList;
  	}
  	
 		
@@ -199,66 +199,66 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		
 	
 
-	protected LineItem saveLineItem(LineItem  lineItem){
+	protected Action saveAction(Action  action){
 	
-		String SQL=this.getSaveLineItemSQL(lineItem);
+		String SQL=this.getSaveActionSQL(action);
 		//FIXME: how about when an item has been updated more than MAX_INT?
-		Object [] parameters = getSaveLineItemParameters(lineItem);
+		Object [] parameters = getSaveActionParameters(action);
 		int affectedNumber = getJdbcTemplateObject().update(SQL,parameters);
 		if(affectedNumber != 1){
 			throw new IllegalStateException("The save operation should return value = 1, while the value = "
 				+ affectedNumber +"If the value = 0, that mean the target record has been updated by someone else!");
 		}
-		return lineItem;
+		return action;
 	
 	}
-	public List<LineItem> saveList(List<LineItem> lineItemList,Set<String> options){
+	public List<Action> saveList(List<Action> actionList,Set<String> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
-		Object [] lists=splitLineItemList(lineItemList);
+		Object [] lists=splitActionList(actionList);
 		
-		batchCreate((List<LineItem>)lists[CREATE_LIST_INDEX]);
+		batchCreate((List<Action>)lists[CREATE_LIST_INDEX]);
 		
-		batchUpdate((List<LineItem>)lists[UPDATE_LIST_INDEX]);
+		batchUpdate((List<Action>)lists[UPDATE_LIST_INDEX]);
 
-		return lineItemList;
+		return actionList;
 	}
 
 	
-	protected List<Object[]> prepareBatchCreateArgs(List<LineItem> lineItemList){
+	protected List<Object[]> prepareBatchCreateArgs(List<Action> actionList){
 		
 		List<Object[]> parametersList=new ArrayList<Object[]>();
-		for(LineItem lineItem:lineItemList ){
-			Object [] parameters = prepareCreateLineItemParameters(lineItem);
+		for(Action action:actionList ){
+			Object [] parameters = prepareCreateActionParameters(action);
 			parametersList.add(parameters);
 		
 		}
 		return parametersList;
 		
 	}
-	protected List<Object[]> prepareBatchUpdateArgs(List<LineItem> lineItemList){
+	protected List<Object[]> prepareBatchUpdateArgs(List<Action> actionList){
 		
 		List<Object[]> parametersList=new ArrayList<Object[]>();
-		for(LineItem lineItem:lineItemList ){
-			Object [] parameters = prepareUpdateLineItemParameters(lineItem);
+		for(Action action:actionList ){
+			Object [] parameters = prepareUpdateActionParameters(action);
 			parametersList.add(parameters);
 		
 		}
 		return parametersList;
 		
 	}
-	protected void batchCreate(List<LineItem> lineItemList){
+	protected void batchCreate(List<Action> actionList){
 		String SQL=getCreateSQL();
-		List<Object[]> args=prepareBatchCreateArgs(lineItemList);
+		List<Object[]> args=prepareBatchCreateArgs(actionList);
 		
 		int affectedNumbers[] = getJdbcTemplateObject().batchUpdate(SQL, args);
 		
 	}
 	
 	
-	protected void batchUpdate(List<LineItem> lineItemList){
+	protected void batchUpdate(List<Action> actionList){
 		String SQL=getUpdateSQL();
-		List<Object[]> args=prepareBatchUpdateArgs(lineItemList);
+		List<Object[]> args=prepareBatchUpdateArgs(actionList);
 		
 		int affectedNumbers[] = getJdbcTemplateObject().batchUpdate(SQL, args);
 		
@@ -271,85 +271,79 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	static final int CREATE_LIST_INDEX=0;
 	static final int UPDATE_LIST_INDEX=1;
 	
-	protected Object[] splitLineItemList(List<LineItem> lineItemList){
+	protected Object[] splitActionList(List<Action> actionList){
 		
-		List<LineItem> lineItemCreateList=new ArrayList<LineItem>();
-		List<LineItem> lineItemUpdateList=new ArrayList<LineItem>();
+		List<Action> actionCreateList=new ArrayList<Action>();
+		List<Action> actionUpdateList=new ArrayList<Action>();
 		
-		for(LineItem lineItem: lineItemList){
-			if(isUpdateRequest(lineItem)){
-				lineItemUpdateList.add( lineItem);
+		for(Action action: actionList){
+			if(isUpdateRequest(action)){
+				actionUpdateList.add( action);
 				continue;
 			}
-			lineItemCreateList.add(lineItem);
+			actionCreateList.add(action);
 		}
 		
-		return new Object[]{lineItemCreateList,lineItemUpdateList};
+		return new Object[]{actionCreateList,actionUpdateList};
 	}
 	
-	protected boolean isUpdateRequest(LineItem lineItem){
- 		return lineItem.getVersion() > 0;
+	protected boolean isUpdateRequest(Action action){
+ 		return action.getVersion() > 0;
  	}
- 	protected String getSaveLineItemSQL(LineItem lineItem){
- 		if(isUpdateRequest(lineItem)){
+ 	protected String getSaveActionSQL(Action action){
+ 		if(isUpdateRequest(action)){
  			return getUpdateSQL();
  		}
  		return getCreateSQL();
  	}
  	
- 	protected Object[] getSaveLineItemParameters(LineItem lineItem){
- 		if(isUpdateRequest(lineItem) ){
- 			return prepareUpdateLineItemParameters(lineItem);
+ 	protected Object[] getSaveActionParameters(Action action){
+ 		if(isUpdateRequest(action) ){
+ 			return prepareUpdateActionParameters(action);
  		}
- 		return prepareCreateLineItemParameters(lineItem);
+ 		return prepareCreateActionParameters(action);
  	}
- 	protected Object[] prepareUpdateLineItemParameters(LineItem lineItem){
- 		Object[] parameters = new Object[8];
-  	
- 		if(lineItem.getBizOrder() != null){
- 			parameters[0] = lineItem.getBizOrder().getId();
- 		}
+ 	protected Object[] prepareUpdateActionParameters(Action action){
+ 		Object[] parameters = new Object[5];
  
- 		parameters[1] = lineItem.getSkuId();
- 		parameters[2] = lineItem.getSkuName();
- 		parameters[3] = lineItem.getAmount();
- 		parameters[4] = lineItem.getQuantity();
- 		parameters[5] = lineItem.getX();		
- 		parameters[6] = lineItem.getId();
- 		parameters[7] = lineItem.getVersion();
+ 		parameters[0] = action.getName();
+ 		parameters[1] = action.getInternalName(); 	
+ 		if(action.getBo() != null){
+ 			parameters[2] = action.getBo().getId();
+ 		}
+ 		
+ 		parameters[3] = action.getId();
+ 		parameters[4] = action.getVersion();
  				
  		return parameters;
  	}
- 	protected Object[] prepareCreateLineItemParameters(LineItem lineItem){
-		Object[] parameters = new Object[7];
-		String newLineItemId=getNextId();
-		lineItem.setId(newLineItemId);
-		parameters[0] =  lineItem.getId();
-  	
- 		if(lineItem.getBizOrder() != null){
- 			parameters[1] = lineItem.getBizOrder().getId();
+ 	protected Object[] prepareCreateActionParameters(Action action){
+		Object[] parameters = new Object[4];
+		String newActionId=getNextId();
+		action.setId(newActionId);
+		parameters[0] =  action.getId();
+ 
+ 		parameters[1] = action.getName();
+ 		parameters[2] = action.getInternalName(); 	
+ 		if(action.getBo() != null){
+ 			parameters[3] = action.getBo().getId();
  		
  		}
- 		
- 		parameters[2] = lineItem.getSkuId();
- 		parameters[3] = lineItem.getSkuName();
- 		parameters[4] = lineItem.getAmount();
- 		parameters[5] = lineItem.getQuantity();
- 		parameters[6] = lineItem.getX();		
+ 				
  				
  		return parameters;
  	}
  	
-	protected LineItem saveInternalLineItem(LineItem lineItem, Set<String> options){
+	protected Action saveInternalAction(Action action, Set<String> options){
 		
-		saveLineItem(lineItem);
+		saveAction(action);
  	
- 		if(isSaveBizOrderEnabled(options)){
-	 		saveBizOrder(lineItem);
+ 		if(isSaveBoEnabled(options)){
+	 		saveBo(action);
  		}
  
 		
-		return lineItem;
+		return action;
 		
 	}
 	
@@ -358,12 +352,12 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	//======================================================================================
 	 
  
- 	protected LineItem saveBizOrder(LineItem lineItem){
+ 	protected Action saveBo(Action action){
  		//Call inject DAO to execute this method
  		Set<String> options = new HashSet<String>();
  		
- 		getOrderDAO().save(lineItem.getBizOrder(),options);
- 		return lineItem;
+ 		getOrderDAO().save(action.getBo(),options);
+ 		return action;
  		
  	}
 	
@@ -420,5 +414,9 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	}
 	
 }
+
+
+
+
 
 

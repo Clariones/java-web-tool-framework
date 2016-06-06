@@ -13,6 +13,7 @@ public interface OrderDAO{
 	public List<Order> saveList(List<Order> orderList,Set<String> options);
 	
 	public void delete(String orderId, int version) throws Exception;
+	public int deleteAll() throws Exception;
  	public List<Order> findOrderByBuyer(String buyerCompanyId);
   	public List<Order> findOrderBySeller(String sellerCompanyId);
  }

@@ -62,6 +62,16 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 		return newPaymentGroup;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String paymentGroupId, int version) throws Exception{
 	
 		String methodName="delete(String paymentGroupId, int version)";

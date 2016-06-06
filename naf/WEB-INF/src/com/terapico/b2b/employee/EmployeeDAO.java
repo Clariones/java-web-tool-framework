@@ -13,6 +13,7 @@ public interface EmployeeDAO{
 	public List<Employee> saveList(List<Employee> employeeList,Set<String> options);
 	
 	public void delete(String employeeId, int version) throws Exception;
+	public int deleteAll() throws Exception;
  	public List<Employee> findEmployeeByCompany(String buyerCompanyId);
  }
 

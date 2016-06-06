@@ -96,6 +96,16 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		
 		return newRole;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String roleId, int version) throws Exception{
 	
 		String methodName="delete(String roleId, int version)";

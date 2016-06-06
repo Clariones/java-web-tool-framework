@@ -13,6 +13,7 @@ public interface ShippingAddressDAO{
 	public List<ShippingAddress> saveList(List<ShippingAddress> shippingAddressList,Set<String> options);
 	
 	public void delete(String shippingAddressId, int version) throws Exception;
+	public int deleteAll() throws Exception;
 }
 
 

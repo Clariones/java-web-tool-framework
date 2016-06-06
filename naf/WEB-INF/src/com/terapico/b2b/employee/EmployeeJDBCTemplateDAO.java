@@ -79,6 +79,16 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 		
 		return newEmployee;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String employeeId, int version) throws Exception{
 	
 		String methodName="delete(String employeeId, int version)";

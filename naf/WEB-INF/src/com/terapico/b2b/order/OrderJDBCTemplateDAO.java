@@ -9,12 +9,14 @@ import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.lineitem.LineItem;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
+import com.terapico.b2b.action.Action;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
 import com.terapico.b2b.shippinggroup.ShippingGroupDAO;
 import com.terapico.b2b.lineitem.LineItemDAO;
 import com.terapico.b2b.paymentgroup.PaymentGroupDAO;
+import com.terapico.b2b.action.ActionDAO;
 import com.terapico.b2b.sellercompany.SellerCompanyDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
 
@@ -96,6 +98,25 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  	
 			
 		
+	
+  	private  ActionDAO  actionDAO;
+ 	public void setActionDAO(ActionDAO pActionDAO){
+ 	
+ 		if(pActionDAO == null){
+ 			throw new IllegalStateException("Do not trying to set actionDAO to null.");
+ 		}
+	 	this.actionDAO = pActionDAO;
+ 	}
+ 	public ActionDAO getActionDAO(){
+ 		if(this.actionDAO == null){
+ 			throw new IllegalStateException("The actionDAO is not configured yet, please config it some where.");
+ 		}
+ 		
+	 	return this.actionDAO;
+ 	}	
+ 	
+			
+		
 
 	public Order load(String orderId,Set<String> options) throws Exception{
 		return loadInternalOrder(orderId, options);
@@ -141,10 +162,27 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  			}
  		}
 		
+ 		
+ 		if(isSaveActionListEnabled(options)){
+ 			for(Action item: newOrder.getActionList()){
+ 				item.setVersion(0);
+ 			}
+ 		}
+		
 		
 		saveInternalOrder(newOrder,options);
 		
 		return newOrder;
+	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
 	}
 	public void delete(String orderId, int version) throws Exception{
 	
@@ -292,6 +330,22 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  	
 			
 		
+	protected static final String ACTION_LIST = "actionList";
+	
+	protected boolean isExtractActionListEnabled(Set<String> options){
+		
+ 		return checkOptions(options,ACTION_LIST);
+		
+ 	}
+
+	protected boolean isSaveActionListEnabled(Set<String> options){
+		return checkOptions(options, ACTION_LIST);
+		
+ 	}
+ 	
+ 	
+			
+		
 	
 
 	protected OrderMapper getMapper(){
@@ -327,6 +381,8 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		if(isExtractPaymentGroupListEnabled(loadOptions)){
 	 		extractPaymentGroupList(order);
  		}		
+		
+				
 		
 		return order;
 		
@@ -390,6 +446,17 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		List<PaymentGroup> paymentGroupList = getPaymentGroupDAO().findPaymentGroupByBizOrder(order.getId());
 		if(paymentGroupList != null){
 			order.setPaymentGroupList(paymentGroupList);
+		}
+		
+		return order;
+	
+	}	
+		
+	protected Order extractActionList(Order order){
+		
+		List<Action> actionList = getActionDAO().findActionByBo(order.getId());
+		if(actionList != null){
+			order.setActionList(actionList);
 		}
 		
 		return order;
@@ -594,6 +661,8 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	 		savePaymentGroupList(order);
  		}		
 		
+
+		
 		return order;
 		
 	}
@@ -668,6 +737,22 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		//Call DAO to save the list
 		Set<String> options = new HashSet<String>();
 		getPaymentGroupDAO().saveList(order.getPaymentGroupList(),options);
+		
+		return order;
+	
+	}
+		
+	protected Order saveActionList(Order order){
+		List<Action> actionList = order.getActionList();
+		if(actionList==null){
+			return order;
+		}
+		if(actionList.isEmpty()){
+			return order;// Does this mean delete all from the parent object?
+		}
+		//Call DAO to save the list
+		Set<String> options = new HashSet<String>();
+		getActionDAO().saveList(order.getActionList(),options);
 		
 		return order;
 	

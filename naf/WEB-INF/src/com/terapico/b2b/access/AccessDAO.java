@@ -13,6 +13,7 @@ public interface AccessDAO{
 	public List<Access> saveList(List<Access> accessList,Set<String> options);
 	
 	public void delete(String accessId, int version) throws Exception;
+	public int deleteAll() throws Exception;
  	public List<Access> findAccessByRole(String roleId);
  }
 

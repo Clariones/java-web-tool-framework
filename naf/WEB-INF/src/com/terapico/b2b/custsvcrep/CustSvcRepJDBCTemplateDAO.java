@@ -62,6 +62,16 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		
 		return newCustSvcRep;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String custSvcRepId, int version) throws Exception{
 	
 		String methodName="delete(String custSvcRepId, int version)";
@@ -481,9 +491,5 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	}
 	
 }
-
-
-
-
 
 

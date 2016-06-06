@@ -79,6 +79,16 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 		
 		return newBillingAddress;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String billingAddressId, int version) throws Exception{
 	
 		String methodName="delete(String billingAddressId, int version)";

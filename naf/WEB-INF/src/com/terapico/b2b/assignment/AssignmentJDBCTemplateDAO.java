@@ -62,6 +62,16 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		
 		return newAssignment;
 	}
+	public int deleteAll() throws Exception{
+	
+		String methodName="deleteAll()";
+		
+		String SQL=this.getDeleteAllSQL();
+		int affectedNumber = getJdbcTemplateObject().update(SQL);
+		return affectedNumber;
+		
+	
+	}
 	public void delete(String assignmentId, int version) throws Exception{
 	
 		String methodName="delete(String assignmentId, int version)";

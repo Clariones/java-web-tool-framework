@@ -13,6 +13,7 @@ public interface ShippingGroupDAO{
 	public List<ShippingGroup> saveList(List<ShippingGroup> shippingGroupList,Set<String> options);
 	
 	public void delete(String shippingGroupId, int version) throws Exception;
+	public int deleteAll() throws Exception;
  	public List<ShippingGroup> findShippingGroupByBizOrder(String orderId);
   	public List<ShippingGroup> findShippingGroupByAddress(String shippingAddressId);
  }

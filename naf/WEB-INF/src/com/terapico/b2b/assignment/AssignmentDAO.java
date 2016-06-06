@@ -13,6 +13,7 @@ public interface AssignmentDAO{
 	public List<Assignment> saveList(List<Assignment> assignmentList,Set<String> options);
 	
 	public void delete(String assignmentId, int version) throws Exception;
+	public int deleteAll() throws Exception;
  	public List<Assignment> findAssignmentByUser(String employeeId);
   	public List<Assignment> findAssignmentByAccess(String accessId);
  }

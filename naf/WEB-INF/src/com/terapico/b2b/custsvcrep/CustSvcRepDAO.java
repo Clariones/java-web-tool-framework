@@ -13,17 +13,9 @@ public interface CustSvcRepDAO{
 	public List<CustSvcRep> saveList(List<CustSvcRep> custSvcRepList,Set<String> options);
 	
 	public void delete(String custSvcRepId, int version) throws Exception;
+	public int deleteAll() throws Exception;
  	public List<CustSvcRep> findCustSvcRepByRole(String roleId);
   	public List<CustSvcRep> findCustSvcRepByCompany(String sellerCompanyId);
  }
-
-
-
-
-
-
-
-
-
 
 

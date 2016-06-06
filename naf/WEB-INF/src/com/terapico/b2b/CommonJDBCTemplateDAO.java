@@ -155,6 +155,18 @@ public abstract class CommonJDBCTemplateDAO {
 		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"；
 		
 	}
+	protected String getDeleteAllSQL() {
+		// TODO Auto-generated method stub
+		//return new String[]{"name","bize_order","card_number","billing_address"};
+		StringBuilder stringBuilder=new StringBuilder();
+		stringBuilder.append("delete from  ");
+		stringBuilder.append(this.getTableName());
+		stringBuilder.append(";");
+			
+		return stringBuilder.toString();
+		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"；
+		
+	}
 
 	protected String getUpdateSQL() {
 		// TODO Auto-generated method stub

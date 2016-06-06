@@ -13,6 +13,7 @@ public interface LineItemDAO{
 	public List<LineItem> saveList(List<LineItem> lineItemList,Set<String> options);
 	
 	public void delete(String lineItemId, int version) throws Exception;
+	public int deleteAll() throws Exception;
  	public List<LineItem> findLineItemByBizOrder(String orderId);
  }
 

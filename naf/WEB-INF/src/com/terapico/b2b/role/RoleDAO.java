@@ -13,6 +13,7 @@ public interface RoleDAO{
 	public List<Role> saveList(List<Role> roleList,Set<String> options);
 	
 	public void delete(String roleId, int version) throws Exception;
+	public int deleteAll() throws Exception;
 }
 
 
