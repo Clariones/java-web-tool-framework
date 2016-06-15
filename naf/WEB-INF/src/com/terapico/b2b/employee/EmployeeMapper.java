@@ -16,7 +16,8 @@ public class EmployeeMapper implements RowMapper<Employee>{
 		employee.setName(rs.getString("name"));
 		 		
  		employee.setCompany(createEmptyCompany(rs.getString("company")));
- 		employee.setVersion(rs.getInt("version"));
+ 		employee.setEmail(rs.getString("email"));
+		employee.setVersion(rs.getInt("version"));
 		
 
 		return employee;

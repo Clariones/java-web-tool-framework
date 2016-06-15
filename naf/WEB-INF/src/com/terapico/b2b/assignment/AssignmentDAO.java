@@ -3,14 +3,15 @@ package com.terapico.b2b.assignment;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 public interface AssignmentDAO{
 
 	
-	public Assignment load(String assignmentId,Set<String> options) throws Exception;
-	public Assignment clone(String assignmentId,Set<String> options) throws Exception;
+	public Assignment load(String assignmentId,Map<String,Object> options) throws Exception;
+	public Assignment clone(String assignmentId,Map<String,Object> options) throws Exception;
 	
-	public Assignment save(Assignment assignment,Set<String> options);
-	public List<Assignment> saveList(List<Assignment> assignmentList,Set<String> options);
+	public Assignment save(Assignment assignment,Map<String,Object> options);
+	public List<Assignment> saveList(List<Assignment> assignmentList,Map<String,Object> options);
 	
 	public void delete(String assignmentId, int version) throws Exception;
 	public int deleteAll() throws Exception;

@@ -16,6 +16,7 @@ public class Employee implements  java.io.Serializable{
 	protected		String	mId;
 	protected		String	mName;
 	protected		BuyerCompany	mCompany;
+	protected		String	mEmail;
 	protected		int	mxVersion;
 	
 	
@@ -26,11 +27,12 @@ public class Employee implements  java.io.Serializable{
 
 	}
 	
-	public 	Employee(String	id,String	name,BuyerCompany	company,int	version)
+	public 	Employee(String	id,String	name,BuyerCompany	company,String	email,int	version)
 	{
 		setId(id);
 		setName(name);
 		setCompany(company);
+		setEmail(email);
 		setVersion(version);
 		this.mAssignmentList = new ArrayList<Assignment>();	
 	}
@@ -56,6 +58,13 @@ public class Employee implements  java.io.Serializable{
 	}
 	public BuyerCompany getCompany(){
 		return this.mCompany;
+	}
+	
+	public void setEmail(String email){
+		this.mEmail = email;
+	}
+	public String getEmail(){
+		return this.mEmail;
 	}
 	
 	public void setVersion(int version){
@@ -108,6 +117,7 @@ public class Employee implements  java.io.Serializable{
 		stringBuilder.append("\tid='"+getId()+"';");
 		stringBuilder.append("\tname='"+getName()+"';");
 		stringBuilder.append("\tcompany='buyer_company("+getCompany().getId()+")';");
+		stringBuilder.append("\temail='"+getEmail()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

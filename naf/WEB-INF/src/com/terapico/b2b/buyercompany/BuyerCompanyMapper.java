@@ -16,6 +16,7 @@ public class BuyerCompanyMapper implements RowMapper<BuyerCompany>{
 		buyerCompany.setId(rs.getString("id"));
 		buyerCompany.setName(rs.getString("name"));
 		buyerCompany.setPriceList(rs.getString("price_list"));
+		buyerCompany.setRating(rs.getInt("rating"));
 		buyerCompany.setVersion(rs.getInt("version"));
 		
 

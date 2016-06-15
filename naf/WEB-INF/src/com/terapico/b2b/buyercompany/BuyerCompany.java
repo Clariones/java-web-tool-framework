@@ -17,6 +17,7 @@ public class BuyerCompany implements  java.io.Serializable{
 	protected		String	mId;
 	protected		String	mName;
 	protected		String	mPriceList;
+	protected		int	mxRating;
 	protected		int	mxVersion;
 	
 	
@@ -29,11 +30,12 @@ public class BuyerCompany implements  java.io.Serializable{
 
 	}
 	
-	public 	BuyerCompany(String	id,String	name,String	price_list,int	version)
+	public 	BuyerCompany(String	id,String	name,String	price_list,int	rating,int	version)
 	{
 		setId(id);
 		setName(name);
 		setPriceList(price_list);
+		setRating(rating);
 		setVersion(version);
 		this.mBillingAddressList = new ArrayList<BillingAddress>();
 		this.mEmployeeList = new ArrayList<Employee>();
@@ -61,6 +63,13 @@ public class BuyerCompany implements  java.io.Serializable{
 	}
 	public String getPriceList(){
 		return this.mPriceList;
+	}
+	
+	public void setRating(int rating){
+		this.mxRating = rating;
+	}
+	public int getRating(){
+		return this.mxRating;
 	}
 	
 	public void setVersion(int version){
@@ -183,6 +192,7 @@ public class BuyerCompany implements  java.io.Serializable{
 		stringBuilder.append("\tid='"+getId()+"';");
 		stringBuilder.append("\tname='"+getName()+"';");
 		stringBuilder.append("\tprice_list='"+getPriceList()+"';");
+		stringBuilder.append("\trating='"+getRating()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

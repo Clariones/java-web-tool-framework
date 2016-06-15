@@ -3,14 +3,15 @@ package com.terapico.b2b.paymentgroup;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 public interface PaymentGroupDAO{
 
 	
-	public PaymentGroup load(String paymentGroupId,Set<String> options) throws Exception;
-	public PaymentGroup clone(String paymentGroupId,Set<String> options) throws Exception;
+	public PaymentGroup load(String paymentGroupId,Map<String,Object> options) throws Exception;
+	public PaymentGroup clone(String paymentGroupId,Map<String,Object> options) throws Exception;
 	
-	public PaymentGroup save(PaymentGroup paymentGroup,Set<String> options);
-	public List<PaymentGroup> saveList(List<PaymentGroup> paymentGroupList,Set<String> options);
+	public PaymentGroup save(PaymentGroup paymentGroup,Map<String,Object> options);
+	public List<PaymentGroup> saveList(List<PaymentGroup> paymentGroupList,Map<String,Object> options);
 	
 	public void delete(String paymentGroupId, int version) throws Exception;
 	public int deleteAll() throws Exception;

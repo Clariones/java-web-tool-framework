@@ -3,8 +3,8 @@ package com.terapico.b2b.lineitem;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
@@ -23,21 +23,21 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 
 		
 
-	public LineItem load(String lineItemId,Set<String> options) throws Exception{
+	public LineItem load(String lineItemId,Map<String,Object> options) throws Exception{
 		return loadInternalLineItem(lineItemId, options);
 	}
-	public LineItem save(LineItem lineItem,Set<String> options){
+	public LineItem save(LineItem lineItem,Map<String,Object> options){
 		
-		String methodName="save(LineItem lineItem,Set<String> options){";
+		String methodName="save(LineItem lineItem,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(lineItem, methodName, "lineItem");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalLineItem(lineItem,options);
 	}
-	public LineItem clone(String lineItemId,Set<String> options) throws Exception{
+	public LineItem clone(String lineItemId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String lineItemId,Set<String> options)";
+		String methodName="clone(String lineItemId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(lineItemId, methodName, "lineItemId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -61,6 +61,27 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String lineItemId, int version) throws  LineItemVersionChangedException,  LineItemNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{lineItemId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new LineItemVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new LineItemNotFoundException(
+					"The " + this.getTableName() + "(" + lineItemId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String lineItemId, int version) throws Exception{
 	
 		String methodName="delete(String lineItemId, int version)";
@@ -75,21 +96,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{lineItemId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new LineItemVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new LineItemNotFoundException("The "+this.getTableName()+"("+lineItemId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(lineItemId,version);
 		}
 		
 	
@@ -98,7 +105,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"biz_order","sku_id","sku_name","amount","quantity","x"};
+		return new String[]{"biz_order","sku_id","sku_name","amount","quantity"};
 	}
 	@Override
 	protected String getName() {
@@ -108,15 +115,15 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -126,14 +133,14 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  
  	//private boolean extractBizOrderEnabled = true;
  	private static final String BIZORDER = "bizOrder";
- 	protected boolean isExtractBizOrderEnabled(Set<String> options){
+ 	protected boolean isExtractBizOrderEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, BIZORDER);
  	}
  	
  	
  	//private boolean saveBizOrderEnabled = true;
- 	protected boolean isSaveBizOrderEnabled(Set<String> options){
+ 	protected boolean isSaveBizOrderEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, BIZORDER);
  	}
@@ -153,12 +160,12 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		return lineItem;
 	}
 
-	protected LineItem loadInternalLineItem(String lineItemId, Set<String> loadOptions) throws Exception{
+	protected LineItem loadInternalLineItem(String lineItemId, Map<String,Object> loadOptions) throws Exception{
 		
 		LineItem lineItem = extractLineItem(lineItemId);
  	
  		if(isExtractBizOrderEnabled(loadOptions)){
-	 		extractBizOrder(lineItem);
+	 		extractBizOrder(lineItem, loadOptions);
  		}
  
 		
@@ -169,9 +176,12 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	
 	 
 
- 	protected LineItem extractBizOrder(LineItem lineItem) throws Exception{
+ 	protected LineItem extractBizOrder(LineItem lineItem, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(lineItem.getBizOrder() == null){
+			return lineItem;
+		}
+		
 		Order bizOrder = getOrderDAO().load(lineItem.getBizOrder().getId(),options);
 		if(bizOrder != null){
 			lineItem.setBizOrder(bizOrder);
@@ -212,7 +222,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		return lineItem;
 	
 	}
-	public List<LineItem> saveList(List<LineItem> lineItemList,Set<String> options){
+	public List<LineItem> saveList(List<LineItem> lineItemList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitLineItemList(lineItemList);
@@ -304,7 +314,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  		return prepareCreateLineItemParameters(lineItem);
  	}
  	protected Object[] prepareUpdateLineItemParameters(LineItem lineItem){
- 		Object[] parameters = new Object[8];
+ 		Object[] parameters = new Object[7];
   	
  		if(lineItem.getBizOrder() != null){
  			parameters[0] = lineItem.getBizOrder().getId();
@@ -313,15 +323,14 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  		parameters[1] = lineItem.getSkuId();
  		parameters[2] = lineItem.getSkuName();
  		parameters[3] = lineItem.getAmount();
- 		parameters[4] = lineItem.getQuantity();
- 		parameters[5] = lineItem.getX();		
- 		parameters[6] = lineItem.getId();
- 		parameters[7] = lineItem.getVersion();
+ 		parameters[4] = lineItem.getQuantity();		
+ 		parameters[5] = lineItem.getId();
+ 		parameters[6] = lineItem.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateLineItemParameters(LineItem lineItem){
-		Object[] parameters = new Object[7];
+		Object[] parameters = new Object[6];
 		String newLineItemId=getNextId();
 		lineItem.setId(newLineItemId);
 		parameters[0] =  lineItem.getId();
@@ -334,18 +343,17 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  		parameters[2] = lineItem.getSkuId();
  		parameters[3] = lineItem.getSkuName();
  		parameters[4] = lineItem.getAmount();
- 		parameters[5] = lineItem.getQuantity();
- 		parameters[6] = lineItem.getX();		
+ 		parameters[5] = lineItem.getQuantity();		
  				
  		return parameters;
  	}
  	
-	protected LineItem saveInternalLineItem(LineItem lineItem, Set<String> options){
+	protected LineItem saveInternalLineItem(LineItem lineItem, Map<String,Object> options){
 		
 		saveLineItem(lineItem);
  	
  		if(isSaveBizOrderEnabled(options)){
-	 		saveBizOrder(lineItem);
+	 		saveBizOrder(lineItem, options);
  		}
  
 		
@@ -358,10 +366,8 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	//======================================================================================
 	 
  
- 	protected LineItem saveBizOrder(LineItem lineItem){
+ 	protected LineItem saveBizOrder(LineItem lineItem, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getOrderDAO().save(lineItem.getBizOrder(),options);
  		return lineItem;
  		

@@ -86,7 +86,7 @@ public class ServletResultRenderer {
 	{
 		throw new IllegalArgumentException(message);
 	}
-	protected String getRenderKey(InvocationResult result) {
+	protected String getGenericResultRenderKey(InvocationResult result) {
 
 		if(result==null){
 			handleArgumentExcepttion("getRenderKey(InvocationResult result)： result should not be null.");
@@ -135,7 +135,28 @@ public class ServletResultRenderer {
 		Method method = result.getInvocationContext().getMethodToCall();
 		return isGenericReturnType(method);
 	}
-	
+	protected boolean isArrayResult(InvocationResult result) {
+		if(result==null){
+			return false;
+		}
+		if(result.getInvocationContext()==null){
+			return false;
+		}
+		if(result.getActualResult()==null){
+			return false;
+		}
+		Type type=result.getActualResult().getClass();
+		return isArrayType(type);
+	}
+	protected boolean isArrayType(Type type) {
+		
+		
+		Class typeClazz = (Class) type;
+		if (typeClazz.isArray()) {
+			return true;
+		}
+		return false;
+	}
 	protected boolean isGenericReturnType(Method method) {
 
 		Type type = method.getGenericReturnType();
@@ -162,11 +183,26 @@ public class ServletResultRenderer {
 	protected RequestDispatcher getRenderView(HttpServlet servlet, HttpServletRequest request, InvocationResult result)
 			throws MalformedURLException {
 		if(isGenericResult(result)){
-			return request.getRequestDispatcher("/" + getRenderKey(result) + ".jsp");
+			return request.getRequestDispatcher("/" + getGenericResultRenderKey(result) + ".jsp");
+		}
+		if(isArrayResult(result)){
+			return request.getRequestDispatcher("/" + getArrayResultRenderKey(result) + ".jsp");
 		}
 		return getSimpleRenderView(servlet, request, result.getActualResult());
 
 
+	}
+
+	protected String getArrayResultRenderKey(InvocationResult result) {
+		if(!isArrayResult(result)){
+			throw new IllegalArgumentException("The result should be an array to be processed");
+		}
+		//The method isArrayResult will check the result, result.getActualResult()
+		Class componentType = result.getActualResult().getClass().getComponentType();
+		
+		
+		
+		return componentType.getName()+"$Array";
 	}
 
 	private Map<Class, String> viewCache = new ConcurrentHashMap<Class, String>();

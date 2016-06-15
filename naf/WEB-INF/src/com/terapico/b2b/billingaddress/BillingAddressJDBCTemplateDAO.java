@@ -3,8 +3,8 @@ package com.terapico.b2b.billingaddress;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
@@ -44,21 +44,21 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 			
 		
 
-	public BillingAddress load(String billingAddressId,Set<String> options) throws Exception{
+	public BillingAddress load(String billingAddressId,Map<String,Object> options) throws Exception{
 		return loadInternalBillingAddress(billingAddressId, options);
 	}
-	public BillingAddress save(BillingAddress billingAddress,Set<String> options){
+	public BillingAddress save(BillingAddress billingAddress,Map<String,Object> options){
 		
-		String methodName="save(BillingAddress billingAddress,Set<String> options){";
+		String methodName="save(BillingAddress billingAddress,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(billingAddress, methodName, "billingAddress");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalBillingAddress(billingAddress,options);
 	}
-	public BillingAddress clone(String billingAddressId,Set<String> options) throws Exception{
+	public BillingAddress clone(String billingAddressId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String billingAddressId,Set<String> options)";
+		String methodName="clone(String billingAddressId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(billingAddressId, methodName, "billingAddressId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -89,6 +89,27 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String billingAddressId, int version) throws  BillingAddressVersionChangedException,  BillingAddressNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{billingAddressId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new BillingAddressVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new BillingAddressNotFoundException(
+					"The " + this.getTableName() + "(" + billingAddressId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String billingAddressId, int version) throws Exception{
 	
 		String methodName="delete(String billingAddressId, int version)";
@@ -103,21 +124,7 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{billingAddressId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new BillingAddressVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new BillingAddressNotFoundException("The "+this.getTableName()+"("+billingAddressId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(billingAddressId,version);
 		}
 		
 	
@@ -136,15 +143,15 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -154,14 +161,14 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
  
  	//private boolean extractCompanyEnabled = true;
  	private static final String COMPANY = "company";
- 	protected boolean isExtractCompanyEnabled(Set<String> options){
+ 	protected boolean isExtractCompanyEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, COMPANY);
  	}
  	
  	
  	//private boolean saveCompanyEnabled = true;
- 	protected boolean isSaveCompanyEnabled(Set<String> options){
+ 	protected boolean isSaveCompanyEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, COMPANY);
  	}
@@ -172,13 +179,13 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 		
 	protected static final String PAYMENT_GROUP_LIST = "paymentGroupList";
 	
-	protected boolean isExtractPaymentGroupListEnabled(Set<String> options){
+	protected boolean isExtractPaymentGroupListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,PAYMENT_GROUP_LIST);
 		
  	}
 
-	protected boolean isSavePaymentGroupListEnabled(Set<String> options){
+	protected boolean isSavePaymentGroupListEnabled(Map<String,Object> options){
 		return checkOptions(options, PAYMENT_GROUP_LIST);
 		
  	}
@@ -197,17 +204,17 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 		return billingAddress;
 	}
 
-	protected BillingAddress loadInternalBillingAddress(String billingAddressId, Set<String> loadOptions) throws Exception{
+	protected BillingAddress loadInternalBillingAddress(String billingAddressId, Map<String,Object> loadOptions) throws Exception{
 		
 		BillingAddress billingAddress = extractBillingAddress(billingAddressId);
  	
  		if(isExtractCompanyEnabled(loadOptions)){
-	 		extractCompany(billingAddress);
+	 		extractCompany(billingAddress, loadOptions);
  		}
  
 		
 		if(isExtractPaymentGroupListEnabled(loadOptions)){
-	 		extractPaymentGroupList(billingAddress);
+	 		extractPaymentGroupList(billingAddress, loadOptions);
  		}		
 		
 		return billingAddress;
@@ -217,9 +224,12 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 	
 	 
 
- 	protected BillingAddress extractCompany(BillingAddress billingAddress) throws Exception{
+ 	protected BillingAddress extractCompany(BillingAddress billingAddress, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(billingAddress.getCompany() == null){
+			return billingAddress;
+		}
+		
 		BuyerCompany company = getBuyerCompanyDAO().load(billingAddress.getCompany().getId(),options);
 		if(company != null){
 			billingAddress.setCompany(company);
@@ -231,7 +241,7 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
  		
  
 		
-	protected BillingAddress extractPaymentGroupList(BillingAddress billingAddress){
+	protected BillingAddress extractPaymentGroupList(BillingAddress billingAddress, Map<String,Object> options){
 		
 		List<PaymentGroup> paymentGroupList = getPaymentGroupDAO().findPaymentGroupByBillingAddress(billingAddress.getId());
 		if(paymentGroupList != null){
@@ -271,7 +281,7 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 		return billingAddress;
 	
 	}
-	public List<BillingAddress> saveList(List<BillingAddress> billingAddressList,Set<String> options){
+	public List<BillingAddress> saveList(List<BillingAddress> billingAddressList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitBillingAddressList(billingAddressList);
@@ -399,17 +409,17 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
  		return parameters;
  	}
  	
-	protected BillingAddress saveInternalBillingAddress(BillingAddress billingAddress, Set<String> options){
+	protected BillingAddress saveInternalBillingAddress(BillingAddress billingAddress, Map<String,Object> options){
 		
 		saveBillingAddress(billingAddress);
  	
  		if(isSaveCompanyEnabled(options)){
-	 		saveCompany(billingAddress);
+	 		saveCompany(billingAddress, options);
  		}
  
 		
 		if(isSavePaymentGroupListEnabled(options)){
-	 		savePaymentGroupList(billingAddress);
+	 		savePaymentGroupList(billingAddress, options);
  		}		
 		
 		return billingAddress;
@@ -421,10 +431,8 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 	//======================================================================================
 	 
  
- 	protected BillingAddress saveCompany(BillingAddress billingAddress){
+ 	protected BillingAddress saveCompany(BillingAddress billingAddress, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getBuyerCompanyDAO().save(billingAddress.getCompany(),options);
  		return billingAddress;
  		
@@ -432,16 +440,16 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 	
  
 		
-	protected BillingAddress savePaymentGroupList(BillingAddress billingAddress){
+	protected BillingAddress savePaymentGroupList(BillingAddress billingAddress, Map<String,Object> options){
 		List<PaymentGroup> paymentGroupList = billingAddress.getPaymentGroupList();
-		if(paymentGroupList==null){
+		if(paymentGroupList == null){
 			return billingAddress;
 		}
 		if(paymentGroupList.isEmpty()){
 			return billingAddress;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getPaymentGroupDAO().saveList(billingAddress.getPaymentGroupList(),options);
 		
 		return billingAddress;

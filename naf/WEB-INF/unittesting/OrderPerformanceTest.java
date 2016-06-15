@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
@@ -26,7 +28,7 @@ public class OrderPerformanceTest {
 		Order o=order.loadOrder("O000001");
 		System.out.print(o.toString());
 		*/
-		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
+		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("orderDAO");
 		
 		
 		
@@ -40,10 +42,10 @@ public class OrderPerformanceTest {
 		
 		
 		
-		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
+		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("orderDAO");
 		
 		System.out.println(gorder);
-		Set<String> options= new HashSet<String>();
+		Map<String,Object> options= new HashMap<String, Object>();
 		//options.add("lineItemList");
 		System.out.println(System.currentTimeMillis());
 		
@@ -67,7 +69,7 @@ public class OrderPerformanceTest {
 		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
 		
 		System.out.println(gorder);
-		Set<String> options= new HashSet<String>();
+		Map<String,Object> options= new HashMap<String, Object>();
 		//options.add("lineItemList");
 		System.out.println(System.currentTimeMillis());
 		
@@ -91,10 +93,10 @@ public class OrderPerformanceTest {
 		
 		
 		
-		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
+		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("orderDAO");
 		
 		System.out.println(gorder);
-		Set<String> options= new HashSet<String>();
+		Map<String,Object> options= new HashMap<String, Object>();
 		//options.add("lineItemList");
 		System.out.println(System.currentTimeMillis());
 		
@@ -116,11 +118,11 @@ public class OrderPerformanceTest {
 		
 		
 		
-		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("gorder");
+		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("orderDAO");
 		
 		System.out.println(gorder);
-		Set<String> options= new HashSet<String>();
-		options.add("lineItemList");
+		Map<String,Object> options= new HashMap<String, Object>();
+		options.put("__all__","");
 		System.out.println(System.currentTimeMillis());
 		
 		//gorder.delete("O000011",10);

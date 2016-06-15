@@ -71,10 +71,45 @@
 		<property name="dataSource" ref="dataSource" />
  		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
  		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+ 		<property name="confirmationDAO" ref="confirmationDAO" />
+ 		<property name="approvalDAO" ref="approvalDAO" />
+ 		<property name="processingDAO" ref="processingDAO" />
+ 		<property name="shipmentDAO" ref="shipmentDAO" />
+ 		<property name="deliveryDAO" ref="deliveryDAO" />
 		<property name="lineItemDAO" ref="lineItemDAO" />
 		<property name="shippingGroupDAO" ref="shippingGroupDAO" />
 		<property name="paymentGroupDAO" ref="paymentGroupDAO" />
 		<property name="actionDAO" ref="actionDAO" />
+	</bean>	
+	
+	
+	<bean id="confirmationDAO" class="com.terapico.b2b.confirmation.ConfirmationJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+	
+	<bean id="shipmentDAO" class="com.terapico.b2b.shipment.ShipmentJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+	
+	<bean id="deliveryDAO" class="com.terapico.b2b.delivery.DeliveryJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+	
+	<bean id="processingDAO" class="com.terapico.b2b.processing.ProcessingJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+	
+	<bean id="approvalDAO" class="com.terapico.b2b.approval.ApprovalJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="orderDAO" ref="orderDAO" />
 	</bean>	
 	
 	
@@ -114,6 +149,11 @@
 
 
 </beans>
+
+
+
+
+
 
 
 

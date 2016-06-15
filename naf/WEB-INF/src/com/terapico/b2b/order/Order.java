@@ -7,10 +7,15 @@ import java.sql.Date;
 import org.xml.sax.Attributes;
 
 
+import com.terapico.b2b.approval.Approval;
+import com.terapico.b2b.confirmation.Confirmation;
+import com.terapico.b2b.shipment.Shipment;
 import com.terapico.b2b.buyercompany.BuyerCompany;
+import com.terapico.b2b.processing.Processing;
 import com.terapico.b2b.lineitem.LineItem;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
 import com.terapico.b2b.action.Action;
+import com.terapico.b2b.delivery.Delivery;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
@@ -24,6 +29,11 @@ public class Order implements  java.io.Serializable{
 	protected		double	mTotalAmount;
 	protected		String	mType;
 	protected		boolean	mMarkAsDelete;
+	protected		Confirmation	mConfirmation;
+	protected		Approval	mApproval;
+	protected		Processing	mProcessing;
+	protected		Shipment	mShipment;
+	protected		Delivery	mDelivery;
 	protected		int	mxVersion;
 	
 	
@@ -102,6 +112,41 @@ public class Order implements  java.io.Serializable{
 	}
 	public boolean getMarkAsDelete(){
 		return this.mMarkAsDelete;
+	}
+	
+	public void setConfirmation(Confirmation confirmation){
+		this.mConfirmation = confirmation;
+	}
+	public Confirmation getConfirmation(){
+		return this.mConfirmation;
+	}
+	
+	public void setApproval(Approval approval){
+		this.mApproval = approval;
+	}
+	public Approval getApproval(){
+		return this.mApproval;
+	}
+	
+	public void setProcessing(Processing processing){
+		this.mProcessing = processing;
+	}
+	public Processing getProcessing(){
+		return this.mProcessing;
+	}
+	
+	public void setShipment(Shipment shipment){
+		this.mShipment = shipment;
+	}
+	public Shipment getShipment(){
+		return this.mShipment;
+	}
+	
+	public void setDelivery(Delivery delivery){
+		this.mDelivery = delivery;
+	}
+	public Delivery getDelivery(){
+		return this.mDelivery;
 	}
 	
 	public void setVersion(int version){
@@ -263,6 +308,11 @@ public class Order implements  java.io.Serializable{
 		stringBuilder.append("\ttotal_amount='"+getTotalAmount()+"';");
 		stringBuilder.append("\ttype='"+getType()+"';");
 		stringBuilder.append("\tmark_as_delete='"+getMarkAsDelete()+"';");
+		stringBuilder.append("\tconfirmation='confirmation("+getConfirmation().getId()+")';");
+		stringBuilder.append("\tapproval='approval("+getApproval().getId()+")';");
+		stringBuilder.append("\tprocessing='processing("+getProcessing().getId()+")';");
+		stringBuilder.append("\tshipment='shipment("+getShipment().getId()+")';");
+		stringBuilder.append("\tdelivery='delivery("+getDelivery().getId()+")';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

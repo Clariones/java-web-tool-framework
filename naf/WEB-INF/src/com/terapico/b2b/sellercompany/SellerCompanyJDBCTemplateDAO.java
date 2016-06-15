@@ -3,8 +3,8 @@ package com.terapico.b2b.sellercompany;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
@@ -54,21 +54,21 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 			
 		
 
-	public SellerCompany load(String sellerCompanyId,Set<String> options) throws Exception{
+	public SellerCompany load(String sellerCompanyId,Map<String,Object> options) throws Exception{
 		return loadInternalSellerCompany(sellerCompanyId, options);
 	}
-	public SellerCompany save(SellerCompany sellerCompany,Set<String> options){
+	public SellerCompany save(SellerCompany sellerCompany,Map<String,Object> options){
 		
-		String methodName="save(SellerCompany sellerCompany,Set<String> options){";
+		String methodName="save(SellerCompany sellerCompany,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(sellerCompany, methodName, "sellerCompany");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalSellerCompany(sellerCompany,options);
 	}
-	public SellerCompany clone(String sellerCompanyId,Set<String> options) throws Exception{
+	public SellerCompany clone(String sellerCompanyId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String sellerCompanyId,Set<String> options)";
+		String methodName="clone(String sellerCompanyId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(sellerCompanyId, methodName, "sellerCompanyId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -106,6 +106,27 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String sellerCompanyId, int version) throws  SellerCompanyVersionChangedException,  SellerCompanyNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{sellerCompanyId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new SellerCompanyVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new SellerCompanyNotFoundException(
+					"The " + this.getTableName() + "(" + sellerCompanyId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String sellerCompanyId, int version) throws Exception{
 	
 		String methodName="delete(String sellerCompanyId, int version)";
@@ -120,21 +141,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{sellerCompanyId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new SellerCompanyVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new SellerCompanyNotFoundException("The "+this.getTableName()+"("+sellerCompanyId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(sellerCompanyId,version);
 		}
 		
 	
@@ -153,15 +160,15 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -172,13 +179,13 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		
 	protected static final String ORDER_LIST = "orderList";
 	
-	protected boolean isExtractOrderListEnabled(Set<String> options){
+	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,ORDER_LIST);
 		
  	}
 
-	protected boolean isSaveOrderListEnabled(Set<String> options){
+	protected boolean isSaveOrderListEnabled(Map<String,Object> options){
 		return checkOptions(options, ORDER_LIST);
 		
  	}
@@ -188,13 +195,13 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		
 	protected static final String CUST_SVC_REP_LIST = "custSvcRepList";
 	
-	protected boolean isExtractCustSvcRepListEnabled(Set<String> options){
+	protected boolean isExtractCustSvcRepListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,CUST_SVC_REP_LIST);
 		
  	}
 
-	protected boolean isSaveCustSvcRepListEnabled(Set<String> options){
+	protected boolean isSaveCustSvcRepListEnabled(Map<String,Object> options){
 		return checkOptions(options, CUST_SVC_REP_LIST);
 		
  	}
@@ -213,17 +220,17 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		return sellerCompany;
 	}
 
-	protected SellerCompany loadInternalSellerCompany(String sellerCompanyId, Set<String> loadOptions) throws Exception{
+	protected SellerCompany loadInternalSellerCompany(String sellerCompanyId, Map<String,Object> loadOptions) throws Exception{
 		
 		SellerCompany sellerCompany = extractSellerCompany(sellerCompanyId);
 
 		
 		if(isExtractOrderListEnabled(loadOptions)){
-	 		extractOrderList(sellerCompany);
+	 		extractOrderList(sellerCompany, loadOptions);
  		}		
 		
 		if(isExtractCustSvcRepListEnabled(loadOptions)){
-	 		extractCustSvcRepList(sellerCompany);
+	 		extractCustSvcRepList(sellerCompany, loadOptions);
  		}		
 		
 		return sellerCompany;
@@ -233,7 +240,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	
 	
 		
-	protected SellerCompany extractOrderList(SellerCompany sellerCompany){
+	protected SellerCompany extractOrderList(SellerCompany sellerCompany, Map<String,Object> options){
 		
 		List<Order> orderList = getOrderDAO().findOrderBySeller(sellerCompany.getId());
 		if(orderList != null){
@@ -244,7 +251,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	
 	}	
 		
-	protected SellerCompany extractCustSvcRepList(SellerCompany sellerCompany){
+	protected SellerCompany extractCustSvcRepList(SellerCompany sellerCompany, Map<String,Object> options){
 		
 		List<CustSvcRep> custSvcRepList = getCustSvcRepDAO().findCustSvcRepByCompany(sellerCompany.getId());
 		if(custSvcRepList != null){
@@ -275,7 +282,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		return sellerCompany;
 	
 	}
-	public List<SellerCompany> saveList(List<SellerCompany> sellerCompanyList,Set<String> options){
+	public List<SellerCompany> saveList(List<SellerCompany> sellerCompanyList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitSellerCompanyList(sellerCompanyList);
@@ -386,17 +393,17 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
  		return parameters;
  	}
  	
-	protected SellerCompany saveInternalSellerCompany(SellerCompany sellerCompany, Set<String> options){
+	protected SellerCompany saveInternalSellerCompany(SellerCompany sellerCompany, Map<String,Object> options){
 		
 		saveSellerCompany(sellerCompany);
 
 		
 		if(isSaveOrderListEnabled(options)){
-	 		saveOrderList(sellerCompany);
+	 		saveOrderList(sellerCompany, options);
  		}		
 		
 		if(isSaveCustSvcRepListEnabled(options)){
-	 		saveCustSvcRepList(sellerCompany);
+	 		saveCustSvcRepList(sellerCompany, options);
  		}		
 		
 		return sellerCompany;
@@ -408,32 +415,32 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	//======================================================================================
 	
 		
-	protected SellerCompany saveOrderList(SellerCompany sellerCompany){
+	protected SellerCompany saveOrderList(SellerCompany sellerCompany, Map<String,Object> options){
 		List<Order> orderList = sellerCompany.getOrderList();
-		if(orderList==null){
+		if(orderList == null){
 			return sellerCompany;
 		}
 		if(orderList.isEmpty()){
 			return sellerCompany;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getOrderDAO().saveList(sellerCompany.getOrderList(),options);
 		
 		return sellerCompany;
 	
 	}
 		
-	protected SellerCompany saveCustSvcRepList(SellerCompany sellerCompany){
+	protected SellerCompany saveCustSvcRepList(SellerCompany sellerCompany, Map<String,Object> options){
 		List<CustSvcRep> custSvcRepList = sellerCompany.getCustSvcRepList();
-		if(custSvcRepList==null){
+		if(custSvcRepList == null){
 			return sellerCompany;
 		}
 		if(custSvcRepList.isEmpty()){
 			return sellerCompany;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getCustSvcRepDAO().saveList(sellerCompany.getCustSvcRepList(),options);
 		
 		return sellerCompany;

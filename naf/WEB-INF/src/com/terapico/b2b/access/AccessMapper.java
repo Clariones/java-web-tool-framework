@@ -13,6 +13,7 @@ public class AccessMapper implements RowMapper<Access>{
 
 		
 		access.setId(rs.getString("id"));
+		access.setRoleName(rs.getString("role_name"));
 		 		
  		access.setRole(createEmptyRole(rs.getString("role")));
  		access.setVersion(rs.getInt("version"));

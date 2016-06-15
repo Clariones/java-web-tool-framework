@@ -2,8 +2,10 @@ package com.terapico.b2b.order;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.terapico.b2b.action.Action;
@@ -21,8 +23,9 @@ public class OrderServiceImpl {
 		this.orderDAO = orderDAO;
 	}
 	public Order load(String orderId,String [] optionsArray) throws Exception {
-		Set<String> options=new HashSet<String>();
-		options.addAll(Arrays.asList(optionsArray));
+		Map<String,Object> options=new HashMap<String,Object>();
+		options.put("__all__", "__all__");
+		//options.addAll(Arrays.asList(optionsArray));
 		Order theOrder = orderDAO.load(orderId, options);
 		
 		theOrder.addActions(getAvailableActions());;
@@ -35,8 +38,8 @@ public class OrderServiceImpl {
 		return this.load("O000004", new String[]{"__all__"});
 	}
 	public Order confirm(String orderId,String [] optionsArray,String who) throws Exception {
-		Set<String> options=new HashSet<String>();
-		options.addAll(Arrays.asList(optionsArray));
+		Map<String,Object> options=new HashMap<String,Object>();
+		//options.addAll(Arrays.asList(optionsArray));
 		Order theOrder = orderDAO.load(orderId, options);
 		
 		//action..set
@@ -70,8 +73,51 @@ public class OrderServiceImpl {
 		 
 	}
 	public Order submit(String orderId,String [] optionsArray) throws Exception {
-		Set<String> options=new HashSet<String>();
-		options.addAll(Arrays.asList(optionsArray));
+		Map<String,Object> options=new HashMap<String,Object>();
+		//options.addAll(Arrays.asList(optionsArray));
 		return orderDAO.load(orderId, options);
 	}
+	/*
+	 * 
+	 * protected		String	mId;
+	protected		BuyerCompany	mBuyer;
+	protected		SellerCompany	mSeller;
+	protected		String	mTitle;
+	protected		double	mTotalAmount;
+	protected		String	mType;
+	protected		boolean	mMarkAsDelete;
+	protected		int	mxVersion;
+	 * 
+	 * */
+	public Order createOrder(String title,String buyerId, String sellerId,String type) throws Exception {
+		
+		return this.load("O000004", new String[]{"__all__"});
+	}
+	public String[] getCandidateTitlesForCreatingOrder() throws Exception {
+		
+		return new String[]{"order title"};
+	}
+	public String[] getCandidateBuyerList() throws Exception {
+		
+		return new String[]{"buyid"};
+	}
+	public String[] getCandidateSellerList() throws Exception {
+		
+		return new String[]{"sellerid"};
+	}
+	public String[] getCandidateTypeList() throws Exception {
+		
+		return new String[]{"S001","S002"};
+	}
+	public Order updateOrder(String orderId, String title,String buyerId, String sellerId,String type) throws Exception {
+		
+		return this.load("O000004", new String[]{"__all__"});
+	}
+	public Order updateOrder(String orderId, OrderField field, String value) throws Exception {
+		
+		return this.load("O000004", new String[]{"__all__"});
+	}
+	
+	
+	
 }

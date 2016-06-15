@@ -3,8 +3,8 @@ package com.terapico.b2b.custsvcrep;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.role.Role;
 import com.terapico.b2b.sellercompany.SellerCompany;
@@ -34,21 +34,21 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 
 		
 
-	public CustSvcRep load(String custSvcRepId,Set<String> options) throws Exception{
+	public CustSvcRep load(String custSvcRepId,Map<String,Object> options) throws Exception{
 		return loadInternalCustSvcRep(custSvcRepId, options);
 	}
-	public CustSvcRep save(CustSvcRep custSvcRep,Set<String> options){
+	public CustSvcRep save(CustSvcRep custSvcRep,Map<String,Object> options){
 		
-		String methodName="save(CustSvcRep custSvcRep,Set<String> options){";
+		String methodName="save(CustSvcRep custSvcRep,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(custSvcRep, methodName, "custSvcRep");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalCustSvcRep(custSvcRep,options);
 	}
-	public CustSvcRep clone(String custSvcRepId,Set<String> options) throws Exception{
+	public CustSvcRep clone(String custSvcRepId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String custSvcRepId,Set<String> options)";
+		String methodName="clone(String custSvcRepId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(custSvcRepId, methodName, "custSvcRepId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -72,6 +72,27 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String custSvcRepId, int version) throws  CustSvcRepVersionChangedException,  CustSvcRepNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{custSvcRepId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new CustSvcRepVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new CustSvcRepNotFoundException(
+					"The " + this.getTableName() + "(" + custSvcRepId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String custSvcRepId, int version) throws Exception{
 	
 		String methodName="delete(String custSvcRepId, int version)";
@@ -86,21 +107,7 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{custSvcRepId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new CustSvcRepVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new CustSvcRepNotFoundException("The "+this.getTableName()+"("+custSvcRepId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(custSvcRepId,version);
 		}
 		
 	
@@ -119,15 +126,15 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -137,14 +144,14 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  
  	//private boolean extractRoleEnabled = true;
  	private static final String ROLE = "role";
- 	protected boolean isExtractRoleEnabled(Set<String> options){
+ 	protected boolean isExtractRoleEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, ROLE);
  	}
  	
  	
  	//private boolean saveRoleEnabled = true;
- 	protected boolean isSaveRoleEnabled(Set<String> options){
+ 	protected boolean isSaveRoleEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, ROLE);
  	}
@@ -154,14 +161,14 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
   
  	//private boolean extractCompanyEnabled = true;
  	private static final String COMPANY = "company";
- 	protected boolean isExtractCompanyEnabled(Set<String> options){
+ 	protected boolean isExtractCompanyEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, COMPANY);
  	}
  	
  	
  	//private boolean saveCompanyEnabled = true;
- 	protected boolean isSaveCompanyEnabled(Set<String> options){
+ 	protected boolean isSaveCompanyEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, COMPANY);
  	}
@@ -181,16 +188,16 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		return custSvcRep;
 	}
 
-	protected CustSvcRep loadInternalCustSvcRep(String custSvcRepId, Set<String> loadOptions) throws Exception{
+	protected CustSvcRep loadInternalCustSvcRep(String custSvcRepId, Map<String,Object> loadOptions) throws Exception{
 		
 		CustSvcRep custSvcRep = extractCustSvcRep(custSvcRepId);
  	
  		if(isExtractRoleEnabled(loadOptions)){
-	 		extractRole(custSvcRep);
+	 		extractRole(custSvcRep, loadOptions);
  		}
   	
  		if(isExtractCompanyEnabled(loadOptions)){
-	 		extractCompany(custSvcRep);
+	 		extractCompany(custSvcRep, loadOptions);
  		}
  
 		
@@ -201,9 +208,12 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
 	 
 
- 	protected CustSvcRep extractRole(CustSvcRep custSvcRep) throws Exception{
+ 	protected CustSvcRep extractRole(CustSvcRep custSvcRep, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(custSvcRep.getRole() == null){
+			return custSvcRep;
+		}
+		
 		Role role = getRoleDAO().load(custSvcRep.getRole().getId(),options);
 		if(role != null){
 			custSvcRep.setRole(role);
@@ -215,9 +225,12 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  		
   
 
- 	protected CustSvcRep extractCompany(CustSvcRep custSvcRep) throws Exception{
+ 	protected CustSvcRep extractCompany(CustSvcRep custSvcRep, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(custSvcRep.getCompany() == null){
+			return custSvcRep;
+		}
+		
 		SellerCompany company = getSellerCompanyDAO().load(custSvcRep.getCompany().getId(),options);
 		if(company != null){
 			custSvcRep.setCompany(company);
@@ -267,7 +280,7 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		return custSvcRep;
 	
 	}
-	public List<CustSvcRep> saveList(List<CustSvcRep> custSvcRepList,Set<String> options){
+	public List<CustSvcRep> saveList(List<CustSvcRep> custSvcRepList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitCustSvcRepList(custSvcRepList);
@@ -396,16 +409,16 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  		return parameters;
  	}
  	
-	protected CustSvcRep saveInternalCustSvcRep(CustSvcRep custSvcRep, Set<String> options){
+	protected CustSvcRep saveInternalCustSvcRep(CustSvcRep custSvcRep, Map<String,Object> options){
 		
 		saveCustSvcRep(custSvcRep);
  	
  		if(isSaveRoleEnabled(options)){
-	 		saveRole(custSvcRep);
+	 		saveRole(custSvcRep, options);
  		}
   	
  		if(isSaveCompanyEnabled(options)){
-	 		saveCompany(custSvcRep);
+	 		saveCompany(custSvcRep, options);
  		}
  
 		
@@ -418,10 +431,8 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	//======================================================================================
 	 
  
- 	protected CustSvcRep saveRole(CustSvcRep custSvcRep){
+ 	protected CustSvcRep saveRole(CustSvcRep custSvcRep, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getRoleDAO().save(custSvcRep.getRole(),options);
  		return custSvcRep;
  		
@@ -429,10 +440,8 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
   
  
- 	protected CustSvcRep saveCompany(CustSvcRep custSvcRep){
+ 	protected CustSvcRep saveCompany(CustSvcRep custSvcRep, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getSellerCompanyDAO().save(custSvcRep.getCompany(),options);
  		return custSvcRep;
  		

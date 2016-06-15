@@ -3,8 +3,8 @@ package com.terapico.b2b.access;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.role.Role;
 import com.terapico.b2b.assignment.Assignment;
@@ -44,21 +44,21 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 			
 		
 
-	public Access load(String accessId,Set<String> options) throws Exception{
+	public Access load(String accessId,Map<String,Object> options) throws Exception{
 		return loadInternalAccess(accessId, options);
 	}
-	public Access save(Access access,Set<String> options){
+	public Access save(Access access,Map<String,Object> options){
 		
-		String methodName="save(Access access,Set<String> options){";
+		String methodName="save(Access access,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(access, methodName, "access");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalAccess(access,options);
 	}
-	public Access clone(String accessId,Set<String> options) throws Exception{
+	public Access clone(String accessId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String accessId,Set<String> options)";
+		String methodName="clone(String accessId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(accessId, methodName, "accessId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -89,6 +89,27 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String accessId, int version) throws  AccessVersionChangedException,  AccessNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{accessId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new AccessVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new AccessNotFoundException(
+					"The " + this.getTableName() + "(" + accessId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String accessId, int version) throws Exception{
 	
 		String methodName="delete(String accessId, int version)";
@@ -103,21 +124,7 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{accessId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new AccessVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new AccessNotFoundException("The "+this.getTableName()+"("+accessId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(accessId,version);
 		}
 		
 	
@@ -126,7 +133,7 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"role"};
+		return new String[]{"role_name","role"};
 	}
 	@Override
 	protected String getName() {
@@ -136,15 +143,15 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -154,14 +161,14 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
  
  	//private boolean extractRoleEnabled = true;
  	private static final String ROLE = "role";
- 	protected boolean isExtractRoleEnabled(Set<String> options){
+ 	protected boolean isExtractRoleEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, ROLE);
  	}
  	
  	
  	//private boolean saveRoleEnabled = true;
- 	protected boolean isSaveRoleEnabled(Set<String> options){
+ 	protected boolean isSaveRoleEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, ROLE);
  	}
@@ -172,13 +179,13 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 		
 	protected static final String ASSIGNMENT_LIST = "assignmentList";
 	
-	protected boolean isExtractAssignmentListEnabled(Set<String> options){
+	protected boolean isExtractAssignmentListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,ASSIGNMENT_LIST);
 		
  	}
 
-	protected boolean isSaveAssignmentListEnabled(Set<String> options){
+	protected boolean isSaveAssignmentListEnabled(Map<String,Object> options){
 		return checkOptions(options, ASSIGNMENT_LIST);
 		
  	}
@@ -197,17 +204,17 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 		return access;
 	}
 
-	protected Access loadInternalAccess(String accessId, Set<String> loadOptions) throws Exception{
+	protected Access loadInternalAccess(String accessId, Map<String,Object> loadOptions) throws Exception{
 		
 		Access access = extractAccess(accessId);
  	
  		if(isExtractRoleEnabled(loadOptions)){
-	 		extractRole(access);
+	 		extractRole(access, loadOptions);
  		}
  
 		
 		if(isExtractAssignmentListEnabled(loadOptions)){
-	 		extractAssignmentList(access);
+	 		extractAssignmentList(access, loadOptions);
  		}		
 		
 		return access;
@@ -217,9 +224,12 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 	
 	 
 
- 	protected Access extractRole(Access access) throws Exception{
+ 	protected Access extractRole(Access access, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(access.getRole() == null){
+			return access;
+		}
+		
 		Role role = getRoleDAO().load(access.getRole().getId(),options);
 		if(role != null){
 			access.setRole(role);
@@ -231,7 +241,7 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
  		
  
 		
-	protected Access extractAssignmentList(Access access){
+	protected Access extractAssignmentList(Access access, Map<String,Object> options){
 		
 		List<Assignment> assignmentList = getAssignmentDAO().findAssignmentByAccess(access.getId());
 		if(assignmentList != null){
@@ -271,7 +281,7 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 		return access;
 	
 	}
-	public List<Access> saveList(List<Access> accessList,Set<String> options){
+	public List<Access> saveList(List<Access> accessList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitAccessList(accessList);
@@ -363,25 +373,27 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
  		return prepareCreateAccessParameters(access);
  	}
  	protected Object[] prepareUpdateAccessParameters(Access access){
- 		Object[] parameters = new Object[3];
-  	
+ 		Object[] parameters = new Object[4];
+ 
+ 		parameters[0] = access.getRoleName(); 	
  		if(access.getRole() != null){
- 			parameters[0] = access.getRole().getId();
+ 			parameters[1] = access.getRole().getId();
  		}
  		
- 		parameters[1] = access.getId();
- 		parameters[2] = access.getVersion();
+ 		parameters[2] = access.getId();
+ 		parameters[3] = access.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateAccessParameters(Access access){
-		Object[] parameters = new Object[2];
+		Object[] parameters = new Object[3];
 		String newAccessId=getNextId();
 		access.setId(newAccessId);
 		parameters[0] =  access.getId();
-  	
+ 
+ 		parameters[1] = access.getRoleName(); 	
  		if(access.getRole() != null){
- 			parameters[1] = access.getRole().getId();
+ 			parameters[2] = access.getRole().getId();
  		
  		}
  				
@@ -389,17 +401,17 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
  		return parameters;
  	}
  	
-	protected Access saveInternalAccess(Access access, Set<String> options){
+	protected Access saveInternalAccess(Access access, Map<String,Object> options){
 		
 		saveAccess(access);
  	
  		if(isSaveRoleEnabled(options)){
-	 		saveRole(access);
+	 		saveRole(access, options);
  		}
  
 		
 		if(isSaveAssignmentListEnabled(options)){
-	 		saveAssignmentList(access);
+	 		saveAssignmentList(access, options);
  		}		
 		
 		return access;
@@ -411,10 +423,8 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 	//======================================================================================
 	 
  
- 	protected Access saveRole(Access access){
+ 	protected Access saveRole(Access access, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getRoleDAO().save(access.getRole(),options);
  		return access;
  		
@@ -422,16 +432,16 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 	
  
 		
-	protected Access saveAssignmentList(Access access){
+	protected Access saveAssignmentList(Access access, Map<String,Object> options){
 		List<Assignment> assignmentList = access.getAssignmentList();
-		if(assignmentList==null){
+		if(assignmentList == null){
 			return access;
 		}
 		if(assignmentList.isEmpty()){
 			return access;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getAssignmentDAO().saveList(access.getAssignmentList(),options);
 		
 		return access;

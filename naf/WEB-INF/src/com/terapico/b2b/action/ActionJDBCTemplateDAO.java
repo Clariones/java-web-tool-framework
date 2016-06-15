@@ -3,8 +3,8 @@ package com.terapico.b2b.action;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
@@ -23,21 +23,21 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 
 		
 
-	public Action load(String actionId,Set<String> options) throws Exception{
+	public Action load(String actionId,Map<String,Object> options) throws Exception{
 		return loadInternalAction(actionId, options);
 	}
-	public Action save(Action action,Set<String> options){
+	public Action save(Action action,Map<String,Object> options){
 		
-		String methodName="save(Action action,Set<String> options){";
+		String methodName="save(Action action,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(action, methodName, "action");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalAction(action,options);
 	}
-	public Action clone(String actionId,Set<String> options) throws Exception{
+	public Action clone(String actionId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String actionId,Set<String> options)";
+		String methodName="clone(String actionId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(actionId, methodName, "actionId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -61,6 +61,27 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String actionId, int version) throws  ActionVersionChangedException,  ActionNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{actionId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new ActionVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new ActionNotFoundException(
+					"The " + this.getTableName() + "(" + actionId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String actionId, int version) throws Exception{
 	
 		String methodName="delete(String actionId, int version)";
@@ -75,21 +96,7 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{actionId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new ActionVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new ActionNotFoundException("The "+this.getTableName()+"("+actionId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(actionId,version);
 		}
 		
 	
@@ -108,15 +115,15 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -126,14 +133,14 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
  
  	//private boolean extractBoEnabled = true;
  	private static final String BO = "bo";
- 	protected boolean isExtractBoEnabled(Set<String> options){
+ 	protected boolean isExtractBoEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, BO);
  	}
  	
  	
  	//private boolean saveBoEnabled = true;
- 	protected boolean isSaveBoEnabled(Set<String> options){
+ 	protected boolean isSaveBoEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, BO);
  	}
@@ -153,12 +160,12 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 		return action;
 	}
 
-	protected Action loadInternalAction(String actionId, Set<String> loadOptions) throws Exception{
+	protected Action loadInternalAction(String actionId, Map<String,Object> loadOptions) throws Exception{
 		
 		Action action = extractAction(actionId);
  	
  		if(isExtractBoEnabled(loadOptions)){
-	 		extractBo(action);
+	 		extractBo(action, loadOptions);
  		}
  
 		
@@ -169,9 +176,12 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 	
 	 
 
- 	protected Action extractBo(Action action) throws Exception{
+ 	protected Action extractBo(Action action, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(action.getBo() == null){
+			return action;
+		}
+		
 		Order bo = getOrderDAO().load(action.getBo().getId(),options);
 		if(bo != null){
 			action.setBo(bo);
@@ -212,7 +222,7 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 		return action;
 	
 	}
-	public List<Action> saveList(List<Action> actionList,Set<String> options){
+	public List<Action> saveList(List<Action> actionList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitActionList(actionList);
@@ -334,12 +344,12 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
  		return parameters;
  	}
  	
-	protected Action saveInternalAction(Action action, Set<String> options){
+	protected Action saveInternalAction(Action action, Map<String,Object> options){
 		
 		saveAction(action);
  	
  		if(isSaveBoEnabled(options)){
-	 		saveBo(action);
+	 		saveBo(action, options);
  		}
  
 		
@@ -352,10 +362,8 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 	//======================================================================================
 	 
  
- 	protected Action saveBo(Action action){
+ 	protected Action saveBo(Action action, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getOrderDAO().save(action.getBo(),options);
  		return action;
  		

@@ -3,20 +3,30 @@ package com.terapico.b2b.order;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
+import com.terapico.b2b.approval.Approval;
+import com.terapico.b2b.confirmation.Confirmation;
+import com.terapico.b2b.shipment.Shipment;
 import com.terapico.b2b.buyercompany.BuyerCompany;
+import com.terapico.b2b.processing.Processing;
 import com.terapico.b2b.lineitem.LineItem;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
 import com.terapico.b2b.action.Action;
+import com.terapico.b2b.delivery.Delivery;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
 import com.terapico.b2b.shippinggroup.ShippingGroupDAO;
+import com.terapico.b2b.delivery.DeliveryDAO;
 import com.terapico.b2b.lineitem.LineItemDAO;
+import com.terapico.b2b.shipment.ShipmentDAO;
+import com.terapico.b2b.processing.ProcessingDAO;
 import com.terapico.b2b.paymentgroup.PaymentGroupDAO;
 import com.terapico.b2b.action.ActionDAO;
+import com.terapico.b2b.approval.ApprovalDAO;
+import com.terapico.b2b.confirmation.ConfirmationDAO;
 import com.terapico.b2b.sellercompany.SellerCompanyDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
 
@@ -38,6 +48,51 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  	}
  	public SellerCompanyDAO getSellerCompanyDAO(){
 	 	return this.sellerCompanyDAO;
+ 	}
+ 
+ 	
+ 	private  ConfirmationDAO  confirmationDAO;
+ 	public void setConfirmationDAO(ConfirmationDAO confirmationDAO){
+	 	this.confirmationDAO = confirmationDAO;
+ 	}
+ 	public ConfirmationDAO getConfirmationDAO(){
+	 	return this.confirmationDAO;
+ 	}
+ 
+ 	
+ 	private  ApprovalDAO  approvalDAO;
+ 	public void setApprovalDAO(ApprovalDAO approvalDAO){
+	 	this.approvalDAO = approvalDAO;
+ 	}
+ 	public ApprovalDAO getApprovalDAO(){
+	 	return this.approvalDAO;
+ 	}
+ 
+ 	
+ 	private  ProcessingDAO  processingDAO;
+ 	public void setProcessingDAO(ProcessingDAO processingDAO){
+	 	this.processingDAO = processingDAO;
+ 	}
+ 	public ProcessingDAO getProcessingDAO(){
+	 	return this.processingDAO;
+ 	}
+ 
+ 	
+ 	private  ShipmentDAO  shipmentDAO;
+ 	public void setShipmentDAO(ShipmentDAO shipmentDAO){
+	 	this.shipmentDAO = shipmentDAO;
+ 	}
+ 	public ShipmentDAO getShipmentDAO(){
+	 	return this.shipmentDAO;
+ 	}
+ 
+ 	
+ 	private  DeliveryDAO  deliveryDAO;
+ 	public void setDeliveryDAO(DeliveryDAO deliveryDAO){
+	 	this.deliveryDAO = deliveryDAO;
+ 	}
+ 	public DeliveryDAO getDeliveryDAO(){
+	 	return this.deliveryDAO;
  	}
 
 		
@@ -118,21 +173,21 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 			
 		
 
-	public Order load(String orderId,Set<String> options) throws Exception{
+	public Order load(String orderId,Map<String,Object> options) throws Exception{
 		return loadInternalOrder(orderId, options);
 	}
-	public Order save(Order order,Set<String> options){
+	public Order save(Order order,Map<String,Object> options){
 		
-		String methodName="save(Order order,Set<String> options){";
+		String methodName="save(Order order,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(order, methodName, "order");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalOrder(order,options);
 	}
-	public Order clone(String orderId,Set<String> options) throws Exception{
+	public Order clone(String orderId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String orderId,Set<String> options)";
+		String methodName="clone(String orderId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(orderId, methodName, "orderId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -184,6 +239,27 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String orderId, int version) throws  OrderVersionChangedException,  OrderNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{orderId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new OrderVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new OrderNotFoundException(
+					"The " + this.getTableName() + "(" + orderId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String orderId, int version) throws Exception{
 	
 		String methodName="delete(String orderId, int version)";
@@ -198,21 +274,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{orderId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new OrderVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new OrderNotFoundException("The "+this.getTableName()+"("+orderId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(orderId,version);
 		}
 		
 	
@@ -221,7 +283,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"buyer","seller","title","total_amount","type","mark_as_delete"};
+		return new String[]{"buyer","seller","title","total_amount","type","mark_as_delete","confirmation","approval","processing","shipment","delivery"};
 	}
 	@Override
 	protected String getName() {
@@ -231,15 +293,15 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -249,14 +311,14 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  
  	//private boolean extractBuyerEnabled = true;
  	private static final String BUYER = "buyer";
- 	protected boolean isExtractBuyerEnabled(Set<String> options){
+ 	protected boolean isExtractBuyerEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, BUYER);
  	}
  	
  	
  	//private boolean saveBuyerEnabled = true;
- 	protected boolean isSaveBuyerEnabled(Set<String> options){
+ 	protected boolean isSaveBuyerEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, BUYER);
  	}
@@ -266,16 +328,101 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
   
  	//private boolean extractSellerEnabled = true;
  	private static final String SELLER = "seller";
- 	protected boolean isExtractSellerEnabled(Set<String> options){
+ 	protected boolean isExtractSellerEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, SELLER);
  	}
  	
  	
  	//private boolean saveSellerEnabled = true;
- 	protected boolean isSaveSellerEnabled(Set<String> options){
+ 	protected boolean isSaveSellerEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, SELLER);
+ 	}
+ 	
+
+ 	
+  
+ 	//private boolean extractConfirmationEnabled = true;
+ 	private static final String CONFIRMATION = "confirmation";
+ 	protected boolean isExtractConfirmationEnabled(Map<String,Object> options){
+ 		
+	 	return checkOptions(options, CONFIRMATION);
+ 	}
+ 	
+ 	
+ 	//private boolean saveConfirmationEnabled = true;
+ 	protected boolean isSaveConfirmationEnabled(Map<String,Object> options){
+	 	
+ 		return checkOptions(options, CONFIRMATION);
+ 	}
+ 	
+
+ 	
+  
+ 	//private boolean extractApprovalEnabled = true;
+ 	private static final String APPROVAL = "approval";
+ 	protected boolean isExtractApprovalEnabled(Map<String,Object> options){
+ 		
+	 	return checkOptions(options, APPROVAL);
+ 	}
+ 	
+ 	
+ 	//private boolean saveApprovalEnabled = true;
+ 	protected boolean isSaveApprovalEnabled(Map<String,Object> options){
+	 	
+ 		return checkOptions(options, APPROVAL);
+ 	}
+ 	
+
+ 	
+  
+ 	//private boolean extractProcessingEnabled = true;
+ 	private static final String PROCESSING = "processing";
+ 	protected boolean isExtractProcessingEnabled(Map<String,Object> options){
+ 		
+	 	return checkOptions(options, PROCESSING);
+ 	}
+ 	
+ 	
+ 	//private boolean saveProcessingEnabled = true;
+ 	protected boolean isSaveProcessingEnabled(Map<String,Object> options){
+	 	
+ 		return checkOptions(options, PROCESSING);
+ 	}
+ 	
+
+ 	
+  
+ 	//private boolean extractShipmentEnabled = true;
+ 	private static final String SHIPMENT = "shipment";
+ 	protected boolean isExtractShipmentEnabled(Map<String,Object> options){
+ 		
+	 	return checkOptions(options, SHIPMENT);
+ 	}
+ 	
+ 	
+ 	//private boolean saveShipmentEnabled = true;
+ 	protected boolean isSaveShipmentEnabled(Map<String,Object> options){
+	 	
+ 		return checkOptions(options, SHIPMENT);
+ 	}
+ 	
+
+ 	
+  
+ 	//private boolean extractDeliveryEnabled = true;
+ 	private static final String DELIVERY = "delivery";
+ 	protected boolean isExtractDeliveryEnabled(Map<String,Object> options){
+ 		
+	 	return checkOptions(options, DELIVERY);
+ 	}
+ 	
+ 	
+ 	//private boolean saveDeliveryEnabled = true;
+ 	protected boolean isSaveDeliveryEnabled(Map<String,Object> options){
+	 	
+ 		return checkOptions(options, DELIVERY);
  	}
  	
 
@@ -284,13 +431,13 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	protected static final String LINE_ITEM_LIST = "lineItemList";
 	
-	protected boolean isExtractLineItemListEnabled(Set<String> options){
+	protected boolean isExtractLineItemListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,LINE_ITEM_LIST);
 		
  	}
 
-	protected boolean isSaveLineItemListEnabled(Set<String> options){
+	protected boolean isSaveLineItemListEnabled(Map<String,Object> options){
 		return checkOptions(options, LINE_ITEM_LIST);
 		
  	}
@@ -300,13 +447,13 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	protected static final String SHIPPING_GROUP_LIST = "shippingGroupList";
 	
-	protected boolean isExtractShippingGroupListEnabled(Set<String> options){
+	protected boolean isExtractShippingGroupListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,SHIPPING_GROUP_LIST);
 		
  	}
 
-	protected boolean isSaveShippingGroupListEnabled(Set<String> options){
+	protected boolean isSaveShippingGroupListEnabled(Map<String,Object> options){
 		return checkOptions(options, SHIPPING_GROUP_LIST);
 		
  	}
@@ -316,13 +463,13 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	protected static final String PAYMENT_GROUP_LIST = "paymentGroupList";
 	
-	protected boolean isExtractPaymentGroupListEnabled(Set<String> options){
+	protected boolean isExtractPaymentGroupListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,PAYMENT_GROUP_LIST);
 		
  	}
 
-	protected boolean isSavePaymentGroupListEnabled(Set<String> options){
+	protected boolean isSavePaymentGroupListEnabled(Map<String,Object> options){
 		return checkOptions(options, PAYMENT_GROUP_LIST);
 		
  	}
@@ -332,13 +479,13 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	protected static final String ACTION_LIST = "actionList";
 	
-	protected boolean isExtractActionListEnabled(Set<String> options){
+	protected boolean isExtractActionListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,ACTION_LIST);
 		
  	}
 
-	protected boolean isSaveActionListEnabled(Set<String> options){
+	protected boolean isSaveActionListEnabled(Map<String,Object> options){
 		return checkOptions(options, ACTION_LIST);
 		
  	}
@@ -357,32 +504,54 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		return order;
 	}
 
-	protected Order loadInternalOrder(String orderId, Set<String> loadOptions) throws Exception{
+	protected Order loadInternalOrder(String orderId, Map<String,Object> loadOptions) throws Exception{
 		
 		Order order = extractOrder(orderId);
  	
  		if(isExtractBuyerEnabled(loadOptions)){
-	 		extractBuyer(order);
+	 		extractBuyer(order, loadOptions);
  		}
   	
  		if(isExtractSellerEnabled(loadOptions)){
-	 		extractSeller(order);
+	 		extractSeller(order, loadOptions);
+ 		}
+  	
+ 		if(isExtractConfirmationEnabled(loadOptions)){
+	 		extractConfirmation(order, loadOptions);
+ 		}
+  	
+ 		if(isExtractApprovalEnabled(loadOptions)){
+	 		extractApproval(order, loadOptions);
+ 		}
+  	
+ 		if(isExtractProcessingEnabled(loadOptions)){
+	 		extractProcessing(order, loadOptions);
+ 		}
+  	
+ 		if(isExtractShipmentEnabled(loadOptions)){
+	 		extractShipment(order, loadOptions);
+ 		}
+  	
+ 		if(isExtractDeliveryEnabled(loadOptions)){
+	 		extractDelivery(order, loadOptions);
  		}
  
 		
 		if(isExtractLineItemListEnabled(loadOptions)){
-	 		extractLineItemList(order);
+	 		extractLineItemList(order, loadOptions);
  		}		
 		
 		if(isExtractShippingGroupListEnabled(loadOptions)){
-	 		extractShippingGroupList(order);
+	 		extractShippingGroupList(order, loadOptions);
  		}		
 		
 		if(isExtractPaymentGroupListEnabled(loadOptions)){
-	 		extractPaymentGroupList(order);
+	 		extractPaymentGroupList(order, loadOptions);
  		}		
 		
-				
+		if(isExtractActionListEnabled(loadOptions)){
+	 		extractActionList(order, loadOptions);
+ 		}		
 		
 		return order;
 		
@@ -391,9 +560,12 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	
 	 
 
- 	protected Order extractBuyer(Order order) throws Exception{
+ 	protected Order extractBuyer(Order order, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(order.getBuyer() == null){
+			return order;
+		}
+		
 		BuyerCompany buyer = getBuyerCompanyDAO().load(order.getBuyer().getId(),options);
 		if(buyer != null){
 			order.setBuyer(buyer);
@@ -405,9 +577,12 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  		
   
 
- 	protected Order extractSeller(Order order) throws Exception{
+ 	protected Order extractSeller(Order order, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(order.getSeller() == null){
+			return order;
+		}
+		
 		SellerCompany seller = getSellerCompanyDAO().load(order.getSeller().getId(),options);
 		if(seller != null){
 			order.setSeller(seller);
@@ -417,9 +592,94 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  		return order;
  	}
  		
+  
+
+ 	protected Order extractConfirmation(Order order, Map<String,Object> options) throws Exception{
+
+		if(order.getConfirmation() == null){
+			return order;
+		}
+		
+		Confirmation confirmation = getConfirmationDAO().load(order.getConfirmation().getId(),options);
+		if(confirmation != null){
+			order.setConfirmation(confirmation);
+		}
+		
+ 		
+ 		return order;
+ 	}
+ 		
+  
+
+ 	protected Order extractApproval(Order order, Map<String,Object> options) throws Exception{
+
+		if(order.getApproval() == null){
+			return order;
+		}
+		
+		Approval approval = getApprovalDAO().load(order.getApproval().getId(),options);
+		if(approval != null){
+			order.setApproval(approval);
+		}
+		
+ 		
+ 		return order;
+ 	}
+ 		
+  
+
+ 	protected Order extractProcessing(Order order, Map<String,Object> options) throws Exception{
+
+		if(order.getProcessing() == null){
+			return order;
+		}
+		
+		Processing processing = getProcessingDAO().load(order.getProcessing().getId(),options);
+		if(processing != null){
+			order.setProcessing(processing);
+		}
+		
+ 		
+ 		return order;
+ 	}
+ 		
+  
+
+ 	protected Order extractShipment(Order order, Map<String,Object> options) throws Exception{
+
+		if(order.getShipment() == null){
+			return order;
+		}
+		
+		Shipment shipment = getShipmentDAO().load(order.getShipment().getId(),options);
+		if(shipment != null){
+			order.setShipment(shipment);
+		}
+		
+ 		
+ 		return order;
+ 	}
+ 		
+  
+
+ 	protected Order extractDelivery(Order order, Map<String,Object> options) throws Exception{
+
+		if(order.getDelivery() == null){
+			return order;
+		}
+		
+		Delivery delivery = getDeliveryDAO().load(order.getDelivery().getId(),options);
+		if(delivery != null){
+			order.setDelivery(delivery);
+		}
+		
+ 		
+ 		return order;
+ 	}
+ 		
  
 		
-	protected Order extractLineItemList(Order order){
+	protected Order extractLineItemList(Order order, Map<String,Object> options){
 		
 		List<LineItem> lineItemList = getLineItemDAO().findLineItemByBizOrder(order.getId());
 		if(lineItemList != null){
@@ -430,7 +690,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	
 	}	
 		
-	protected Order extractShippingGroupList(Order order){
+	protected Order extractShippingGroupList(Order order, Map<String,Object> options){
 		
 		List<ShippingGroup> shippingGroupList = getShippingGroupDAO().findShippingGroupByBizOrder(order.getId());
 		if(shippingGroupList != null){
@@ -441,7 +701,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	
 	}	
 		
-	protected Order extractPaymentGroupList(Order order){
+	protected Order extractPaymentGroupList(Order order, Map<String,Object> options){
 		
 		List<PaymentGroup> paymentGroupList = getPaymentGroupDAO().findPaymentGroupByBizOrder(order.getId());
 		if(paymentGroupList != null){
@@ -452,7 +712,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	
 	}	
 		
-	protected Order extractActionList(Order order){
+	protected Order extractActionList(Order order, Map<String,Object> options){
 		
 		List<Action> actionList = getActionDAO().findActionByBo(order.getId());
 		if(actionList != null){
@@ -482,6 +742,51 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  	
  		return orderList;
  	}
+  	
+ 	public List<Order> findOrderByConfirmation(String confirmationId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where confirmation = ?";
+		List<Order> orderList = getJdbcTemplateObject().query(SQL, new Object[]{confirmationId}, getMapper());
+		
+ 	
+ 		return orderList;
+ 	}
+  	
+ 	public List<Order> findOrderByApproval(String approvalId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where approval = ?";
+		List<Order> orderList = getJdbcTemplateObject().query(SQL, new Object[]{approvalId}, getMapper());
+		
+ 	
+ 		return orderList;
+ 	}
+  	
+ 	public List<Order> findOrderByProcessing(String processingId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where processing = ?";
+		List<Order> orderList = getJdbcTemplateObject().query(SQL, new Object[]{processingId}, getMapper());
+		
+ 	
+ 		return orderList;
+ 	}
+  	
+ 	public List<Order> findOrderByShipment(String shipmentId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where shipment = ?";
+		List<Order> orderList = getJdbcTemplateObject().query(SQL, new Object[]{shipmentId}, getMapper());
+		
+ 	
+ 		return orderList;
+ 	}
+  	
+ 	public List<Order> findOrderByDelivery(String deliveryId){
+ 	
+ 		String SQL = "select * from "+this.getTableName()+" where delivery = ?";
+		List<Order> orderList = getJdbcTemplateObject().query(SQL, new Object[]{deliveryId}, getMapper());
+		
+ 	
+ 		return orderList;
+ 	}
  	
 		
 		
@@ -501,7 +806,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		return order;
 	
 	}
-	public List<Order> saveList(List<Order> orderList,Set<String> options){
+	public List<Order> saveList(List<Order> orderList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitOrderList(orderList);
@@ -593,7 +898,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  		return prepareCreateOrderParameters(order);
  	}
  	protected Object[] prepareUpdateOrderParameters(Order order){
- 		Object[] parameters = new Object[8];
+ 		Object[] parameters = new Object[13];
   	
  		if(order.getBuyer() != null){
  			parameters[0] = order.getBuyer().getId();
@@ -606,14 +911,34 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  		parameters[2] = order.getTitle();
  		parameters[3] = order.getTotalAmount();
  		parameters[4] = order.getType();
- 		parameters[5] = order.getMarkAsDelete();		
- 		parameters[6] = order.getId();
- 		parameters[7] = order.getVersion();
+ 		parameters[5] = order.getMarkAsDelete(); 	
+ 		if(order.getConfirmation() != null){
+ 			parameters[6] = order.getConfirmation().getId();
+ 		}
+  	
+ 		if(order.getApproval() != null){
+ 			parameters[7] = order.getApproval().getId();
+ 		}
+  	
+ 		if(order.getProcessing() != null){
+ 			parameters[8] = order.getProcessing().getId();
+ 		}
+  	
+ 		if(order.getShipment() != null){
+ 			parameters[9] = order.getShipment().getId();
+ 		}
+  	
+ 		if(order.getDelivery() != null){
+ 			parameters[10] = order.getDelivery().getId();
+ 		}
+ 		
+ 		parameters[11] = order.getId();
+ 		parameters[12] = order.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateOrderParameters(Order order){
-		Object[] parameters = new Object[7];
+		Object[] parameters = new Object[12];
 		String newOrderId=getNextId();
 		order.setId(newOrderId);
 		parameters[0] =  order.getId();
@@ -631,37 +956,84 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  		parameters[3] = order.getTitle();
  		parameters[4] = order.getTotalAmount();
  		parameters[5] = order.getType();
- 		parameters[6] = order.getMarkAsDelete();		
+ 		parameters[6] = order.getMarkAsDelete(); 	
+ 		if(order.getConfirmation() != null){
+ 			parameters[7] = order.getConfirmation().getId();
+ 		
+ 		}
+ 		 	
+ 		if(order.getApproval() != null){
+ 			parameters[8] = order.getApproval().getId();
+ 		
+ 		}
+ 		 	
+ 		if(order.getProcessing() != null){
+ 			parameters[9] = order.getProcessing().getId();
+ 		
+ 		}
+ 		 	
+ 		if(order.getShipment() != null){
+ 			parameters[10] = order.getShipment().getId();
+ 		
+ 		}
+ 		 	
+ 		if(order.getDelivery() != null){
+ 			parameters[11] = order.getDelivery().getId();
+ 		
+ 		}
+ 				
  				
  		return parameters;
  	}
  	
-	protected Order saveInternalOrder(Order order, Set<String> options){
+	protected Order saveInternalOrder(Order order, Map<String,Object> options){
 		
 		saveOrder(order);
  	
  		if(isSaveBuyerEnabled(options)){
-	 		saveBuyer(order);
+	 		saveBuyer(order, options);
  		}
   	
  		if(isSaveSellerEnabled(options)){
-	 		saveSeller(order);
+	 		saveSeller(order, options);
+ 		}
+  	
+ 		if(isSaveConfirmationEnabled(options)){
+	 		saveConfirmation(order, options);
+ 		}
+  	
+ 		if(isSaveApprovalEnabled(options)){
+	 		saveApproval(order, options);
+ 		}
+  	
+ 		if(isSaveProcessingEnabled(options)){
+	 		saveProcessing(order, options);
+ 		}
+  	
+ 		if(isSaveShipmentEnabled(options)){
+	 		saveShipment(order, options);
+ 		}
+  	
+ 		if(isSaveDeliveryEnabled(options)){
+	 		saveDelivery(order, options);
  		}
  
 		
 		if(isSaveLineItemListEnabled(options)){
-	 		saveLineItemList(order);
+	 		saveLineItemList(order, options);
  		}		
 		
 		if(isSaveShippingGroupListEnabled(options)){
-	 		saveShippingGroupList(order);
+	 		saveShippingGroupList(order, options);
  		}		
 		
 		if(isSavePaymentGroupListEnabled(options)){
-	 		savePaymentGroupList(order);
+	 		savePaymentGroupList(order, options);
  		}		
 		
-
+		if(isSaveActionListEnabled(options)){
+	 		saveActionList(order, options);
+ 		}		
 		
 		return order;
 		
@@ -672,10 +1044,8 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	//======================================================================================
 	 
  
- 	protected Order saveBuyer(Order order){
+ 	protected Order saveBuyer(Order order, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getBuyerCompanyDAO().save(order.getBuyer(),options);
  		return order;
  		
@@ -683,75 +1053,118 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	
   
  
- 	protected Order saveSeller(Order order){
+ 	protected Order saveSeller(Order order, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getSellerCompanyDAO().save(order.getSeller(),options);
+ 		return order;
+ 		
+ 	}
+	
+  
+ 
+ 	protected Order saveConfirmation(Order order, Map<String,Object> options){
+ 		//Call inject DAO to execute this method
+ 		getConfirmationDAO().save(order.getConfirmation(),options);
+ 		return order;
+ 		
+ 	}
+	
+  
+ 
+ 	protected Order saveApproval(Order order, Map<String,Object> options){
+ 		//Call inject DAO to execute this method
+ 		getApprovalDAO().save(order.getApproval(),options);
+ 		return order;
+ 		
+ 	}
+	
+  
+ 
+ 	protected Order saveProcessing(Order order, Map<String,Object> options){
+ 		//Call inject DAO to execute this method
+ 		getProcessingDAO().save(order.getProcessing(),options);
+ 		return order;
+ 		
+ 	}
+	
+  
+ 
+ 	protected Order saveShipment(Order order, Map<String,Object> options){
+ 		//Call inject DAO to execute this method
+ 		getShipmentDAO().save(order.getShipment(),options);
+ 		return order;
+ 		
+ 	}
+	
+  
+ 
+ 	protected Order saveDelivery(Order order, Map<String,Object> options){
+ 		//Call inject DAO to execute this method
+ 		getDeliveryDAO().save(order.getDelivery(),options);
  		return order;
  		
  	}
 	
  
 		
-	protected Order saveLineItemList(Order order){
+	protected Order saveLineItemList(Order order, Map<String,Object> options){
 		List<LineItem> lineItemList = order.getLineItemList();
-		if(lineItemList==null){
+		if(lineItemList == null){
 			return order;
 		}
 		if(lineItemList.isEmpty()){
 			return order;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getLineItemDAO().saveList(order.getLineItemList(),options);
 		
 		return order;
 	
 	}
 		
-	protected Order saveShippingGroupList(Order order){
+	protected Order saveShippingGroupList(Order order, Map<String,Object> options){
 		List<ShippingGroup> shippingGroupList = order.getShippingGroupList();
-		if(shippingGroupList==null){
+		if(shippingGroupList == null){
 			return order;
 		}
 		if(shippingGroupList.isEmpty()){
 			return order;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getShippingGroupDAO().saveList(order.getShippingGroupList(),options);
 		
 		return order;
 	
 	}
 		
-	protected Order savePaymentGroupList(Order order){
+	protected Order savePaymentGroupList(Order order, Map<String,Object> options){
 		List<PaymentGroup> paymentGroupList = order.getPaymentGroupList();
-		if(paymentGroupList==null){
+		if(paymentGroupList == null){
 			return order;
 		}
 		if(paymentGroupList.isEmpty()){
 			return order;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getPaymentGroupDAO().saveList(order.getPaymentGroupList(),options);
 		
 		return order;
 	
 	}
 		
-	protected Order saveActionList(Order order){
+	protected Order saveActionList(Order order, Map<String,Object> options){
 		List<Action> actionList = order.getActionList();
-		if(actionList==null){
+		if(actionList == null){
 			return order;
 		}
 		if(actionList.isEmpty()){
 			return order;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getActionDAO().saveList(order.getActionList(),options);
 		
 		return order;

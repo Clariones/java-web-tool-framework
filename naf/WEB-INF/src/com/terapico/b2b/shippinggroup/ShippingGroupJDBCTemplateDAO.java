@@ -3,8 +3,8 @@ package com.terapico.b2b.shippinggroup;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 import com.terapico.b2b.shippingaddress.ShippingAddress;
@@ -34,21 +34,21 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 
 		
 
-	public ShippingGroup load(String shippingGroupId,Set<String> options) throws Exception{
+	public ShippingGroup load(String shippingGroupId,Map<String,Object> options) throws Exception{
 		return loadInternalShippingGroup(shippingGroupId, options);
 	}
-	public ShippingGroup save(ShippingGroup shippingGroup,Set<String> options){
+	public ShippingGroup save(ShippingGroup shippingGroup,Map<String,Object> options){
 		
-		String methodName="save(ShippingGroup shippingGroup,Set<String> options){";
+		String methodName="save(ShippingGroup shippingGroup,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(shippingGroup, methodName, "shippingGroup");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalShippingGroup(shippingGroup,options);
 	}
-	public ShippingGroup clone(String shippingGroupId,Set<String> options) throws Exception{
+	public ShippingGroup clone(String shippingGroupId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String shippingGroupId,Set<String> options)";
+		String methodName="clone(String shippingGroupId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(shippingGroupId, methodName, "shippingGroupId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -72,6 +72,27 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String shippingGroupId, int version) throws  ShippingGroupVersionChangedException,  ShippingGroupNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{shippingGroupId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new ShippingGroupVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new ShippingGroupNotFoundException(
+					"The " + this.getTableName() + "(" + shippingGroupId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String shippingGroupId, int version) throws Exception{
 	
 		String methodName="delete(String shippingGroupId, int version)";
@@ -86,21 +107,7 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{shippingGroupId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new ShippingGroupVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new ShippingGroupNotFoundException("The "+this.getTableName()+"("+shippingGroupId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(shippingGroupId,version);
 		}
 		
 	
@@ -119,15 +126,15 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -137,14 +144,14 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
  
  	//private boolean extractBizOrderEnabled = true;
  	private static final String BIZORDER = "bizOrder";
- 	protected boolean isExtractBizOrderEnabled(Set<String> options){
+ 	protected boolean isExtractBizOrderEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, BIZORDER);
  	}
  	
  	
  	//private boolean saveBizOrderEnabled = true;
- 	protected boolean isSaveBizOrderEnabled(Set<String> options){
+ 	protected boolean isSaveBizOrderEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, BIZORDER);
  	}
@@ -154,14 +161,14 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
   
  	//private boolean extractAddressEnabled = true;
  	private static final String ADDRESS = "address";
- 	protected boolean isExtractAddressEnabled(Set<String> options){
+ 	protected boolean isExtractAddressEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, ADDRESS);
  	}
  	
  	
  	//private boolean saveAddressEnabled = true;
- 	protected boolean isSaveAddressEnabled(Set<String> options){
+ 	protected boolean isSaveAddressEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, ADDRESS);
  	}
@@ -181,16 +188,16 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		return shippingGroup;
 	}
 
-	protected ShippingGroup loadInternalShippingGroup(String shippingGroupId, Set<String> loadOptions) throws Exception{
+	protected ShippingGroup loadInternalShippingGroup(String shippingGroupId, Map<String,Object> loadOptions) throws Exception{
 		
 		ShippingGroup shippingGroup = extractShippingGroup(shippingGroupId);
  	
  		if(isExtractBizOrderEnabled(loadOptions)){
-	 		extractBizOrder(shippingGroup);
+	 		extractBizOrder(shippingGroup, loadOptions);
  		}
   	
  		if(isExtractAddressEnabled(loadOptions)){
-	 		extractAddress(shippingGroup);
+	 		extractAddress(shippingGroup, loadOptions);
  		}
  
 		
@@ -201,9 +208,12 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	
 	 
 
- 	protected ShippingGroup extractBizOrder(ShippingGroup shippingGroup) throws Exception{
+ 	protected ShippingGroup extractBizOrder(ShippingGroup shippingGroup, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(shippingGroup.getBizOrder() == null){
+			return shippingGroup;
+		}
+		
 		Order bizOrder = getOrderDAO().load(shippingGroup.getBizOrder().getId(),options);
 		if(bizOrder != null){
 			shippingGroup.setBizOrder(bizOrder);
@@ -215,9 +225,12 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
  		
   
 
- 	protected ShippingGroup extractAddress(ShippingGroup shippingGroup) throws Exception{
+ 	protected ShippingGroup extractAddress(ShippingGroup shippingGroup, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(shippingGroup.getAddress() == null){
+			return shippingGroup;
+		}
+		
 		ShippingAddress address = getShippingAddressDAO().load(shippingGroup.getAddress().getId(),options);
 		if(address != null){
 			shippingGroup.setAddress(address);
@@ -267,7 +280,7 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		return shippingGroup;
 	
 	}
-	public List<ShippingGroup> saveList(List<ShippingGroup> shippingGroupList,Set<String> options){
+	public List<ShippingGroup> saveList(List<ShippingGroup> shippingGroupList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitShippingGroupList(shippingGroupList);
@@ -398,16 +411,16 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
  		return parameters;
  	}
  	
-	protected ShippingGroup saveInternalShippingGroup(ShippingGroup shippingGroup, Set<String> options){
+	protected ShippingGroup saveInternalShippingGroup(ShippingGroup shippingGroup, Map<String,Object> options){
 		
 		saveShippingGroup(shippingGroup);
  	
  		if(isSaveBizOrderEnabled(options)){
-	 		saveBizOrder(shippingGroup);
+	 		saveBizOrder(shippingGroup, options);
  		}
   	
  		if(isSaveAddressEnabled(options)){
-	 		saveAddress(shippingGroup);
+	 		saveAddress(shippingGroup, options);
  		}
  
 		
@@ -420,10 +433,8 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	//======================================================================================
 	 
  
- 	protected ShippingGroup saveBizOrder(ShippingGroup shippingGroup){
+ 	protected ShippingGroup saveBizOrder(ShippingGroup shippingGroup, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getOrderDAO().save(shippingGroup.getBizOrder(),options);
  		return shippingGroup;
  		
@@ -431,10 +442,8 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	
   
  
- 	protected ShippingGroup saveAddress(ShippingGroup shippingGroup){
+ 	protected ShippingGroup saveAddress(ShippingGroup shippingGroup, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getShippingAddressDAO().save(shippingGroup.getAddress(),options);
  		return shippingGroup;
  		

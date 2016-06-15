@@ -3,8 +3,8 @@ package com.terapico.b2b.employee;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.assignment.Assignment;
@@ -44,21 +44,21 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 			
 		
 
-	public Employee load(String employeeId,Set<String> options) throws Exception{
+	public Employee load(String employeeId,Map<String,Object> options) throws Exception{
 		return loadInternalEmployee(employeeId, options);
 	}
-	public Employee save(Employee employee,Set<String> options){
+	public Employee save(Employee employee,Map<String,Object> options){
 		
-		String methodName="save(Employee employee,Set<String> options){";
+		String methodName="save(Employee employee,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(employee, methodName, "employee");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalEmployee(employee,options);
 	}
-	public Employee clone(String employeeId,Set<String> options) throws Exception{
+	public Employee clone(String employeeId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String employeeId,Set<String> options)";
+		String methodName="clone(String employeeId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(employeeId, methodName, "employeeId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -89,6 +89,27 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String employeeId, int version) throws  EmployeeVersionChangedException,  EmployeeNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{employeeId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new EmployeeVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new EmployeeNotFoundException(
+					"The " + this.getTableName() + "(" + employeeId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String employeeId, int version) throws Exception{
 	
 		String methodName="delete(String employeeId, int version)";
@@ -103,21 +124,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{employeeId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new EmployeeVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new EmployeeNotFoundException("The "+this.getTableName()+"("+employeeId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(employeeId,version);
 		}
 		
 	
@@ -126,7 +133,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"name","company"};
+		return new String[]{"name","company","email"};
 	}
 	@Override
 	protected String getName() {
@@ -136,15 +143,15 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -154,14 +161,14 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
  
  	//private boolean extractCompanyEnabled = true;
  	private static final String COMPANY = "company";
- 	protected boolean isExtractCompanyEnabled(Set<String> options){
+ 	protected boolean isExtractCompanyEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, COMPANY);
  	}
  	
  	
  	//private boolean saveCompanyEnabled = true;
- 	protected boolean isSaveCompanyEnabled(Set<String> options){
+ 	protected boolean isSaveCompanyEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, COMPANY);
  	}
@@ -172,13 +179,13 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 		
 	protected static final String ASSIGNMENT_LIST = "assignmentList";
 	
-	protected boolean isExtractAssignmentListEnabled(Set<String> options){
+	protected boolean isExtractAssignmentListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,ASSIGNMENT_LIST);
 		
  	}
 
-	protected boolean isSaveAssignmentListEnabled(Set<String> options){
+	protected boolean isSaveAssignmentListEnabled(Map<String,Object> options){
 		return checkOptions(options, ASSIGNMENT_LIST);
 		
  	}
@@ -197,17 +204,17 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 		return employee;
 	}
 
-	protected Employee loadInternalEmployee(String employeeId, Set<String> loadOptions) throws Exception{
+	protected Employee loadInternalEmployee(String employeeId, Map<String,Object> loadOptions) throws Exception{
 		
 		Employee employee = extractEmployee(employeeId);
  	
  		if(isExtractCompanyEnabled(loadOptions)){
-	 		extractCompany(employee);
+	 		extractCompany(employee, loadOptions);
  		}
  
 		
 		if(isExtractAssignmentListEnabled(loadOptions)){
-	 		extractAssignmentList(employee);
+	 		extractAssignmentList(employee, loadOptions);
  		}		
 		
 		return employee;
@@ -217,9 +224,12 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	
 	 
 
- 	protected Employee extractCompany(Employee employee) throws Exception{
+ 	protected Employee extractCompany(Employee employee, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(employee.getCompany() == null){
+			return employee;
+		}
+		
 		BuyerCompany company = getBuyerCompanyDAO().load(employee.getCompany().getId(),options);
 		if(company != null){
 			employee.setCompany(company);
@@ -231,7 +241,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
  		
  
 		
-	protected Employee extractAssignmentList(Employee employee){
+	protected Employee extractAssignmentList(Employee employee, Map<String,Object> options){
 		
 		List<Assignment> assignmentList = getAssignmentDAO().findAssignmentByUser(employee.getId());
 		if(assignmentList != null){
@@ -271,7 +281,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 		return employee;
 	
 	}
-	public List<Employee> saveList(List<Employee> employeeList,Set<String> options){
+	public List<Employee> saveList(List<Employee> employeeList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitEmployeeList(employeeList);
@@ -363,20 +373,21 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
  		return prepareCreateEmployeeParameters(employee);
  	}
  	protected Object[] prepareUpdateEmployeeParameters(Employee employee){
- 		Object[] parameters = new Object[4];
+ 		Object[] parameters = new Object[5];
  
  		parameters[0] = employee.getName(); 	
  		if(employee.getCompany() != null){
  			parameters[1] = employee.getCompany().getId();
  		}
- 		
- 		parameters[2] = employee.getId();
- 		parameters[3] = employee.getVersion();
+ 
+ 		parameters[2] = employee.getEmail();		
+ 		parameters[3] = employee.getId();
+ 		parameters[4] = employee.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateEmployeeParameters(Employee employee){
-		Object[] parameters = new Object[3];
+		Object[] parameters = new Object[4];
 		String newEmployeeId=getNextId();
 		employee.setId(newEmployeeId);
 		parameters[0] =  employee.getId();
@@ -386,22 +397,23 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
  			parameters[2] = employee.getCompany().getId();
  		
  		}
- 				
+ 		
+ 		parameters[3] = employee.getEmail();		
  				
  		return parameters;
  	}
  	
-	protected Employee saveInternalEmployee(Employee employee, Set<String> options){
+	protected Employee saveInternalEmployee(Employee employee, Map<String,Object> options){
 		
 		saveEmployee(employee);
  	
  		if(isSaveCompanyEnabled(options)){
-	 		saveCompany(employee);
+	 		saveCompany(employee, options);
  		}
  
 		
 		if(isSaveAssignmentListEnabled(options)){
-	 		saveAssignmentList(employee);
+	 		saveAssignmentList(employee, options);
  		}		
 		
 		return employee;
@@ -413,10 +425,8 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	//======================================================================================
 	 
  
- 	protected Employee saveCompany(Employee employee){
+ 	protected Employee saveCompany(Employee employee, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getBuyerCompanyDAO().save(employee.getCompany(),options);
  		return employee;
  		
@@ -424,16 +434,16 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	
  
 		
-	protected Employee saveAssignmentList(Employee employee){
+	protected Employee saveAssignmentList(Employee employee, Map<String,Object> options){
 		List<Assignment> assignmentList = employee.getAssignmentList();
-		if(assignmentList==null){
+		if(assignmentList == null){
 			return employee;
 		}
 		if(assignmentList.isEmpty()){
 			return employee;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getAssignmentDAO().saveList(employee.getAssignmentList(),options);
 		
 		return employee;

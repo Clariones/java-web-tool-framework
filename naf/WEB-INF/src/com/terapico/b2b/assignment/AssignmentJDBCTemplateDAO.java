@@ -3,8 +3,8 @@ package com.terapico.b2b.assignment;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.employee.Employee;
@@ -34,21 +34,21 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 
 		
 
-	public Assignment load(String assignmentId,Set<String> options) throws Exception{
+	public Assignment load(String assignmentId,Map<String,Object> options) throws Exception{
 		return loadInternalAssignment(assignmentId, options);
 	}
-	public Assignment save(Assignment assignment,Set<String> options){
+	public Assignment save(Assignment assignment,Map<String,Object> options){
 		
-		String methodName="save(Assignment assignment,Set<String> options){";
+		String methodName="save(Assignment assignment,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(assignment, methodName, "assignment");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalAssignment(assignment,options);
 	}
-	public Assignment clone(String assignmentId,Set<String> options) throws Exception{
+	public Assignment clone(String assignmentId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String assignmentId,Set<String> options)";
+		String methodName="clone(String assignmentId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(assignmentId, methodName, "assignmentId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -72,6 +72,27 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String assignmentId, int version) throws  AssignmentVersionChangedException,  AssignmentNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{assignmentId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new AssignmentVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new AssignmentNotFoundException(
+					"The " + this.getTableName() + "(" + assignmentId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String assignmentId, int version) throws Exception{
 	
 		String methodName="delete(String assignmentId, int version)";
@@ -86,21 +107,7 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{assignmentId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new AssignmentVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new AssignmentNotFoundException("The "+this.getTableName()+"("+assignmentId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(assignmentId,version);
 		}
 		
 	
@@ -119,15 +126,15 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -137,14 +144,14 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  
  	//private boolean extractUserEnabled = true;
  	private static final String USER = "user";
- 	protected boolean isExtractUserEnabled(Set<String> options){
+ 	protected boolean isExtractUserEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, USER);
  	}
  	
  	
  	//private boolean saveUserEnabled = true;
- 	protected boolean isSaveUserEnabled(Set<String> options){
+ 	protected boolean isSaveUserEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, USER);
  	}
@@ -154,14 +161,14 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
   
  	//private boolean extractAccessEnabled = true;
  	private static final String ACCESS = "access";
- 	protected boolean isExtractAccessEnabled(Set<String> options){
+ 	protected boolean isExtractAccessEnabled(Map<String,Object> options){
  		
 	 	return checkOptions(options, ACCESS);
  	}
  	
  	
  	//private boolean saveAccessEnabled = true;
- 	protected boolean isSaveAccessEnabled(Set<String> options){
+ 	protected boolean isSaveAccessEnabled(Map<String,Object> options){
 	 	
  		return checkOptions(options, ACCESS);
  	}
@@ -181,16 +188,16 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		return assignment;
 	}
 
-	protected Assignment loadInternalAssignment(String assignmentId, Set<String> loadOptions) throws Exception{
+	protected Assignment loadInternalAssignment(String assignmentId, Map<String,Object> loadOptions) throws Exception{
 		
 		Assignment assignment = extractAssignment(assignmentId);
  	
  		if(isExtractUserEnabled(loadOptions)){
-	 		extractUser(assignment);
+	 		extractUser(assignment, loadOptions);
  		}
   	
  		if(isExtractAccessEnabled(loadOptions)){
-	 		extractAccess(assignment);
+	 		extractAccess(assignment, loadOptions);
  		}
  
 		
@@ -201,9 +208,12 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
 	 
 
- 	protected Assignment extractUser(Assignment assignment) throws Exception{
+ 	protected Assignment extractUser(Assignment assignment, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(assignment.getUser() == null){
+			return assignment;
+		}
+		
 		Employee user = getEmployeeDAO().load(assignment.getUser().getId(),options);
 		if(user != null){
 			assignment.setUser(user);
@@ -215,9 +225,12 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  		
   
 
- 	protected Assignment extractAccess(Assignment assignment) throws Exception{
+ 	protected Assignment extractAccess(Assignment assignment, Map<String,Object> options) throws Exception{
 
-		Set<String> options = new HashSet<String>();
+		if(assignment.getAccess() == null){
+			return assignment;
+		}
+		
 		Access access = getAccessDAO().load(assignment.getAccess().getId(),options);
 		if(access != null){
 			assignment.setAccess(access);
@@ -267,7 +280,7 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		return assignment;
 	
 	}
-	public List<Assignment> saveList(List<Assignment> assignmentList,Set<String> options){
+	public List<Assignment> saveList(List<Assignment> assignmentList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitAssignmentList(assignmentList);
@@ -396,16 +409,16 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  		return parameters;
  	}
  	
-	protected Assignment saveInternalAssignment(Assignment assignment, Set<String> options){
+	protected Assignment saveInternalAssignment(Assignment assignment, Map<String,Object> options){
 		
 		saveAssignment(assignment);
  	
  		if(isSaveUserEnabled(options)){
-	 		saveUser(assignment);
+	 		saveUser(assignment, options);
  		}
   	
  		if(isSaveAccessEnabled(options)){
-	 		saveAccess(assignment);
+	 		saveAccess(assignment, options);
  		}
  
 		
@@ -418,10 +431,8 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	//======================================================================================
 	 
  
- 	protected Assignment saveUser(Assignment assignment){
+ 	protected Assignment saveUser(Assignment assignment, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getEmployeeDAO().save(assignment.getUser(),options);
  		return assignment;
  		
@@ -429,10 +440,8 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	
   
  
- 	protected Assignment saveAccess(Assignment assignment){
+ 	protected Assignment saveAccess(Assignment assignment, Map<String,Object> options){
  		//Call inject DAO to execute this method
- 		Set<String> options = new HashSet<String>();
- 		
  		getAccessDAO().save(assignment.getAccess(),options);
  		return assignment;
  		

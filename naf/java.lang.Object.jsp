@@ -9,7 +9,7 @@
 </style>
 
 <div class="message">
-           Please configurate ${result} (a ${result.class.name})
+           Please configurate ${result} <%-- (a ${result.class.name}) --%> 
            
            <textarea rows="40" cols="80">${rootResult.resultExpr}</textarea>
 	

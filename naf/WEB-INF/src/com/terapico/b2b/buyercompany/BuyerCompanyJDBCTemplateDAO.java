@@ -3,8 +3,8 @@ package com.terapico.b2b.buyercompany;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 import com.terapico.b2b.billingaddress.BillingAddress;
@@ -75,21 +75,21 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 			
 		
 
-	public BuyerCompany load(String buyerCompanyId,Set<String> options) throws Exception{
+	public BuyerCompany load(String buyerCompanyId,Map<String,Object> options) throws Exception{
 		return loadInternalBuyerCompany(buyerCompanyId, options);
 	}
-	public BuyerCompany save(BuyerCompany buyerCompany,Set<String> options){
+	public BuyerCompany save(BuyerCompany buyerCompany,Map<String,Object> options){
 		
-		String methodName="save(BuyerCompany buyerCompany,Set<String> options){";
+		String methodName="save(BuyerCompany buyerCompany,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(buyerCompany, methodName, "buyerCompany");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalBuyerCompany(buyerCompany,options);
 	}
-	public BuyerCompany clone(String buyerCompanyId,Set<String> options) throws Exception{
+	public BuyerCompany clone(String buyerCompanyId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String buyerCompanyId,Set<String> options)";
+		String methodName="clone(String buyerCompanyId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(buyerCompanyId, methodName, "buyerCompanyId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -134,6 +134,27 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String buyerCompanyId, int version) throws  BuyerCompanyVersionChangedException,  BuyerCompanyNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{buyerCompanyId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new BuyerCompanyVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new BuyerCompanyNotFoundException(
+					"The " + this.getTableName() + "(" + buyerCompanyId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String buyerCompanyId, int version) throws Exception{
 	
 		String methodName="delete(String buyerCompanyId, int version)";
@@ -148,21 +169,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{buyerCompanyId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new BuyerCompanyVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new BuyerCompanyNotFoundException("The "+this.getTableName()+"("+buyerCompanyId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(buyerCompanyId,version);
 		}
 		
 	
@@ -171,7 +178,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"name","price_list"};
+		return new String[]{"name","price_list","rating"};
 	}
 	@Override
 	protected String getName() {
@@ -181,15 +188,15 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -200,13 +207,13 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 	protected static final String BILLING_ADDRESS_LIST = "billingAddressList";
 	
-	protected boolean isExtractBillingAddressListEnabled(Set<String> options){
+	protected boolean isExtractBillingAddressListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,BILLING_ADDRESS_LIST);
 		
  	}
 
-	protected boolean isSaveBillingAddressListEnabled(Set<String> options){
+	protected boolean isSaveBillingAddressListEnabled(Map<String,Object> options){
 		return checkOptions(options, BILLING_ADDRESS_LIST);
 		
  	}
@@ -216,13 +223,13 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 	protected static final String EMPLOYEE_LIST = "employeeList";
 	
-	protected boolean isExtractEmployeeListEnabled(Set<String> options){
+	protected boolean isExtractEmployeeListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,EMPLOYEE_LIST);
 		
  	}
 
-	protected boolean isSaveEmployeeListEnabled(Set<String> options){
+	protected boolean isSaveEmployeeListEnabled(Map<String,Object> options){
 		return checkOptions(options, EMPLOYEE_LIST);
 		
  	}
@@ -232,13 +239,13 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		
 	protected static final String ORDER_LIST = "orderList";
 	
-	protected boolean isExtractOrderListEnabled(Set<String> options){
+	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,ORDER_LIST);
 		
  	}
 
-	protected boolean isSaveOrderListEnabled(Set<String> options){
+	protected boolean isSaveOrderListEnabled(Map<String,Object> options){
 		return checkOptions(options, ORDER_LIST);
 		
  	}
@@ -257,21 +264,21 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		return buyerCompany;
 	}
 
-	protected BuyerCompany loadInternalBuyerCompany(String buyerCompanyId, Set<String> loadOptions) throws Exception{
+	protected BuyerCompany loadInternalBuyerCompany(String buyerCompanyId, Map<String,Object> loadOptions) throws Exception{
 		
 		BuyerCompany buyerCompany = extractBuyerCompany(buyerCompanyId);
 
 		
 		if(isExtractBillingAddressListEnabled(loadOptions)){
-	 		extractBillingAddressList(buyerCompany);
+	 		extractBillingAddressList(buyerCompany, loadOptions);
  		}		
 		
 		if(isExtractEmployeeListEnabled(loadOptions)){
-	 		extractEmployeeList(buyerCompany);
+	 		extractEmployeeList(buyerCompany, loadOptions);
  		}		
 		
 		if(isExtractOrderListEnabled(loadOptions)){
-	 		extractOrderList(buyerCompany);
+	 		extractOrderList(buyerCompany, loadOptions);
  		}		
 		
 		return buyerCompany;
@@ -281,7 +288,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	
 	
 		
-	protected BuyerCompany extractBillingAddressList(BuyerCompany buyerCompany){
+	protected BuyerCompany extractBillingAddressList(BuyerCompany buyerCompany, Map<String,Object> options){
 		
 		List<BillingAddress> billingAddressList = getBillingAddressDAO().findBillingAddressByCompany(buyerCompany.getId());
 		if(billingAddressList != null){
@@ -292,7 +299,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	
 	}	
 		
-	protected BuyerCompany extractEmployeeList(BuyerCompany buyerCompany){
+	protected BuyerCompany extractEmployeeList(BuyerCompany buyerCompany, Map<String,Object> options){
 		
 		List<Employee> employeeList = getEmployeeDAO().findEmployeeByCompany(buyerCompany.getId());
 		if(employeeList != null){
@@ -303,7 +310,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	
 	}	
 		
-	protected BuyerCompany extractOrderList(BuyerCompany buyerCompany){
+	protected BuyerCompany extractOrderList(BuyerCompany buyerCompany, Map<String,Object> options){
 		
 		List<Order> orderList = getOrderDAO().findOrderByBuyer(buyerCompany.getId());
 		if(orderList != null){
@@ -334,7 +341,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		return buyerCompany;
 	
 	}
-	public List<BuyerCompany> saveList(List<BuyerCompany> buyerCompanyList,Set<String> options){
+	public List<BuyerCompany> saveList(List<BuyerCompany> buyerCompanyList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitBuyerCompanyList(buyerCompanyList);
@@ -426,42 +433,44 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
  		return prepareCreateBuyerCompanyParameters(buyerCompany);
  	}
  	protected Object[] prepareUpdateBuyerCompanyParameters(BuyerCompany buyerCompany){
- 		Object[] parameters = new Object[4];
+ 		Object[] parameters = new Object[5];
  
  		parameters[0] = buyerCompany.getName();
- 		parameters[1] = buyerCompany.getPriceList();		
- 		parameters[2] = buyerCompany.getId();
- 		parameters[3] = buyerCompany.getVersion();
+ 		parameters[1] = buyerCompany.getPriceList();
+ 		parameters[2] = buyerCompany.getRating();		
+ 		parameters[3] = buyerCompany.getId();
+ 		parameters[4] = buyerCompany.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateBuyerCompanyParameters(BuyerCompany buyerCompany){
-		Object[] parameters = new Object[3];
+		Object[] parameters = new Object[4];
 		String newBuyerCompanyId=getNextId();
 		buyerCompany.setId(newBuyerCompanyId);
 		parameters[0] =  buyerCompany.getId();
  
  		parameters[1] = buyerCompany.getName();
- 		parameters[2] = buyerCompany.getPriceList();		
+ 		parameters[2] = buyerCompany.getPriceList();
+ 		parameters[3] = buyerCompany.getRating();		
  				
  		return parameters;
  	}
  	
-	protected BuyerCompany saveInternalBuyerCompany(BuyerCompany buyerCompany, Set<String> options){
+	protected BuyerCompany saveInternalBuyerCompany(BuyerCompany buyerCompany, Map<String,Object> options){
 		
 		saveBuyerCompany(buyerCompany);
 
 		
 		if(isSaveBillingAddressListEnabled(options)){
-	 		saveBillingAddressList(buyerCompany);
+	 		saveBillingAddressList(buyerCompany, options);
  		}		
 		
 		if(isSaveEmployeeListEnabled(options)){
-	 		saveEmployeeList(buyerCompany);
+	 		saveEmployeeList(buyerCompany, options);
  		}		
 		
 		if(isSaveOrderListEnabled(options)){
-	 		saveOrderList(buyerCompany);
+	 		saveOrderList(buyerCompany, options);
  		}		
 		
 		return buyerCompany;
@@ -473,48 +482,48 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	//======================================================================================
 	
 		
-	protected BuyerCompany saveBillingAddressList(BuyerCompany buyerCompany){
+	protected BuyerCompany saveBillingAddressList(BuyerCompany buyerCompany, Map<String,Object> options){
 		List<BillingAddress> billingAddressList = buyerCompany.getBillingAddressList();
-		if(billingAddressList==null){
+		if(billingAddressList == null){
 			return buyerCompany;
 		}
 		if(billingAddressList.isEmpty()){
 			return buyerCompany;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getBillingAddressDAO().saveList(buyerCompany.getBillingAddressList(),options);
 		
 		return buyerCompany;
 	
 	}
 		
-	protected BuyerCompany saveEmployeeList(BuyerCompany buyerCompany){
+	protected BuyerCompany saveEmployeeList(BuyerCompany buyerCompany, Map<String,Object> options){
 		List<Employee> employeeList = buyerCompany.getEmployeeList();
-		if(employeeList==null){
+		if(employeeList == null){
 			return buyerCompany;
 		}
 		if(employeeList.isEmpty()){
 			return buyerCompany;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getEmployeeDAO().saveList(buyerCompany.getEmployeeList(),options);
 		
 		return buyerCompany;
 	
 	}
 		
-	protected BuyerCompany saveOrderList(BuyerCompany buyerCompany){
+	protected BuyerCompany saveOrderList(BuyerCompany buyerCompany, Map<String,Object> options){
 		List<Order> orderList = buyerCompany.getOrderList();
-		if(orderList==null){
+		if(orderList == null){
 			return buyerCompany;
 		}
 		if(orderList.isEmpty()){
 			return buyerCompany;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getOrderDAO().saveList(buyerCompany.getOrderList(),options);
 		
 		return buyerCompany;

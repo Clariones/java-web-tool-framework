@@ -18,7 +18,6 @@ public class LineItemMapper implements RowMapper<LineItem>{
 		lineItem.setSkuName(rs.getString("sku_name"));
 		lineItem.setAmount(rs.getDouble("amount"));
 		lineItem.setQuantity(rs.getInt("quantity"));
-		lineItem.setX(rs.getString("x"));
 		lineItem.setVersion(rs.getInt("version"));
 		
 

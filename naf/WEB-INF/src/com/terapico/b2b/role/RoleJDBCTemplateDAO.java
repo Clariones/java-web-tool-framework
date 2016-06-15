@@ -3,8 +3,8 @@ package com.terapico.b2b.role;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
@@ -54,21 +54,21 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 			
 		
 
-	public Role load(String roleId,Set<String> options) throws Exception{
+	public Role load(String roleId,Map<String,Object> options) throws Exception{
 		return loadInternalRole(roleId, options);
 	}
-	public Role save(Role role,Set<String> options){
+	public Role save(Role role,Map<String,Object> options){
 		
-		String methodName="save(Role role,Set<String> options){";
+		String methodName="save(Role role,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(role, methodName, "role");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalRole(role,options);
 	}
-	public Role clone(String roleId,Set<String> options) throws Exception{
+	public Role clone(String roleId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String roleId,Set<String> options)";
+		String methodName="clone(String roleId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(roleId, methodName, "roleId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -106,6 +106,27 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String roleId, int version) throws  RoleVersionChangedException,  RoleNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{roleId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new RoleVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new RoleNotFoundException(
+					"The " + this.getTableName() + "(" + roleId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String roleId, int version) throws Exception{
 	
 		String methodName="delete(String roleId, int version)";
@@ -120,21 +141,7 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{roleId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new RoleVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new RoleNotFoundException("The "+this.getTableName()+"("+roleId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(roleId,version);
 		}
 		
 	
@@ -153,15 +160,15 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -172,13 +179,13 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		
 	protected static final String ACCESS_LIST = "accessList";
 	
-	protected boolean isExtractAccessListEnabled(Set<String> options){
+	protected boolean isExtractAccessListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,ACCESS_LIST);
 		
  	}
 
-	protected boolean isSaveAccessListEnabled(Set<String> options){
+	protected boolean isSaveAccessListEnabled(Map<String,Object> options){
 		return checkOptions(options, ACCESS_LIST);
 		
  	}
@@ -188,13 +195,13 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		
 	protected static final String CUST_SVC_REP_LIST = "custSvcRepList";
 	
-	protected boolean isExtractCustSvcRepListEnabled(Set<String> options){
+	protected boolean isExtractCustSvcRepListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,CUST_SVC_REP_LIST);
 		
  	}
 
-	protected boolean isSaveCustSvcRepListEnabled(Set<String> options){
+	protected boolean isSaveCustSvcRepListEnabled(Map<String,Object> options){
 		return checkOptions(options, CUST_SVC_REP_LIST);
 		
  	}
@@ -213,17 +220,17 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		return role;
 	}
 
-	protected Role loadInternalRole(String roleId, Set<String> loadOptions) throws Exception{
+	protected Role loadInternalRole(String roleId, Map<String,Object> loadOptions) throws Exception{
 		
 		Role role = extractRole(roleId);
 
 		
 		if(isExtractAccessListEnabled(loadOptions)){
-	 		extractAccessList(role);
+	 		extractAccessList(role, loadOptions);
  		}		
 		
 		if(isExtractCustSvcRepListEnabled(loadOptions)){
-	 		extractCustSvcRepList(role);
+	 		extractCustSvcRepList(role, loadOptions);
  		}		
 		
 		return role;
@@ -233,7 +240,7 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 	
 	
 		
-	protected Role extractAccessList(Role role){
+	protected Role extractAccessList(Role role, Map<String,Object> options){
 		
 		List<Access> accessList = getAccessDAO().findAccessByRole(role.getId());
 		if(accessList != null){
@@ -244,7 +251,7 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 	
 	}	
 		
-	protected Role extractCustSvcRepList(Role role){
+	protected Role extractCustSvcRepList(Role role, Map<String,Object> options){
 		
 		List<CustSvcRep> custSvcRepList = getCustSvcRepDAO().findCustSvcRepByRole(role.getId());
 		if(custSvcRepList != null){
@@ -275,7 +282,7 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 		return role;
 	
 	}
-	public List<Role> saveList(List<Role> roleList,Set<String> options){
+	public List<Role> saveList(List<Role> roleList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitRoleList(roleList);
@@ -386,17 +393,17 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
  		return parameters;
  	}
  	
-	protected Role saveInternalRole(Role role, Set<String> options){
+	protected Role saveInternalRole(Role role, Map<String,Object> options){
 		
 		saveRole(role);
 
 		
 		if(isSaveAccessListEnabled(options)){
-	 		saveAccessList(role);
+	 		saveAccessList(role, options);
  		}		
 		
 		if(isSaveCustSvcRepListEnabled(options)){
-	 		saveCustSvcRepList(role);
+	 		saveCustSvcRepList(role, options);
  		}		
 		
 		return role;
@@ -408,32 +415,32 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 	//======================================================================================
 	
 		
-	protected Role saveAccessList(Role role){
+	protected Role saveAccessList(Role role, Map<String,Object> options){
 		List<Access> accessList = role.getAccessList();
-		if(accessList==null){
+		if(accessList == null){
 			return role;
 		}
 		if(accessList.isEmpty()){
 			return role;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getAccessDAO().saveList(role.getAccessList(),options);
 		
 		return role;
 	
 	}
 		
-	protected Role saveCustSvcRepList(Role role){
+	protected Role saveCustSvcRepList(Role role, Map<String,Object> options){
 		List<CustSvcRep> custSvcRepList = role.getCustSvcRepList();
-		if(custSvcRepList==null){
+		if(custSvcRepList == null){
 			return role;
 		}
 		if(custSvcRepList.isEmpty()){
 			return role;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getCustSvcRepDAO().saveList(role.getCustSvcRepList(),options);
 		
 		return role;

@@ -3,8 +3,8 @@ package com.terapico.b2b.shippingaddress;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
@@ -33,21 +33,21 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 			
 		
 
-	public ShippingAddress load(String shippingAddressId,Set<String> options) throws Exception{
+	public ShippingAddress load(String shippingAddressId,Map<String,Object> options) throws Exception{
 		return loadInternalShippingAddress(shippingAddressId, options);
 	}
-	public ShippingAddress save(ShippingAddress shippingAddress,Set<String> options){
+	public ShippingAddress save(ShippingAddress shippingAddress,Map<String,Object> options){
 		
-		String methodName="save(ShippingAddress shippingAddress,Set<String> options){";
+		String methodName="save(ShippingAddress shippingAddress,Map<String,Object> options){";
 		
 		assertMethodArgumentNotNull(shippingAddress, methodName, "shippingAddress");
 		assertMethodArgumentNotNull(options, methodName, "options");
 		
 		return saveInternalShippingAddress(shippingAddress,options);
 	}
-	public ShippingAddress clone(String shippingAddressId,Set<String> options) throws Exception{
+	public ShippingAddress clone(String shippingAddressId,Map<String,Object> options) throws Exception{
 	
-		String methodName="clone(String shippingAddressId,Set<String> options)";
+		String methodName="clone(String shippingAddressId,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(shippingAddressId, methodName, "shippingAddressId");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -78,6 +78,27 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 		
 	
 	}
+	
+	protected void handleDeleteOneError(String shippingAddressId, int version) throws  ShippingAddressVersionChangedException,  ShippingAddressNotFoundException {
+		// the version has been changed, the client should reload it and ensure
+		// this can be deleted
+		String SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
+		Object[]  parameters = new Object[]{shippingAddressId};
+		int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
+		if (count == 1) {
+			throw new ShippingAddressVersionChangedException(
+					"The object version has been changed, please reload to delete");
+		}
+		if (count < 1) {
+			throw new ShippingAddressNotFoundException(
+					"The " + this.getTableName() + "(" + shippingAddressId + ") has already been deleted.");
+		}
+		if (count > 1) {
+			throw new IllegalStateException(
+					"The table '" + this.getTableName() + "' PRIMARY KEY constraint has been damaged, please fix it.");
+		}
+	}
+	
 	public void delete(String shippingAddressId, int version) throws Exception{
 	
 		String methodName="delete(String shippingAddressId, int version)";
@@ -92,21 +113,7 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 			return ; //Delete successfully
 		}
 		if(affectedNumber == 0){
-			// two suitations here, this object has been deleted; or
-			// the version has been changed, the client should reload it and ensure this can be deleted
-			SQL = "select count(1) from " + this.getTableName() + " where id = ? ";
-			parameters=new Object[]{shippingAddressId};
-			int count = getJdbcTemplateObject().queryForObject(SQL, Integer.class, parameters);
-			if(count == 1){
-				throw new ShippingAddressVersionChangedException("The object version has been changed, please reload to delete");
-			}
-			if(count < 1){
-				throw new ShippingAddressNotFoundException("The "+this.getTableName()+"("+shippingAddressId+") has already been deleted.");
-			}
-			if(count > 1){
-				throw new IllegalStateException("The table '"+this.getTableName()+"' PRIMARY KEY constraint has been damaged, please fix it.");
-			}
-		
+			handleDeleteOneError(shippingAddressId,version);
 		}
 		
 	
@@ -125,15 +132,15 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 	
 	
 	static final String ALL="__all__"; //do not assign this to common users,
-	protected boolean checkOptions(Set<String> options, String optionToCheck){
+	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
  			return false;
  		}
- 		if(options.contains(optionToCheck)){
+ 		if(options.containsKey(optionToCheck)){
  			return true;
  		}
- 		if(options.contains(ALL)){
+ 		if(options.containsKey(ALL)){
  			return true;
  		}
  		return false;
@@ -144,13 +151,13 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 		
 	protected static final String SHIPPING_GROUP_LIST = "shippingGroupList";
 	
-	protected boolean isExtractShippingGroupListEnabled(Set<String> options){
+	protected boolean isExtractShippingGroupListEnabled(Map<String,Object> options){
 		
  		return checkOptions(options,SHIPPING_GROUP_LIST);
 		
  	}
 
-	protected boolean isSaveShippingGroupListEnabled(Set<String> options){
+	protected boolean isSaveShippingGroupListEnabled(Map<String,Object> options){
 		return checkOptions(options, SHIPPING_GROUP_LIST);
 		
  	}
@@ -169,13 +176,13 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 		return shippingAddress;
 	}
 
-	protected ShippingAddress loadInternalShippingAddress(String shippingAddressId, Set<String> loadOptions) throws Exception{
+	protected ShippingAddress loadInternalShippingAddress(String shippingAddressId, Map<String,Object> loadOptions) throws Exception{
 		
 		ShippingAddress shippingAddress = extractShippingAddress(shippingAddressId);
 
 		
 		if(isExtractShippingGroupListEnabled(loadOptions)){
-	 		extractShippingGroupList(shippingAddress);
+	 		extractShippingGroupList(shippingAddress, loadOptions);
  		}		
 		
 		return shippingAddress;
@@ -185,7 +192,7 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 	
 	
 		
-	protected ShippingAddress extractShippingGroupList(ShippingAddress shippingAddress){
+	protected ShippingAddress extractShippingGroupList(ShippingAddress shippingAddress, Map<String,Object> options){
 		
 		List<ShippingGroup> shippingGroupList = getShippingGroupDAO().findShippingGroupByAddress(shippingAddress.getId());
 		if(shippingGroupList != null){
@@ -216,7 +223,7 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 		return shippingAddress;
 	
 	}
-	public List<ShippingAddress> saveList(List<ShippingAddress> shippingAddressList,Set<String> options){
+	public List<ShippingAddress> saveList(List<ShippingAddress> shippingAddressList,Map<String,Object> options){
 		//assuming here are big amount objects to be updated.
 		//First step is split into two groups, one group for update and another group for create
 		Object [] lists=splitShippingAddressList(shippingAddressList);
@@ -335,13 +342,13 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
  		return parameters;
  	}
  	
-	protected ShippingAddress saveInternalShippingAddress(ShippingAddress shippingAddress, Set<String> options){
+	protected ShippingAddress saveInternalShippingAddress(ShippingAddress shippingAddress, Map<String,Object> options){
 		
 		saveShippingAddress(shippingAddress);
 
 		
 		if(isSaveShippingGroupListEnabled(options)){
-	 		saveShippingGroupList(shippingAddress);
+	 		saveShippingGroupList(shippingAddress, options);
  		}		
 		
 		return shippingAddress;
@@ -353,16 +360,16 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 	//======================================================================================
 	
 		
-	protected ShippingAddress saveShippingGroupList(ShippingAddress shippingAddress){
+	protected ShippingAddress saveShippingGroupList(ShippingAddress shippingAddress, Map<String,Object> options){
 		List<ShippingGroup> shippingGroupList = shippingAddress.getShippingGroupList();
-		if(shippingGroupList==null){
+		if(shippingGroupList == null){
 			return shippingAddress;
 		}
 		if(shippingGroupList.isEmpty()){
 			return shippingAddress;// Does this mean delete all from the parent object?
 		}
 		//Call DAO to save the list
-		Set<String> options = new HashSet<String>();
+		
 		getShippingGroupDAO().saveList(shippingAddress.getShippingGroupList(),options);
 		
 		return shippingAddress;

@@ -14,6 +14,7 @@ import com.terapico.b2b.assignment.Assignment;
 public class Access implements  java.io.Serializable{
 
 	protected		String	mId;
+	protected		String	mRoleName;
 	protected		Role	mRole;
 	protected		int	mxVersion;
 	
@@ -25,9 +26,10 @@ public class Access implements  java.io.Serializable{
 
 	}
 	
-	public 	Access(String	id,Role	role,int	version)
+	public 	Access(String	id,String	role_name,Role	role,int	version)
 	{
 		setId(id);
+		setRoleName(role_name);
 		setRole(role);
 		setVersion(version);
 		this.mAssignmentList = new ArrayList<Assignment>();	
@@ -40,6 +42,13 @@ public class Access implements  java.io.Serializable{
 	}
 	public String getId(){
 		return this.mId;
+	}
+	
+	public void setRoleName(String role_name){
+		this.mRoleName = role_name;
+	}
+	public String getRoleName(){
+		return this.mRoleName;
 	}
 	
 	public void setRole(Role role){
@@ -97,6 +106,7 @@ public class Access implements  java.io.Serializable{
 
 		stringBuilder.append("access{");
 		stringBuilder.append("\tid='"+getId()+"';");
+		stringBuilder.append("\trole_name='"+getRoleName()+"';");
 		stringBuilder.append("\trole='role("+getRole().getId()+")';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
