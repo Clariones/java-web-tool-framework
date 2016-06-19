@@ -13,7 +13,7 @@ public class DeliveryMapper implements RowMapper<Delivery>{
 		
 		delivery.setId(rs.getString("id"));
 		delivery.setWho(rs.getString("who"));
-		delivery.setD(rs.getDate("d"));
+		delivery.setDeliveryTime(rs.getDate("delivery_time"));
 		delivery.setVersion(rs.getInt("version"));
 		
 

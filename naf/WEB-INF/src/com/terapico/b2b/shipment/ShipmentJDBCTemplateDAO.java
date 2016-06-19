@@ -122,7 +122,7 @@ public class ShipmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Sh
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"who","d"};
+		return new String[]{"who","shup_time"};
 	}
 	@Override
 	protected String getName() {
@@ -138,6 +138,7 @@ public class ShipmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Sh
  			return false;
  		}
  		if(options.containsKey(optionToCheck)){
+ 			options.remove(optionToCheck);//consume the key, can not use any more to exactract the data.
  			return true;
  		}
  		if(options.containsKey(ALL)){
@@ -318,7 +319,7 @@ public class ShipmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Sh
  		Object[] parameters = new Object[4];
  
  		parameters[0] = shipment.getWho();
- 		parameters[1] = shipment.getD();		
+ 		parameters[1] = shipment.getShupTime();		
  		parameters[2] = shipment.getId();
  		parameters[3] = shipment.getVersion();
  				
@@ -331,7 +332,7 @@ public class ShipmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Sh
 		parameters[0] =  shipment.getId();
  
  		parameters[1] = shipment.getWho();
- 		parameters[2] = shipment.getD();		
+ 		parameters[2] = shipment.getShupTime();		
  				
  		return parameters;
  	}

@@ -2,9 +2,8 @@
 package com.terapico.b2b.action;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.order.Order;
@@ -16,7 +15,7 @@ public class Action implements  java.io.Serializable{
 	protected		String	mName;
 	protected		String	mInternalName;
 	protected		Order	mBo;
-	protected		int	mxVersion;
+	protected		int	mVersion;
 	
 	
 	
@@ -65,10 +64,10 @@ public class Action implements  java.io.Serializable{
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	

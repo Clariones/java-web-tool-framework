@@ -14,6 +14,9 @@ public class SellerCompanyMapper implements RowMapper<SellerCompany>{
 		
 		sellerCompany.setId(rs.getString("id"));
 		sellerCompany.setName(rs.getString("name"));
+		sellerCompany.setOwner(rs.getString("owner"));
+		sellerCompany.setLogo(rs.getString("logo"));
+		sellerCompany.setContractText(rs.getString("contract_text"));
 		sellerCompany.setVersion(rs.getInt("version"));
 		
 

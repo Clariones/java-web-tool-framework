@@ -13,7 +13,7 @@ public class ProcessingMapper implements RowMapper<Processing>{
 		
 		processing.setId(rs.getString("id"));
 		processing.setWho(rs.getString("who"));
-		processing.setD(rs.getDate("d"));
+		processing.setProcessTime(rs.getDate("process_time"));
 		processing.setVersion(rs.getInt("version"));
 		
 

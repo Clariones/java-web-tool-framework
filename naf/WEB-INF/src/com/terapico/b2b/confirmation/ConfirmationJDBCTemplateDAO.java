@@ -122,7 +122,7 @@ public class ConfirmationJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"who","d"};
+		return new String[]{"who","confirm_time"};
 	}
 	@Override
 	protected String getName() {
@@ -138,6 +138,7 @@ public class ConfirmationJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
  			return false;
  		}
  		if(options.containsKey(optionToCheck)){
+ 			options.remove(optionToCheck);//consume the key, can not use any more to exactract the data.
  			return true;
  		}
  		if(options.containsKey(ALL)){
@@ -318,7 +319,7 @@ public class ConfirmationJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
  		Object[] parameters = new Object[4];
  
  		parameters[0] = confirmation.getWho();
- 		parameters[1] = confirmation.getD();		
+ 		parameters[1] = confirmation.getConfirmTime();		
  		parameters[2] = confirmation.getId();
  		parameters[3] = confirmation.getVersion();
  				
@@ -331,7 +332,7 @@ public class ConfirmationJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		parameters[0] =  confirmation.getId();
  
  		parameters[1] = confirmation.getWho();
- 		parameters[2] = confirmation.getD();		
+ 		parameters[2] = confirmation.getConfirmTime();		
  				
  		return parameters;
  	}

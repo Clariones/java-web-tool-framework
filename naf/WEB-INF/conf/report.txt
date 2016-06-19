@@ -1,4 +1,4 @@
-=================Excute Report @Tue Jun 14 23:37:30 CST 2016========================
+=================Excute Report @Wed Jun 15 23:01:05 CST 2016========================
 
 
 buyer_company
@@ -181,11 +181,13 @@ Info: Add virtual field [actions(es)] to <order>
 **************************************************
 
 buyer_company{
-	fields(5){
+	fields(7){
 		string	id('ABCD000001'), verb: false;
 		string	name('Aaxis - '), verb: false;
 		string	price_list('price9900'), verb: false;
 		int	rating('10|200'), verb: false;
+		string_image	logo('simple.jpg'), verb: false;
+		string_email	owner('philip@aaxischina.com'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(3){
@@ -198,9 +200,12 @@ buyer_company{
 }
 
 seller_company{
-	fields(3){
+	fields(6){
 		string	id('ABCD000001'), verb: false;
 		string	name('Snack Co. '), verb: false;
+		string_email	owner('philip@aaxischina.com'), verb: false;
+		string_image	logo('simple.jpg'), verb: false;
+		string_document	contract_text('x.doc'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(2){
@@ -308,7 +313,7 @@ order{
 		string	id('ABCD000001'), verb: false;
 		buyer_company	buyer('$(object)'), verb: false;
 		seller_company	seller('$(object)'), verb: false;
-		string	title('order title - '), verb: false;
+		string	title('House Buiding - '), verb: false;
 		double	total_amount('300.88'), verb: false;
 		string	type('ORDER|QUOTE|INVOICE'), verb: false;
 		bool	mark_as_delete('true'), verb: false;
@@ -333,7 +338,7 @@ confirmation{
 	fields(4){
 		string	id('ABCD000001'), verb: false;
 		string	who('approver'), verb: false;
-		date	d('2018-07-09'), verb: false;
+		date	confirm_time('2018-07-09'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(1){
@@ -347,7 +352,7 @@ shipment{
 	fields(4){
 		string	id('ABCD000001'), verb: false;
 		string	who('carrier'), verb: false;
-		date	d('2018-07-09'), verb: false;
+		date	shup_time('2018-07-09'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(1){
@@ -361,7 +366,7 @@ delivery{
 	fields(4){
 		string	id('ABCD000001'), verb: false;
 		string	who('deliverer'), verb: false;
-		date	d('2018-07-09'), verb: false;
+		date	delivery_time('2018-07-09'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(1){
@@ -375,7 +380,7 @@ processing{
 	fields(4){
 		string	id('ABCD000001'), verb: false;
 		string	who('processor'), verb: false;
-		date	d('2018-07-09'), verb: false;
+		date	process_time('2018-07-09'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(1){
@@ -389,7 +394,7 @@ approval{
 	fields(4){
 		string	id('ABCD000001'), verb: false;
 		string	who('approver'), verb: false;
-		date	d('2018-07-09'), verb: false;
+		date	approve_time('2018-07-09'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(1){
@@ -405,7 +410,7 @@ line_item{
 		order	biz_order('$(object)'), verb: false;
 		string	sku_id('SKU'), verb: false;
 		string	sku_name('iPhone - '), verb: false;
-		double	amount('23.97'), verb: false;
+		money	amount('$23.97'), verb: false;
 		int	quantity('10'), verb: false;
 		int	version('10'), verb: false;
 	}

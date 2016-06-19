@@ -2,9 +2,8 @@
 package com.terapico.b2b.lineitem;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.order.Order;
@@ -17,8 +16,8 @@ public class LineItem implements  java.io.Serializable{
 	protected		String	mSkuId;
 	protected		String	mSkuName;
 	protected		double	mAmount;
-	protected		int	mxQuantity;
-	protected		int	mxVersion;
+	protected		int	mQuantity;
+	protected		int	mVersion;
 	
 	
 	
@@ -76,17 +75,17 @@ public class LineItem implements  java.io.Serializable{
 	}
 	
 	public void setQuantity(int quantity){
-		this.mxQuantity = quantity;
+		this.mQuantity = quantity;
 	}
 	public int getQuantity(){
-		return this.mxQuantity;
+		return this.mQuantity;
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	

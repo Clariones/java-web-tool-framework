@@ -150,7 +150,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"name"};
+		return new String[]{"name","owner","logo","contract_text"};
 	}
 	@Override
 	protected String getName() {
@@ -166,6 +166,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
  			return false;
  		}
  		if(options.containsKey(optionToCheck)){
+ 			options.remove(optionToCheck);//consume the key, can not use any more to exactract the data.
  			return true;
  		}
  		if(options.containsKey(ALL)){
@@ -374,21 +375,27 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
  		return prepareCreateSellerCompanyParameters(sellerCompany);
  	}
  	protected Object[] prepareUpdateSellerCompanyParameters(SellerCompany sellerCompany){
- 		Object[] parameters = new Object[3];
+ 		Object[] parameters = new Object[6];
  
- 		parameters[0] = sellerCompany.getName();		
- 		parameters[1] = sellerCompany.getId();
- 		parameters[2] = sellerCompany.getVersion();
+ 		parameters[0] = sellerCompany.getName();
+ 		parameters[1] = sellerCompany.getOwner();
+ 		parameters[2] = sellerCompany.getLogo();
+ 		parameters[3] = sellerCompany.getContractText();		
+ 		parameters[4] = sellerCompany.getId();
+ 		parameters[5] = sellerCompany.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateSellerCompanyParameters(SellerCompany sellerCompany){
-		Object[] parameters = new Object[2];
+		Object[] parameters = new Object[5];
 		String newSellerCompanyId=getNextId();
 		sellerCompany.setId(newSellerCompanyId);
 		parameters[0] =  sellerCompany.getId();
  
- 		parameters[1] = sellerCompany.getName();		
+ 		parameters[1] = sellerCompany.getName();
+ 		parameters[2] = sellerCompany.getOwner();
+ 		parameters[3] = sellerCompany.getLogo();
+ 		parameters[4] = sellerCompany.getContractText();		
  				
  		return parameters;
  	}

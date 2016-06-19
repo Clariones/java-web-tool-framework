@@ -299,6 +299,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  			return false;
  		}
  		if(options.containsKey(optionToCheck)){
+ 			options.remove(optionToCheck);//consume the key, can not use any more to exactract the data.
  			return true;
  		}
  		if(options.containsKey(ALL)){
@@ -860,7 +861,15 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	}
 	
-	
+	protected void batchDelete(List<Order> orderList){
+		String SQL=getUpdateSQL();
+		List<Object[]> args=prepareBatchUpdateArgs(orderList);
+		
+		int affectedNumbers[] = getJdbcTemplateObject().batchUpdate(SQL, args);
+		
+		
+		
+	}
 	
 	static final int CREATE_LIST_INDEX=0;
 	static final int UPDATE_LIST_INDEX=1;

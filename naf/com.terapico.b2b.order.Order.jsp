@@ -143,7 +143,7 @@
 				<tr>
 					<th>ID</th>
 					<th>CARD</th>
-					<th>AMOUNT</th>
+					<th>BILLING</th>
 				</tr>
 			</thead>
 			<tbody>

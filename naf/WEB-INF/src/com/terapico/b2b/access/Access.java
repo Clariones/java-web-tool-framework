@@ -2,9 +2,8 @@
 package com.terapico.b2b.access;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.role.Role;
@@ -16,7 +15,7 @@ public class Access implements  java.io.Serializable{
 	protected		String	mId;
 	protected		String	mRoleName;
 	protected		Role	mRole;
-	protected		int	mxVersion;
+	protected		int	mVersion;
 	
 	
 	protected		List<Assignment> mAssignmentList;
@@ -59,10 +58,10 @@ public class Access implements  java.io.Serializable{
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	public  List<Assignment> getAssignmentList(){
@@ -95,7 +94,9 @@ public class Access implements  java.io.Serializable{
 	public  void removeAssignment(Assignment assignment){
 		getAssignmentList().remove(assignment);
 	}
-	
+	public  void cleanUpAssignmentList(){
+		getAssignmentList().clear();
+	}
 	
 	
 	

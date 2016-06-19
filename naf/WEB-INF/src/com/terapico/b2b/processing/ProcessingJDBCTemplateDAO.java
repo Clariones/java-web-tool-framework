@@ -122,7 +122,7 @@ public class ProcessingJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"who","d"};
+		return new String[]{"who","process_time"};
 	}
 	@Override
 	protected String getName() {
@@ -138,6 +138,7 @@ public class ProcessingJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  			return false;
  		}
  		if(options.containsKey(optionToCheck)){
+ 			options.remove(optionToCheck);//consume the key, can not use any more to exactract the data.
  			return true;
  		}
  		if(options.containsKey(ALL)){
@@ -318,7 +319,7 @@ public class ProcessingJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  		Object[] parameters = new Object[4];
  
  		parameters[0] = processing.getWho();
- 		parameters[1] = processing.getD();		
+ 		parameters[1] = processing.getProcessTime();		
  		parameters[2] = processing.getId();
  		parameters[3] = processing.getVersion();
  				
@@ -331,7 +332,7 @@ public class ProcessingJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		parameters[0] =  processing.getId();
  
  		parameters[1] = processing.getWho();
- 		parameters[2] = processing.getD();		
+ 		parameters[2] = processing.getProcessTime();		
  				
  		return parameters;
  	}

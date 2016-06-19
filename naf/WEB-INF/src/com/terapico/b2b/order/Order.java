@@ -2,9 +2,8 @@
 package com.terapico.b2b.order;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.approval.Approval;
@@ -34,7 +33,7 @@ public class Order implements  java.io.Serializable{
 	protected		Processing	mProcessing;
 	protected		Shipment	mShipment;
 	protected		Delivery	mDelivery;
-	protected		int	mxVersion;
+	protected		int	mVersion;
 	
 	
 	protected		List<LineItem> mLineItemList;
@@ -150,10 +149,10 @@ public class Order implements  java.io.Serializable{
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	public  List<LineItem> getLineItemList(){
@@ -186,7 +185,9 @@ public class Order implements  java.io.Serializable{
 	public  void removeLineItem(LineItem line_item){
 		getLineItemList().remove(line_item);
 	}
-	
+	public  void cleanUpLineItemList(){
+		getLineItemList().clear();
+	}
 	
 	
 	
@@ -221,7 +222,9 @@ public class Order implements  java.io.Serializable{
 	public  void removeShippingGroup(ShippingGroup shipping_group){
 		getShippingGroupList().remove(shipping_group);
 	}
-	
+	public  void cleanUpShippingGroupList(){
+		getShippingGroupList().clear();
+	}
 	
 	
 	
@@ -256,7 +259,9 @@ public class Order implements  java.io.Serializable{
 	public  void removePaymentGroup(PaymentGroup payment_group){
 		getPaymentGroupList().remove(payment_group);
 	}
-	
+	public  void cleanUpPaymentGroupList(){
+		getPaymentGroupList().clear();
+	}
 	
 	
 	
@@ -291,7 +296,9 @@ public class Order implements  java.io.Serializable{
 	public  void removeAction(Action action){
 		getActionList().remove(action);
 	}
-	
+	public  void cleanUpActionList(){
+		getActionList().clear();
+	}
 	
 	
 	

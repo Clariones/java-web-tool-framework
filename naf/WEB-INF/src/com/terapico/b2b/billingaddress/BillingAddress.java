@@ -2,9 +2,8 @@
 package com.terapico.b2b.billingaddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.buyercompany.BuyerCompany;
@@ -20,7 +19,7 @@ public class BillingAddress implements  java.io.Serializable{
 	protected		String	mCity;
 	protected		String	mState;
 	protected		String	mCountry;
-	protected		int	mxVersion;
+	protected		int	mVersion;
 	
 	
 	protected		List<PaymentGroup> mPaymentGroupList;
@@ -95,10 +94,10 @@ public class BillingAddress implements  java.io.Serializable{
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	public  List<PaymentGroup> getPaymentGroupList(){
@@ -131,7 +130,9 @@ public class BillingAddress implements  java.io.Serializable{
 	public  void removePaymentGroup(PaymentGroup payment_group){
 		getPaymentGroupList().remove(payment_group);
 	}
-	
+	public  void cleanUpPaymentGroupList(){
+		getPaymentGroupList().clear();
+	}
 	
 	
 	

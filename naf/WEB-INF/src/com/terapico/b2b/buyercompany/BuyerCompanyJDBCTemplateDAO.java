@@ -178,7 +178,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"name","price_list","rating"};
+		return new String[]{"name","price_list","rating","logo","owner"};
 	}
 	@Override
 	protected String getName() {
@@ -194,6 +194,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
  			return false;
  		}
  		if(options.containsKey(optionToCheck)){
+ 			options.remove(optionToCheck);//consume the key, can not use any more to exactract the data.
  			return true;
  		}
  		if(options.containsKey(ALL)){
@@ -433,25 +434,29 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
  		return prepareCreateBuyerCompanyParameters(buyerCompany);
  	}
  	protected Object[] prepareUpdateBuyerCompanyParameters(BuyerCompany buyerCompany){
- 		Object[] parameters = new Object[5];
+ 		Object[] parameters = new Object[7];
  
  		parameters[0] = buyerCompany.getName();
  		parameters[1] = buyerCompany.getPriceList();
- 		parameters[2] = buyerCompany.getRating();		
- 		parameters[3] = buyerCompany.getId();
- 		parameters[4] = buyerCompany.getVersion();
+ 		parameters[2] = buyerCompany.getRating();
+ 		parameters[3] = buyerCompany.getLogo();
+ 		parameters[4] = buyerCompany.getOwner();		
+ 		parameters[5] = buyerCompany.getId();
+ 		parameters[6] = buyerCompany.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateBuyerCompanyParameters(BuyerCompany buyerCompany){
-		Object[] parameters = new Object[4];
+		Object[] parameters = new Object[6];
 		String newBuyerCompanyId=getNextId();
 		buyerCompany.setId(newBuyerCompanyId);
 		parameters[0] =  buyerCompany.getId();
  
  		parameters[1] = buyerCompany.getName();
  		parameters[2] = buyerCompany.getPriceList();
- 		parameters[3] = buyerCompany.getRating();		
+ 		parameters[3] = buyerCompany.getRating();
+ 		parameters[4] = buyerCompany.getLogo();
+ 		parameters[5] = buyerCompany.getOwner();		
  				
  		return parameters;
  	}

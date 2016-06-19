@@ -122,7 +122,7 @@ public class ApprovalJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Ap
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"who","d"};
+		return new String[]{"who","approve_time"};
 	}
 	@Override
 	protected String getName() {
@@ -138,6 +138,7 @@ public class ApprovalJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Ap
  			return false;
  		}
  		if(options.containsKey(optionToCheck)){
+ 			options.remove(optionToCheck);//consume the key, can not use any more to exactract the data.
  			return true;
  		}
  		if(options.containsKey(ALL)){
@@ -318,7 +319,7 @@ public class ApprovalJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Ap
  		Object[] parameters = new Object[4];
  
  		parameters[0] = approval.getWho();
- 		parameters[1] = approval.getD();		
+ 		parameters[1] = approval.getApproveTime();		
  		parameters[2] = approval.getId();
  		parameters[3] = approval.getVersion();
  				
@@ -331,7 +332,7 @@ public class ApprovalJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Ap
 		parameters[0] =  approval.getId();
  
  		parameters[1] = approval.getWho();
- 		parameters[2] = approval.getD();		
+ 		parameters[2] = approval.getApproveTime();		
  				
  		return parameters;
  	}

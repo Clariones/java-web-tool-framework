@@ -2,9 +2,8 @@
 package com.terapico.b2b.custsvcrep;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.role.Role;
@@ -17,7 +16,7 @@ public class CustSvcRep implements  java.io.Serializable{
 	protected		String	mEmail;
 	protected		Role	mRole;
 	protected		SellerCompany	mCompany;
-	protected		int	mxVersion;
+	protected		int	mVersion;
 	
 	
 	
@@ -66,10 +65,10 @@ public class CustSvcRep implements  java.io.Serializable{
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	

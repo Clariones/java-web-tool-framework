@@ -122,7 +122,7 @@ public class DeliveryJDBCTemplateDAO extends CommonJDBCTemplateDAO implements De
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"who","d"};
+		return new String[]{"who","delivery_time"};
 	}
 	@Override
 	protected String getName() {
@@ -138,6 +138,7 @@ public class DeliveryJDBCTemplateDAO extends CommonJDBCTemplateDAO implements De
  			return false;
  		}
  		if(options.containsKey(optionToCheck)){
+ 			options.remove(optionToCheck);//consume the key, can not use any more to exactract the data.
  			return true;
  		}
  		if(options.containsKey(ALL)){
@@ -318,7 +319,7 @@ public class DeliveryJDBCTemplateDAO extends CommonJDBCTemplateDAO implements De
  		Object[] parameters = new Object[4];
  
  		parameters[0] = delivery.getWho();
- 		parameters[1] = delivery.getD();		
+ 		parameters[1] = delivery.getDeliveryTime();		
  		parameters[2] = delivery.getId();
  		parameters[3] = delivery.getVersion();
  				
@@ -331,7 +332,7 @@ public class DeliveryJDBCTemplateDAO extends CommonJDBCTemplateDAO implements De
 		parameters[0] =  delivery.getId();
  
  		parameters[1] = delivery.getWho();
- 		parameters[2] = delivery.getD();		
+ 		parameters[2] = delivery.getDeliveryTime();		
  				
  		return parameters;
  	}

@@ -13,7 +13,7 @@ public class ShipmentMapper implements RowMapper<Shipment>{
 		
 		shipment.setId(rs.getString("id"));
 		shipment.setWho(rs.getString("who"));
-		shipment.setD(rs.getDate("d"));
+		shipment.setShupTime(rs.getDate("shup_time"));
 		shipment.setVersion(rs.getInt("version"));
 		
 

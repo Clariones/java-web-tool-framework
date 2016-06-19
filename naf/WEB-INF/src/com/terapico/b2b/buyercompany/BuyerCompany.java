@@ -2,9 +2,8 @@
 package com.terapico.b2b.buyercompany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.order.Order;
@@ -17,8 +16,10 @@ public class BuyerCompany implements  java.io.Serializable{
 	protected		String	mId;
 	protected		String	mName;
 	protected		String	mPriceList;
-	protected		int	mxRating;
-	protected		int	mxVersion;
+	protected		int	mRating;
+	protected		String	mLogo;
+	protected		String	mOwner;
+	protected		int	mVersion;
 	
 	
 	protected		List<BillingAddress> mBillingAddressList;
@@ -30,12 +31,14 @@ public class BuyerCompany implements  java.io.Serializable{
 
 	}
 	
-	public 	BuyerCompany(String	id,String	name,String	price_list,int	rating,int	version)
+	public 	BuyerCompany(String	id,String	name,String	price_list,int	rating,String	logo,String	owner,int	version)
 	{
 		setId(id);
 		setName(name);
 		setPriceList(price_list);
 		setRating(rating);
+		setLogo(logo);
+		setOwner(owner);
 		setVersion(version);
 		this.mBillingAddressList = new ArrayList<BillingAddress>();
 		this.mEmployeeList = new ArrayList<Employee>();
@@ -66,17 +69,31 @@ public class BuyerCompany implements  java.io.Serializable{
 	}
 	
 	public void setRating(int rating){
-		this.mxRating = rating;
+		this.mRating = rating;
 	}
 	public int getRating(){
-		return this.mxRating;
+		return this.mRating;
+	}
+	
+	public void setLogo(String logo){
+		this.mLogo = logo;
+	}
+	public String getLogo(){
+		return this.mLogo;
+	}
+	
+	public void setOwner(String owner){
+		this.mOwner = owner;
+	}
+	public String getOwner(){
+		return this.mOwner;
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	public  List<BillingAddress> getBillingAddressList(){
@@ -109,7 +126,9 @@ public class BuyerCompany implements  java.io.Serializable{
 	public  void removeBillingAddress(BillingAddress billing_address){
 		getBillingAddressList().remove(billing_address);
 	}
-	
+	public  void cleanUpBillingAddressList(){
+		getBillingAddressList().clear();
+	}
 	
 	
 	
@@ -144,7 +163,9 @@ public class BuyerCompany implements  java.io.Serializable{
 	public  void removeEmployee(Employee employee){
 		getEmployeeList().remove(employee);
 	}
-	
+	public  void cleanUpEmployeeList(){
+		getEmployeeList().clear();
+	}
 	
 	
 	
@@ -179,7 +200,9 @@ public class BuyerCompany implements  java.io.Serializable{
 	public  void removeOrder(Order order){
 		getOrderList().remove(order);
 	}
-	
+	public  void cleanUpOrderList(){
+		getOrderList().clear();
+	}
 	
 	
 	
@@ -193,6 +216,8 @@ public class BuyerCompany implements  java.io.Serializable{
 		stringBuilder.append("\tname='"+getName()+"';");
 		stringBuilder.append("\tprice_list='"+getPriceList()+"';");
 		stringBuilder.append("\trating='"+getRating()+"';");
+		stringBuilder.append("\tlogo='"+getLogo()+"';");
+		stringBuilder.append("\towner='"+getOwner()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

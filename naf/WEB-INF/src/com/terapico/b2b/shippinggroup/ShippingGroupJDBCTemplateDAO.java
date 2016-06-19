@@ -132,6 +132,7 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
  			return false;
  		}
  		if(options.containsKey(optionToCheck)){
+ 			options.remove(optionToCheck);//consume the key, can not use any more to exactract the data.
  			return true;
  		}
  		if(options.containsKey(ALL)){

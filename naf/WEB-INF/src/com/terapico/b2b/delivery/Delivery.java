@@ -2,9 +2,8 @@
 package com.terapico.b2b.delivery;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.order.Order;
@@ -14,8 +13,8 @@ public class Delivery implements  java.io.Serializable{
 
 	protected		String	mId;
 	protected		String	mWho;
-	protected		Date	mD;
-	protected		int	mxVersion;
+	protected		Date	mDeliveryTime;
+	protected		int	mVersion;
 	
 	
 	protected		List<Order> mOrderList;
@@ -25,11 +24,11 @@ public class Delivery implements  java.io.Serializable{
 
 	}
 	
-	public 	Delivery(String	id,String	who,Date	d,int	version)
+	public 	Delivery(String	id,String	who,Date	delivery_time,int	version)
 	{
 		setId(id);
 		setWho(who);
-		setD(d);
+		setDeliveryTime(delivery_time);
 		setVersion(version);
 		this.mOrderList = new ArrayList<Order>();	
 	}
@@ -50,18 +49,18 @@ public class Delivery implements  java.io.Serializable{
 		return this.mWho;
 	}
 	
-	public void setD(Date d){
-		this.mD = d;
+	public void setDeliveryTime(Date delivery_time){
+		this.mDeliveryTime = delivery_time;
 	}
-	public Date getD(){
-		return this.mD;
+	public Date getDeliveryTime(){
+		return this.mDeliveryTime;
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	public  List<Order> getOrderList(){
@@ -94,7 +93,9 @@ public class Delivery implements  java.io.Serializable{
 	public  void removeOrder(Order order){
 		getOrderList().remove(order);
 	}
-	
+	public  void cleanUpOrderList(){
+		getOrderList().clear();
+	}
 	
 	
 	
@@ -106,7 +107,7 @@ public class Delivery implements  java.io.Serializable{
 		stringBuilder.append("delivery{");
 		stringBuilder.append("\tid='"+getId()+"';");
 		stringBuilder.append("\twho='"+getWho()+"';");
-		stringBuilder.append("\td='"+getD()+"';");
+		stringBuilder.append("\tdelivery_time='"+getDeliveryTime()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

@@ -2,9 +2,8 @@
 package com.terapico.b2b.shippingaddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.shippinggroup.ShippingGroup;
@@ -18,7 +17,7 @@ public class ShippingAddress implements  java.io.Serializable{
 	protected		String	mCity;
 	protected		String	mState;
 	protected		String	mCountry;
-	protected		int	mxVersion;
+	protected		int	mVersion;
 	
 	
 	protected		List<ShippingGroup> mShippingGroupList;
@@ -85,10 +84,10 @@ public class ShippingAddress implements  java.io.Serializable{
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	public  List<ShippingGroup> getShippingGroupList(){
@@ -121,7 +120,9 @@ public class ShippingAddress implements  java.io.Serializable{
 	public  void removeShippingGroup(ShippingGroup shipping_group){
 		getShippingGroupList().remove(shipping_group);
 	}
-	
+	public  void cleanUpShippingGroupList(){
+		getShippingGroupList().clear();
+	}
 	
 	
 	

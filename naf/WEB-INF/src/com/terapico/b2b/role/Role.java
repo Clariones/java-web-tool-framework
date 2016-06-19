@@ -2,9 +2,8 @@
 package com.terapico.b2b.role;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.access.Access;
@@ -15,7 +14,7 @@ public class Role implements  java.io.Serializable{
 
 	protected		String	mId;
 	protected		String	mRoleName;
-	protected		int	mxVersion;
+	protected		int	mVersion;
 	
 	
 	protected		List<Access> mAccessList;
@@ -52,10 +51,10 @@ public class Role implements  java.io.Serializable{
 	}
 	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	public  List<Access> getAccessList(){
@@ -88,7 +87,9 @@ public class Role implements  java.io.Serializable{
 	public  void removeAccess(Access access){
 		getAccessList().remove(access);
 	}
-	
+	public  void cleanUpAccessList(){
+		getAccessList().clear();
+	}
 	
 	
 	
@@ -123,7 +124,9 @@ public class Role implements  java.io.Serializable{
 	public  void removeCustSvcRep(CustSvcRep cust_svc_rep){
 		getCustSvcRepList().remove(cust_svc_rep);
 	}
-	
+	public  void cleanUpCustSvcRepList(){
+		getCustSvcRepList().clear();
+	}
 	
 	
 	

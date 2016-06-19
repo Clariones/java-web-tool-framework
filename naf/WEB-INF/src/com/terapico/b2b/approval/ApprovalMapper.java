@@ -13,7 +13,7 @@ public class ApprovalMapper implements RowMapper<Approval>{
 		
 		approval.setId(rs.getString("id"));
 		approval.setWho(rs.getString("who"));
-		approval.setD(rs.getDate("d"));
+		approval.setApproveTime(rs.getDate("approve_time"));
 		approval.setVersion(rs.getInt("version"));
 		
 

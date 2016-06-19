@@ -2,9 +2,8 @@
 package com.terapico.b2b.sellercompany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import java.sql.Date;
-import org.xml.sax.Attributes;
 
 
 import com.terapico.b2b.order.Order;
@@ -15,7 +14,10 @@ public class SellerCompany implements  java.io.Serializable{
 
 	protected		String	mId;
 	protected		String	mName;
-	protected		int	mxVersion;
+	protected		String	mOwner;
+	protected		String	mLogo;
+	protected		String	mContractText;
+	protected		int	mVersion;
 	
 	
 	protected		List<Order> mOrderList;
@@ -26,10 +28,13 @@ public class SellerCompany implements  java.io.Serializable{
 
 	}
 	
-	public 	SellerCompany(String	id,String	name,int	version)
+	public 	SellerCompany(String	id,String	name,String	owner,String	logo,String	contract_text,int	version)
 	{
 		setId(id);
 		setName(name);
+		setOwner(owner);
+		setLogo(logo);
+		setContractText(contract_text);
 		setVersion(version);
 		this.mOrderList = new ArrayList<Order>();
 		this.mCustSvcRepList = new ArrayList<CustSvcRep>();	
@@ -51,11 +56,32 @@ public class SellerCompany implements  java.io.Serializable{
 		return this.mName;
 	}
 	
+	public void setOwner(String owner){
+		this.mOwner = owner;
+	}
+	public String getOwner(){
+		return this.mOwner;
+	}
+	
+	public void setLogo(String logo){
+		this.mLogo = logo;
+	}
+	public String getLogo(){
+		return this.mLogo;
+	}
+	
+	public void setContractText(String contract_text){
+		this.mContractText = contract_text;
+	}
+	public String getContractText(){
+		return this.mContractText;
+	}
+	
 	public void setVersion(int version){
-		this.mxVersion = version;
+		this.mVersion = version;
 	}
 	public int getVersion(){
-		return this.mxVersion;
+		return this.mVersion;
 	}
 	
 	public  List<Order> getOrderList(){
@@ -88,7 +114,9 @@ public class SellerCompany implements  java.io.Serializable{
 	public  void removeOrder(Order order){
 		getOrderList().remove(order);
 	}
-	
+	public  void cleanUpOrderList(){
+		getOrderList().clear();
+	}
 	
 	
 	
@@ -123,7 +151,9 @@ public class SellerCompany implements  java.io.Serializable{
 	public  void removeCustSvcRep(CustSvcRep cust_svc_rep){
 		getCustSvcRepList().remove(cust_svc_rep);
 	}
-	
+	public  void cleanUpCustSvcRepList(){
+		getCustSvcRepList().clear();
+	}
 	
 	
 	
@@ -135,6 +165,9 @@ public class SellerCompany implements  java.io.Serializable{
 		stringBuilder.append("seller_company{");
 		stringBuilder.append("\tid='"+getId()+"';");
 		stringBuilder.append("\tname='"+getName()+"';");
+		stringBuilder.append("\towner='"+getOwner()+"';");
+		stringBuilder.append("\tlogo='"+getLogo()+"';");
+		stringBuilder.append("\tcontract_text='"+getContractText()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

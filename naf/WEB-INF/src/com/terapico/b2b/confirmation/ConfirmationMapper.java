@@ -13,7 +13,7 @@ public class ConfirmationMapper implements RowMapper<Confirmation>{
 		
 		confirmation.setId(rs.getString("id"));
 		confirmation.setWho(rs.getString("who"));
-		confirmation.setD(rs.getDate("d"));
+		confirmation.setConfirmTime(rs.getDate("confirm_time"));
 		confirmation.setVersion(rs.getInt("version"));
 		
 
