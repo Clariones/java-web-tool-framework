@@ -214,8 +214,11 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		if(shippingGroup.getBizOrder() == null){
 			return shippingGroup;
 		}
-		
-		Order bizOrder = getOrderDAO().load(shippingGroup.getBizOrder().getId(),options);
+		String bizOrderId = shippingGroup.getBizOrder().getId();
+		if( bizOrderId == null){
+			return shippingGroup;
+		}
+		Order bizOrder = getOrderDAO().load(bizOrderId,options);
 		if(bizOrder != null){
 			shippingGroup.setBizOrder(bizOrder);
 		}
@@ -231,8 +234,11 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		if(shippingGroup.getAddress() == null){
 			return shippingGroup;
 		}
-		
-		ShippingAddress address = getShippingAddressDAO().load(shippingGroup.getAddress().getId(),options);
+		String addressId = shippingGroup.getAddress().getId();
+		if( addressId == null){
+			return shippingGroup;
+		}
+		ShippingAddress address = getShippingAddressDAO().load(addressId,options);
 		if(address != null){
 			shippingGroup.setAddress(address);
 		}

@@ -230,8 +230,11 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 		if(billingAddress.getCompany() == null){
 			return billingAddress;
 		}
-		
-		BuyerCompany company = getBuyerCompanyDAO().load(billingAddress.getCompany().getId(),options);
+		String companyId = billingAddress.getCompany().getId();
+		if( companyId == null){
+			return billingAddress;
+		}
+		BuyerCompany company = getBuyerCompanyDAO().load(companyId,options);
 		if(company != null){
 			billingAddress.setCompany(company);
 		}

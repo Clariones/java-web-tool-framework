@@ -214,8 +214,11 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		if(paymentGroup.getBizOrder() == null){
 			return paymentGroup;
 		}
-		
-		Order bizOrder = getOrderDAO().load(paymentGroup.getBizOrder().getId(),options);
+		String bizOrderId = paymentGroup.getBizOrder().getId();
+		if( bizOrderId == null){
+			return paymentGroup;
+		}
+		Order bizOrder = getOrderDAO().load(bizOrderId,options);
 		if(bizOrder != null){
 			paymentGroup.setBizOrder(bizOrder);
 		}
@@ -231,8 +234,11 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		if(paymentGroup.getBillingAddress() == null){
 			return paymentGroup;
 		}
-		
-		BillingAddress billingAddress = getBillingAddressDAO().load(paymentGroup.getBillingAddress().getId(),options);
+		String billingAddressId = paymentGroup.getBillingAddress().getId();
+		if( billingAddressId == null){
+			return paymentGroup;
+		}
+		BillingAddress billingAddress = getBillingAddressDAO().load(billingAddressId,options);
 		if(billingAddress != null){
 			paymentGroup.setBillingAddress(billingAddress);
 		}

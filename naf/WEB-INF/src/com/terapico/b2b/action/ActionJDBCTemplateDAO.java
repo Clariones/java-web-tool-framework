@@ -182,8 +182,11 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 		if(action.getBo() == null){
 			return action;
 		}
-		
-		Order bo = getOrderDAO().load(action.getBo().getId(),options);
+		String boId = action.getBo().getId();
+		if( boId == null){
+			return action;
+		}
+		Order bo = getOrderDAO().load(boId,options);
 		if(bo != null){
 			action.setBo(bo);
 		}
@@ -423,6 +426,10 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 	}
 	
 }
+
+
+
+
 
 
 

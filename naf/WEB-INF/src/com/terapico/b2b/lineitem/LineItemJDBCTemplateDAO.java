@@ -182,8 +182,11 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 		if(lineItem.getBizOrder() == null){
 			return lineItem;
 		}
-		
-		Order bizOrder = getOrderDAO().load(lineItem.getBizOrder().getId(),options);
+		String bizOrderId = lineItem.getBizOrder().getId();
+		if( bizOrderId == null){
+			return lineItem;
+		}
+		Order bizOrder = getOrderDAO().load(bizOrderId,options);
 		if(bizOrder != null){
 			lineItem.setBizOrder(bizOrder);
 		}

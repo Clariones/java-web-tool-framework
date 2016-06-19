@@ -566,8 +566,11 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		if(order.getBuyer() == null){
 			return order;
 		}
-		
-		BuyerCompany buyer = getBuyerCompanyDAO().load(order.getBuyer().getId(),options);
+		String buyerId = order.getBuyer().getId();
+		if( buyerId == null){
+			return order;
+		}
+		BuyerCompany buyer = getBuyerCompanyDAO().load(buyerId,options);
 		if(buyer != null){
 			order.setBuyer(buyer);
 		}
@@ -583,8 +586,11 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		if(order.getSeller() == null){
 			return order;
 		}
-		
-		SellerCompany seller = getSellerCompanyDAO().load(order.getSeller().getId(),options);
+		String sellerId = order.getSeller().getId();
+		if( sellerId == null){
+			return order;
+		}
+		SellerCompany seller = getSellerCompanyDAO().load(sellerId,options);
 		if(seller != null){
 			order.setSeller(seller);
 		}
@@ -600,8 +606,11 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		if(order.getConfirmation() == null){
 			return order;
 		}
-		
-		Confirmation confirmation = getConfirmationDAO().load(order.getConfirmation().getId(),options);
+		String confirmationId = order.getConfirmation().getId();
+		if( confirmationId == null){
+			return order;
+		}
+		Confirmation confirmation = getConfirmationDAO().load(confirmationId,options);
 		if(confirmation != null){
 			order.setConfirmation(confirmation);
 		}
@@ -617,8 +626,11 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		if(order.getApproval() == null){
 			return order;
 		}
-		
-		Approval approval = getApprovalDAO().load(order.getApproval().getId(),options);
+		String approvalId = order.getApproval().getId();
+		if( approvalId == null){
+			return order;
+		}
+		Approval approval = getApprovalDAO().load(approvalId,options);
 		if(approval != null){
 			order.setApproval(approval);
 		}
@@ -634,8 +646,11 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		if(order.getProcessing() == null){
 			return order;
 		}
-		
-		Processing processing = getProcessingDAO().load(order.getProcessing().getId(),options);
+		String processingId = order.getProcessing().getId();
+		if( processingId == null){
+			return order;
+		}
+		Processing processing = getProcessingDAO().load(processingId,options);
 		if(processing != null){
 			order.setProcessing(processing);
 		}
@@ -651,8 +666,11 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		if(order.getShipment() == null){
 			return order;
 		}
-		
-		Shipment shipment = getShipmentDAO().load(order.getShipment().getId(),options);
+		String shipmentId = order.getShipment().getId();
+		if( shipmentId == null){
+			return order;
+		}
+		Shipment shipment = getShipmentDAO().load(shipmentId,options);
 		if(shipment != null){
 			order.setShipment(shipment);
 		}
@@ -668,8 +686,11 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		if(order.getDelivery() == null){
 			return order;
 		}
-		
-		Delivery delivery = getDeliveryDAO().load(order.getDelivery().getId(),options);
+		String deliveryId = order.getDelivery().getId();
+		if( deliveryId == null){
+			return order;
+		}
+		Delivery delivery = getDeliveryDAO().load(deliveryId,options);
 		if(delivery != null){
 			order.setDelivery(delivery);
 		}
@@ -861,15 +882,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 		
 	}
 	
-	protected void batchDelete(List<Order> orderList){
-		String SQL=getUpdateSQL();
-		List<Object[]> args=prepareBatchUpdateArgs(orderList);
-		
-		int affectedNumbers[] = getJdbcTemplateObject().batchUpdate(SQL, args);
-		
-		
-		
-	}
+	
 	
 	static final int CREATE_LIST_INDEX=0;
 	static final int UPDATE_LIST_INDEX=1;

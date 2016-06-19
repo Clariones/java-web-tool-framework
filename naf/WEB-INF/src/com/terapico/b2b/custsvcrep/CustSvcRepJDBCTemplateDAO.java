@@ -214,8 +214,11 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		if(custSvcRep.getRole() == null){
 			return custSvcRep;
 		}
-		
-		Role role = getRoleDAO().load(custSvcRep.getRole().getId(),options);
+		String roleId = custSvcRep.getRole().getId();
+		if( roleId == null){
+			return custSvcRep;
+		}
+		Role role = getRoleDAO().load(roleId,options);
 		if(role != null){
 			custSvcRep.setRole(role);
 		}
@@ -231,8 +234,11 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		if(custSvcRep.getCompany() == null){
 			return custSvcRep;
 		}
-		
-		SellerCompany company = getSellerCompanyDAO().load(custSvcRep.getCompany().getId(),options);
+		String companyId = custSvcRep.getCompany().getId();
+		if( companyId == null){
+			return custSvcRep;
+		}
+		SellerCompany company = getSellerCompanyDAO().load(companyId,options);
 		if(company != null){
 			custSvcRep.setCompany(company);
 		}

@@ -214,8 +214,11 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		if(assignment.getUser() == null){
 			return assignment;
 		}
-		
-		Employee user = getEmployeeDAO().load(assignment.getUser().getId(),options);
+		String userId = assignment.getUser().getId();
+		if( userId == null){
+			return assignment;
+		}
+		Employee user = getEmployeeDAO().load(userId,options);
 		if(user != null){
 			assignment.setUser(user);
 		}
@@ -231,8 +234,11 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 		if(assignment.getAccess() == null){
 			return assignment;
 		}
-		
-		Access access = getAccessDAO().load(assignment.getAccess().getId(),options);
+		String accessId = assignment.getAccess().getId();
+		if( accessId == null){
+			return assignment;
+		}
+		Access access = getAccessDAO().load(accessId,options);
 		if(access != null){
 			assignment.setAccess(access);
 		}

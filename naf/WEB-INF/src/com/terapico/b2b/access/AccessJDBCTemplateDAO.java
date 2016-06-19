@@ -230,8 +230,11 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 		if(access.getRole() == null){
 			return access;
 		}
-		
-		Role role = getRoleDAO().load(access.getRole().getId(),options);
+		String roleId = access.getRole().getId();
+		if( roleId == null){
+			return access;
+		}
+		Role role = getRoleDAO().load(roleId,options);
 		if(role != null){
 			access.setRole(role);
 		}

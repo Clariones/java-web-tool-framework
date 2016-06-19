@@ -1,4 +1,4 @@
-=================Excute Report @Wed Jun 15 23:01:05 CST 2016========================
+=================Excute Report @Sun Jun 19 22:44:37 CST 2016========================
 
 
 buyer_company
@@ -314,7 +314,7 @@ order{
 		buyer_company	buyer('$(object)'), verb: false;
 		seller_company	seller('$(object)'), verb: false;
 		string	title('House Buiding - '), verb: false;
-		double	total_amount('300.88'), verb: false;
+		double	total_amount('3000000000.88'), verb: false;
 		string	type('ORDER|QUOTE|INVOICE'), verb: false;
 		bool	mark_as_delete('true'), verb: false;
 		confirmation	confirmation('$(object)'), verb: true;
@@ -426,7 +426,7 @@ shipping_group{
 		string	name('shipping to this address'), verb: false;
 		order	biz_order('$(object)'), verb: false;
 		shipping_address	address('$(object)'), verb: false;
-		double	amount('5.99'), verb: false;
+		money	amount('$5.99'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(0){

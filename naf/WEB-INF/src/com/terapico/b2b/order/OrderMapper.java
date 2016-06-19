@@ -2,18 +2,16 @@
 package com.terapico.b2b.order;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.springframework.jdbc.core.RowMapper;
+
 import com.terapico.b2b.approval.Approval;
-import com.terapico.b2b.confirmation.Confirmation;
-import com.terapico.b2b.shipment.Shipment;
 import com.terapico.b2b.buyercompany.BuyerCompany;
-import com.terapico.b2b.processing.Processing;
-import com.terapico.b2b.lineitem.LineItem;
-import com.terapico.b2b.paymentgroup.PaymentGroup;
-import com.terapico.b2b.action.Action;
+import com.terapico.b2b.confirmation.Confirmation;
 import com.terapico.b2b.delivery.Delivery;
+import com.terapico.b2b.processing.Processing;
 import com.terapico.b2b.sellercompany.SellerCompany;
-import com.terapico.b2b.shippinggroup.ShippingGroup;
+import com.terapico.b2b.shipment.Shipment;
 
 public class OrderMapper implements RowMapper<Order>{
 	

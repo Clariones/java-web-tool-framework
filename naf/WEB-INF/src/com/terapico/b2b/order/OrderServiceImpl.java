@@ -2,6 +2,7 @@ package com.terapico.b2b.order;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -48,6 +49,11 @@ public class OrderServiceImpl {
 		return this.load("O000004", new String[] { "__all__" });
 	}
 
+	public String echo(String message) throws Exception {
+
+		// theOrder.addAction(action);
+		return message+"@"+new Date();
+	}
 	public Order createOrder(String buyerCompanyId, String sellerCompanyId, String title, 
 			double totalAmount, String type, boolean markAsDelete) throws Exception {
 		/*

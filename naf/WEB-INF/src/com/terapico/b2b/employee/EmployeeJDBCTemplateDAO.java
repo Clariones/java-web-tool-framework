@@ -230,8 +230,11 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 		if(employee.getCompany() == null){
 			return employee;
 		}
-		
-		BuyerCompany company = getBuyerCompanyDAO().load(employee.getCompany().getId(),options);
+		String companyId = employee.getCompany().getId();
+		if( companyId == null){
+			return employee;
+		}
+		BuyerCompany company = getBuyerCompanyDAO().load(companyId,options);
 		if(company != null){
 			employee.setCompany(company);
 		}
