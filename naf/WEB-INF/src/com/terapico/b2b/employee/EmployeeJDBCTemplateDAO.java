@@ -29,7 +29,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
  	public void setAssignmentDAO(AssignmentDAO pAssignmentDAO){
  	
  		if(pAssignmentDAO == null){
- 			throw new IllegalStateException("Do not trying to set assignmentDAO to null.");
+ 			throw new IllegalStateException("Do not try to set assignmentDAO to null.");
  		}
 	 	this.assignmentDAO = pAssignmentDAO;
  	}
@@ -142,7 +142,11 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	}
 	
 	
-	static final String ALL="__all__"; //do not assign this to common users,
+	static final String ALL="__all__"; //do not assign this to common users.
+	static final String SELF="__self__";
+	
+	
+	
 	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
@@ -282,6 +286,8 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 			throw new IllegalStateException("The save operation should return value = 1, while the value = "
 				+ affectedNumber +"If the value = 0, that mean the target record has been updated by someone else!");
 		}
+		int newVersion = employee.getVersion() + 1;
+		employee.setVersion(newVersion);
 		return employee;
 	
 	}
@@ -454,55 +460,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	
 	}
 		
-	protected void assertMethodArgumentNotNull(Object object, String method, String parameterName){
-		if(object == null){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud NOT be null");
-		}
-	}
-	protected void assertMethodIntArgumentGreaterThan(int value, int targetValue,String method, String parameterName){
-		if(value <= targetValue){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud greater than " + targetValue +" but it is: "+ value);
-		}
-	}
-	protected void assertMethodIntArgumentLessThan(int value, int targetValue,String method, String parameterName){
-		if(value >= targetValue){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud less than " + targetValue +" but it is: "+ value);
-		}
-	}
-	
-	protected void assertMethodIntArgumentInClosedRange(int value, int startValue, int endValue, String method, String parameterName){
-		
-		if(startValue>endValue){
-			throw new IllegalArgumentException("When calling the check method, please note your parameter, endValue < startValue");
-		}
-	
-		if(value < startValue){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
-		}
-		if(value > endValue){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
-		}
-	}
-	protected void assertMethodStringArgumentLengthInClosedRange(String value, int lengthMin, int lengthMax, String method, String parameterName){
-		
-		if(lengthMin < 0){
-			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin should not less than 0");
-		}
-		
-		if(lengthMin > lengthMax){
-			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin less or equal lengthMax");
-		}
-		
-		if(value == null){		
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is null");
-		}
-		if(value.length() < lengthMin){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
-		}
-		if(value.length() > lengthMax){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
-		}
-	}
+
 	
 }
 

@@ -8,23 +8,38 @@ import com.terapico.b2b.order.Order;
 public class ApprovalMapper implements RowMapper<Approval>{
 	
 	public Approval mapRow(ResultSet rs, int rowNumber) throws SQLException{
-		Approval approval =new Approval();
-
-		
-		approval.setId(rs.getString("id"));
-		approval.setWho(rs.getString("who"));
-		approval.setApproveTime(rs.getDate("approve_time"));
-		approval.setVersion(rs.getInt("version"));
-		
+		Approval approval = getApproval();		
+		 		
+ 		setId(approval, rs, rowNumber); 		
+ 		setWho(approval, rs, rowNumber); 		
+ 		setApproveTime(approval, rs, rowNumber); 		
+ 		setVersion(approval, rs, rowNumber);
 
 		return approval;
 	}
 	
-
-
+	protected Approval getApproval(){
+		return new Approval();
+	}		
+		
+	protected void setId(Approval approval, ResultSet rs, int rowNumber) throws SQLException{
+		approval.setId(rs.getString("id"));
+	}
+		
+	protected void setWho(Approval approval, ResultSet rs, int rowNumber) throws SQLException{
+		approval.setWho(rs.getString("who"));
+	}
+		
+	protected void setApproveTime(Approval approval, ResultSet rs, int rowNumber) throws SQLException{
+		approval.setApproveTime(rs.getDate("approve_time"));
+	}
+		
+	protected void setVersion(Approval approval, ResultSet rs, int rowNumber) throws SQLException{
+		approval.setVersion(rs.getInt("version"));
+	}
+		
 		
 
-
-	
 }
+
 

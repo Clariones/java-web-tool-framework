@@ -26,19 +26,17 @@ public class BillingAddress implements  java.io.Serializable{
 	
 		
 	public 	BillingAddress(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	BillingAddress(String	id,BuyerCompany	company,String	line1,String	line2,String	city,String	state,String	country,int	version)
+	public 	BillingAddress(BuyerCompany company, String line1, String line2, String city, String state, String country)
 	{
-		setId(id);
 		setCompany(company);
 		setLine1(line1);
 		setLine2(line2);
 		setCity(city);
 		setState(state);
 		setCountry(country);
-		setVersion(version);
 		this.mPaymentGroupList = new ArrayList<PaymentGroup>();	
 	}
 	
@@ -116,9 +114,9 @@ public class BillingAddress implements  java.io.Serializable{
 		
 	}
 	
-	public  void addPaymentGroup(PaymentGroup payment_group){
-		payment_group.setBillingAddress(this);
-		getPaymentGroupList().add(payment_group);
+	public  void addPaymentGroup(PaymentGroup paymentGroup){
+		paymentGroup.setBillingAddress(this);
+		getPaymentGroupList().add(paymentGroup);
 	}
 	public  void addPaymentGroups(List<PaymentGroup> paymentGroupList){
 		for( PaymentGroup paymentGroup:paymentGroupList){
@@ -127,8 +125,8 @@ public class BillingAddress implements  java.io.Serializable{
 		getPaymentGroupList().addAll(paymentGroupList);
 	}
 	
-	public  void removePaymentGroup(PaymentGroup payment_group){
-		getPaymentGroupList().remove(payment_group);
+	public  void removePaymentGroup(PaymentGroup paymentGroup){
+		getPaymentGroupList().remove(paymentGroup);
 	}
 	public  void cleanUpPaymentGroupList(){
 		getPaymentGroupList().clear();

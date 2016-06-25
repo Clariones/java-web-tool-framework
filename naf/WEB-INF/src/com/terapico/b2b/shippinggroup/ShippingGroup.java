@@ -23,17 +23,15 @@ public class ShippingGroup implements  java.io.Serializable{
 	
 		
 	public 	ShippingGroup(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	ShippingGroup(String	id,String	name,Order	biz_order,ShippingAddress	address,double	amount,int	version)
+	public 	ShippingGroup(String name, Order bizOrder, ShippingAddress address, double amount)
 	{
-		setId(id);
 		setName(name);
-		setBizOrder(biz_order);
+		setBizOrder(bizOrder);
 		setAddress(address);
-		setAmount(amount);
-		setVersion(version);	
+		setAmount(amount);	
 	}
 	
 
@@ -52,8 +50,8 @@ public class ShippingGroup implements  java.io.Serializable{
 		return this.mName;
 	}
 	
-	public void setBizOrder(Order biz_order){
-		this.mBizOrder = biz_order;
+	public void setBizOrder(Order bizOrder){
+		this.mBizOrder = bizOrder;
 	}
 	public Order getBizOrder(){
 		return this.mBizOrder;

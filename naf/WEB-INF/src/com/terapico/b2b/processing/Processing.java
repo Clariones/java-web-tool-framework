@@ -21,15 +21,13 @@ public class Processing implements  java.io.Serializable{
 	
 		
 	public 	Processing(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Processing(String	id,String	who,Date	process_time,int	version)
+	public 	Processing(String who, Date processTime)
 	{
-		setId(id);
 		setWho(who);
-		setProcessTime(process_time);
-		setVersion(version);
+		setProcessTime(processTime);
 		this.mOrderList = new ArrayList<Order>();	
 	}
 	
@@ -49,8 +47,8 @@ public class Processing implements  java.io.Serializable{
 		return this.mWho;
 	}
 	
-	public void setProcessTime(Date process_time){
-		this.mProcessTime = process_time;
+	public void setProcessTime(Date processTime){
+		this.mProcessTime = processTime;
 	}
 	public Date getProcessTime(){
 		return this.mProcessTime;

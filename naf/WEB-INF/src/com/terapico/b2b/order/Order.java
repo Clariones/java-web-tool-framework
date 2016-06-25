@@ -43,19 +43,17 @@ public class Order implements  java.io.Serializable{
 	
 		
 	public 	Order(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Order(String	id,BuyerCompany	buyer,SellerCompany	seller,String	title,double	total_amount,String	type,boolean	mark_as_delete,int	version)
+	public 	Order(BuyerCompany buyer, SellerCompany seller, String title, double totalAmount, String type, boolean markAsDelete)
 	{
-		setId(id);
 		setBuyer(buyer);
 		setSeller(seller);
 		setTitle(title);
-		setTotalAmount(total_amount);
+		setTotalAmount(totalAmount);
 		setType(type);
-		setMarkAsDelete(mark_as_delete);
-		setVersion(version);
+		setMarkAsDelete(markAsDelete);
 		this.mLineItemList = new ArrayList<LineItem>();
 		this.mShippingGroupList = new ArrayList<ShippingGroup>();
 		this.mPaymentGroupList = new ArrayList<PaymentGroup>();
@@ -92,8 +90,8 @@ public class Order implements  java.io.Serializable{
 		return this.mTitle;
 	}
 	
-	public void setTotalAmount(double total_amount){
-		this.mTotalAmount = total_amount;
+	public void setTotalAmount(double totalAmount){
+		this.mTotalAmount = totalAmount;
 	}
 	public double getTotalAmount(){
 		return this.mTotalAmount;
@@ -106,8 +104,8 @@ public class Order implements  java.io.Serializable{
 		return this.mType;
 	}
 	
-	public void setMarkAsDelete(boolean mark_as_delete){
-		this.mMarkAsDelete = mark_as_delete;
+	public void setMarkAsDelete(boolean markAsDelete){
+		this.mMarkAsDelete = markAsDelete;
 	}
 	public boolean getMarkAsDelete(){
 		return this.mMarkAsDelete;
@@ -171,9 +169,9 @@ public class Order implements  java.io.Serializable{
 		
 	}
 	
-	public  void addLineItem(LineItem line_item){
-		line_item.setBizOrder(this);
-		getLineItemList().add(line_item);
+	public  void addLineItem(LineItem lineItem){
+		lineItem.setBizOrder(this);
+		getLineItemList().add(lineItem);
 	}
 	public  void addLineItems(List<LineItem> lineItemList){
 		for( LineItem lineItem:lineItemList){
@@ -182,8 +180,8 @@ public class Order implements  java.io.Serializable{
 		getLineItemList().addAll(lineItemList);
 	}
 	
-	public  void removeLineItem(LineItem line_item){
-		getLineItemList().remove(line_item);
+	public  void removeLineItem(LineItem lineItem){
+		getLineItemList().remove(lineItem);
 	}
 	public  void cleanUpLineItemList(){
 		getLineItemList().clear();
@@ -208,9 +206,9 @@ public class Order implements  java.io.Serializable{
 		
 	}
 	
-	public  void addShippingGroup(ShippingGroup shipping_group){
-		shipping_group.setBizOrder(this);
-		getShippingGroupList().add(shipping_group);
+	public  void addShippingGroup(ShippingGroup shippingGroup){
+		shippingGroup.setBizOrder(this);
+		getShippingGroupList().add(shippingGroup);
 	}
 	public  void addShippingGroups(List<ShippingGroup> shippingGroupList){
 		for( ShippingGroup shippingGroup:shippingGroupList){
@@ -219,8 +217,8 @@ public class Order implements  java.io.Serializable{
 		getShippingGroupList().addAll(shippingGroupList);
 	}
 	
-	public  void removeShippingGroup(ShippingGroup shipping_group){
-		getShippingGroupList().remove(shipping_group);
+	public  void removeShippingGroup(ShippingGroup shippingGroup){
+		getShippingGroupList().remove(shippingGroup);
 	}
 	public  void cleanUpShippingGroupList(){
 		getShippingGroupList().clear();
@@ -245,9 +243,9 @@ public class Order implements  java.io.Serializable{
 		
 	}
 	
-	public  void addPaymentGroup(PaymentGroup payment_group){
-		payment_group.setBizOrder(this);
-		getPaymentGroupList().add(payment_group);
+	public  void addPaymentGroup(PaymentGroup paymentGroup){
+		paymentGroup.setBizOrder(this);
+		getPaymentGroupList().add(paymentGroup);
 	}
 	public  void addPaymentGroups(List<PaymentGroup> paymentGroupList){
 		for( PaymentGroup paymentGroup:paymentGroupList){
@@ -256,8 +254,8 @@ public class Order implements  java.io.Serializable{
 		getPaymentGroupList().addAll(paymentGroupList);
 	}
 	
-	public  void removePaymentGroup(PaymentGroup payment_group){
-		getPaymentGroupList().remove(payment_group);
+	public  void removePaymentGroup(PaymentGroup paymentGroup){
+		getPaymentGroupList().remove(paymentGroup);
 	}
 	public  void cleanUpPaymentGroupList(){
 		getPaymentGroupList().clear();

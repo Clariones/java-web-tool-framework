@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+	
+	<bean id="buyerCompanyManager" class="com.terapico.b2b.buyercompany.BuyerCompanyManagerImpl">
+		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+	</bean>	
+	
+	
+	<bean id="sellerCompanyManager" class="com.terapico.b2b.sellercompany.SellerCompanyManagerImpl">
+		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+	</bean>	
+	
+	
+	<bean id="shippingAddressManager" class="com.terapico.b2b.shippingaddress.ShippingAddressManagerImpl">
+		<property name="shippingAddressDAO" ref="shippingAddressDAO" />
+	</bean>	
+	
+	
+	<bean id="billingAddressManager" class="com.terapico.b2b.billingaddress.BillingAddressManagerImpl">
+		<property name="billingAddressDAO" ref="billingAddressDAO" />
+	 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+	</bean>	
+	
+	
+	<bean id="employeeManager" class="com.terapico.b2b.employee.EmployeeManagerImpl">
+		<property name="employeeDAO" ref="employeeDAO" />
+	 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+	</bean>	
+	
+	
+	<bean id="roleManager" class="com.terapico.b2b.role.RoleManagerImpl">
+		<property name="roleDAO" ref="roleDAO" />
+	</bean>	
+	
+	
+	<bean id="assignmentManager" class="com.terapico.b2b.assignment.AssignmentManagerImpl">
+		<property name="assignmentDAO" ref="assignmentDAO" />
+	 		<property name="employeeDAO" ref="employeeDAO" />
+	 		<property name="accessDAO" ref="accessDAO" />
+	</bean>	
+	
+	
+	<bean id="accessManager" class="com.terapico.b2b.access.AccessManagerImpl">
+		<property name="accessDAO" ref="accessDAO" />
+	 		<property name="roleDAO" ref="roleDAO" />
+	</bean>	
+	
+	
+	<bean id="orderManager" class="com.terapico.b2b.order.OrderManagerImpl">
+		<property name="orderDAO" ref="orderDAO" />
+	 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+	 		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+	 		<property name="confirmationDAO" ref="confirmationDAO" />
+	 		<property name="approvalDAO" ref="approvalDAO" />
+	 		<property name="processingDAO" ref="processingDAO" />
+	 		<property name="shipmentDAO" ref="shipmentDAO" />
+	 		<property name="deliveryDAO" ref="deliveryDAO" />
+	</bean>	
+	
+	
+	<bean id="confirmationManager" class="com.terapico.b2b.confirmation.ConfirmationManagerImpl">
+		<property name="confirmationDAO" ref="confirmationDAO" />
+	</bean>	
+	
+	
+	<bean id="shipmentManager" class="com.terapico.b2b.shipment.ShipmentManagerImpl">
+		<property name="shipmentDAO" ref="shipmentDAO" />
+	</bean>	
+	
+	
+	<bean id="deliveryManager" class="com.terapico.b2b.delivery.DeliveryManagerImpl">
+		<property name="deliveryDAO" ref="deliveryDAO" />
+	</bean>	
+	
+	
+	<bean id="processingManager" class="com.terapico.b2b.processing.ProcessingManagerImpl">
+		<property name="processingDAO" ref="processingDAO" />
+	</bean>	
+	
+	
+	<bean id="approvalManager" class="com.terapico.b2b.approval.ApprovalManagerImpl">
+		<property name="approvalDAO" ref="approvalDAO" />
+	</bean>	
+	
+	
+	<bean id="lineItemManager" class="com.terapico.b2b.lineitem.LineItemManagerImpl">
+		<property name="lineItemDAO" ref="lineItemDAO" />
+	 		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+	
+	<bean id="shippingGroupManager" class="com.terapico.b2b.shippinggroup.ShippingGroupManagerImpl">
+		<property name="shippingGroupDAO" ref="shippingGroupDAO" />
+	 		<property name="orderDAO" ref="orderDAO" />
+	 		<property name="shippingAddressDAO" ref="shippingAddressDAO" />
+	</bean>	
+	
+	
+	<bean id="paymentGroupManager" class="com.terapico.b2b.paymentgroup.PaymentGroupManagerImpl">
+		<property name="paymentGroupDAO" ref="paymentGroupDAO" />
+	 		<property name="orderDAO" ref="orderDAO" />
+	 		<property name="billingAddressDAO" ref="billingAddressDAO" />
+	</bean>	
+	
+	
+	<bean id="custSvcRepManager" class="com.terapico.b2b.custsvcrep.CustSvcRepManagerImpl">
+		<property name="custSvcRepDAO" ref="custSvcRepDAO" />
+	 		<property name="roleDAO" ref="roleDAO" />
+	 		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+	</bean>	
+	
+	
+	<bean id="actionManager" class="com.terapico.b2b.action.ActionManagerImpl">
+		<property name="actionDAO" ref="actionDAO" />
+	 		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+
+
+
+</beans>
+
+
+
+

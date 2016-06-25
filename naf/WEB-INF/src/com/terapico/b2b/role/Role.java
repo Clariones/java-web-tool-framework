@@ -22,14 +22,12 @@ public class Role implements  java.io.Serializable{
 	
 		
 	public 	Role(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Role(String	id,String	role_name,int	version)
+	public 	Role(String roleName)
 	{
-		setId(id);
-		setRoleName(role_name);
-		setVersion(version);
+		setRoleName(roleName);
 		this.mAccessList = new ArrayList<Access>();
 		this.mCustSvcRepList = new ArrayList<CustSvcRep>();	
 	}
@@ -43,8 +41,8 @@ public class Role implements  java.io.Serializable{
 		return this.mId;
 	}
 	
-	public void setRoleName(String role_name){
-		this.mRoleName = role_name;
+	public void setRoleName(String roleName){
+		this.mRoleName = roleName;
 	}
 	public String getRoleName(){
 		return this.mRoleName;
@@ -110,9 +108,9 @@ public class Role implements  java.io.Serializable{
 		
 	}
 	
-	public  void addCustSvcRep(CustSvcRep cust_svc_rep){
-		cust_svc_rep.setRole(this);
-		getCustSvcRepList().add(cust_svc_rep);
+	public  void addCustSvcRep(CustSvcRep custSvcRep){
+		custSvcRep.setRole(this);
+		getCustSvcRepList().add(custSvcRep);
 	}
 	public  void addCustSvcReps(List<CustSvcRep> custSvcRepList){
 		for( CustSvcRep custSvcRep:custSvcRepList){
@@ -121,8 +119,8 @@ public class Role implements  java.io.Serializable{
 		getCustSvcRepList().addAll(custSvcRepList);
 	}
 	
-	public  void removeCustSvcRep(CustSvcRep cust_svc_rep){
-		getCustSvcRepList().remove(cust_svc_rep);
+	public  void removeCustSvcRep(CustSvcRep custSvcRep){
+		getCustSvcRepList().remove(custSvcRep);
 	}
 	public  void cleanUpCustSvcRepList(){
 		getCustSvcRepList().clear();

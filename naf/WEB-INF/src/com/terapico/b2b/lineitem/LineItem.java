@@ -23,18 +23,16 @@ public class LineItem implements  java.io.Serializable{
 	
 		
 	public 	LineItem(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	LineItem(String	id,Order	biz_order,String	sku_id,String	sku_name,double	amount,int	quantity,int	version)
+	public 	LineItem(Order bizOrder, String skuId, String skuName, double amount, int quantity)
 	{
-		setId(id);
-		setBizOrder(biz_order);
-		setSkuId(sku_id);
-		setSkuName(sku_name);
+		setBizOrder(bizOrder);
+		setSkuId(skuId);
+		setSkuName(skuName);
 		setAmount(amount);
-		setQuantity(quantity);
-		setVersion(version);	
+		setQuantity(quantity);	
 	}
 	
 
@@ -46,22 +44,22 @@ public class LineItem implements  java.io.Serializable{
 		return this.mId;
 	}
 	
-	public void setBizOrder(Order biz_order){
-		this.mBizOrder = biz_order;
+	public void setBizOrder(Order bizOrder){
+		this.mBizOrder = bizOrder;
 	}
 	public Order getBizOrder(){
 		return this.mBizOrder;
 	}
 	
-	public void setSkuId(String sku_id){
-		this.mSkuId = sku_id;
+	public void setSkuId(String skuId){
+		this.mSkuId = skuId;
 	}
 	public String getSkuId(){
 		return this.mSkuId;
 	}
 	
-	public void setSkuName(String sku_name){
-		this.mSkuName = sku_name;
+	public void setSkuName(String skuName){
+		this.mSkuName = skuName;
 	}
 	public String getSkuName(){
 		return this.mSkuName;

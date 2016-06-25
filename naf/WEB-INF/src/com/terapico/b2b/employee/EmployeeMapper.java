@@ -9,32 +9,62 @@ import com.terapico.b2b.assignment.Assignment;
 public class EmployeeMapper implements RowMapper<Employee>{
 	
 	public Employee mapRow(ResultSet rs, int rowNumber) throws SQLException{
-		Employee employee =new Employee();
-
-		
-		employee.setId(rs.getString("id"));
-		employee.setName(rs.getString("name"));
+		Employee employee = getEmployee();		
 		 		
- 		employee.setCompany(createEmptyCompany(rs.getString("company")));
- 		employee.setEmail(rs.getString("email"));
-		employee.setVersion(rs.getInt("version"));
-		
+ 		setId(employee, rs, rowNumber); 		
+ 		setName(employee, rs, rowNumber); 		
+ 		setCompany(employee, rs, rowNumber); 		
+ 		setEmail(employee, rs, rowNumber); 		
+ 		setVersion(employee, rs, rowNumber);
 
 		return employee;
 	}
 	
-
-
+	protected Employee getEmployee(){
+		return new Employee();
+	}		
+		
+	protected void setId(Employee employee, ResultSet rs, int rowNumber) throws SQLException{
+		employee.setId(rs.getString("id"));
+	}
+		
+	protected void setName(Employee employee, ResultSet rs, int rowNumber) throws SQLException{
+		employee.setName(rs.getString("name"));
+	}
+		 		
+ 	protected void setCompany(Employee employee, ResultSet rs, int rowNumber) throws SQLException{
+ 		String buyerCompanyId = rs.getString("company");
+ 		if( buyerCompanyId == null){
+ 			return;
+ 		}
+ 		if( buyerCompanyId.isEmpty()){
+ 			return;
+ 		}
+ 		BuyerCompany buyerCompany = employee.getCompany();
+ 		if( buyerCompany != null ){
+ 			//if the root object 'employee' already have the property, just set the id for it;
+ 			buyerCompany.setId(buyerCompanyId);
+ 			return;
+ 		}
+ 		employee.setCompany(createEmptyCompany(buyerCompanyId));
+ 	}
+ 	
+	protected void setEmail(Employee employee, ResultSet rs, int rowNumber) throws SQLException{
+		employee.setEmail(rs.getString("email"));
+	}
+		
+	protected void setVersion(Employee employee, ResultSet rs, int rowNumber) throws SQLException{
+		employee.setVersion(rs.getInt("version"));
+	}
+		
 		
 
- 	protected BuyerCompany  createEmptyCompany (String id){
- 		BuyerCompany ret=new BuyerCompany ();
- 		ret.setId(id);
- 		return ret;
- 
- 
+ 	protected BuyerCompany  createEmptyCompany(String buyerCompanyId){
+ 		BuyerCompany buyerCompany = new BuyerCompany();
+ 		buyerCompany.setId(buyerCompanyId);
+ 		return buyerCompany;
  	}
-
-	
+ 	
 }
+
 

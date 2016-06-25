@@ -24,18 +24,16 @@ public class ShippingAddress implements  java.io.Serializable{
 	
 		
 	public 	ShippingAddress(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	ShippingAddress(String	id,String	line1,String	line2,String	city,String	state,String	country,int	version)
+	public 	ShippingAddress(String line1, String line2, String city, String state, String country)
 	{
-		setId(id);
 		setLine1(line1);
 		setLine2(line2);
 		setCity(city);
 		setState(state);
 		setCountry(country);
-		setVersion(version);
 		this.mShippingGroupList = new ArrayList<ShippingGroup>();	
 	}
 	
@@ -106,9 +104,9 @@ public class ShippingAddress implements  java.io.Serializable{
 		
 	}
 	
-	public  void addShippingGroup(ShippingGroup shipping_group){
-		shipping_group.setAddress(this);
-		getShippingGroupList().add(shipping_group);
+	public  void addShippingGroup(ShippingGroup shippingGroup){
+		shippingGroup.setAddress(this);
+		getShippingGroupList().add(shippingGroup);
 	}
 	public  void addShippingGroups(List<ShippingGroup> shippingGroupList){
 		for( ShippingGroup shippingGroup:shippingGroupList){
@@ -117,8 +115,8 @@ public class ShippingAddress implements  java.io.Serializable{
 		getShippingGroupList().addAll(shippingGroupList);
 	}
 	
-	public  void removeShippingGroup(ShippingGroup shipping_group){
-		getShippingGroupList().remove(shipping_group);
+	public  void removeShippingGroup(ShippingGroup shippingGroup){
+		getShippingGroupList().remove(shippingGroup);
 	}
 	public  void cleanUpShippingGroupList(){
 		getShippingGroupList().clear();

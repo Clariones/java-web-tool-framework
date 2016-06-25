@@ -21,15 +21,13 @@ public class Delivery implements  java.io.Serializable{
 	
 		
 	public 	Delivery(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Delivery(String	id,String	who,Date	delivery_time,int	version)
+	public 	Delivery(String who, Date deliveryTime)
 	{
-		setId(id);
 		setWho(who);
-		setDeliveryTime(delivery_time);
-		setVersion(version);
+		setDeliveryTime(deliveryTime);
 		this.mOrderList = new ArrayList<Order>();	
 	}
 	
@@ -49,8 +47,8 @@ public class Delivery implements  java.io.Serializable{
 		return this.mWho;
 	}
 	
-	public void setDeliveryTime(Date delivery_time){
-		this.mDeliveryTime = delivery_time;
+	public void setDeliveryTime(Date deliveryTime){
+		this.mDeliveryTime = deliveryTime;
 	}
 	public Date getDeliveryTime(){
 		return this.mDeliveryTime;

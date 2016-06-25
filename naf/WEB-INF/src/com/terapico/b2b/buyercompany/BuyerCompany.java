@@ -28,18 +28,16 @@ public class BuyerCompany implements  java.io.Serializable{
 	
 		
 	public 	BuyerCompany(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	BuyerCompany(String	id,String	name,String	price_list,int	rating,String	logo,String	owner,int	version)
+	public 	BuyerCompany(String name, String priceList, int rating, String logo, String owner)
 	{
-		setId(id);
 		setName(name);
-		setPriceList(price_list);
+		setPriceList(priceList);
 		setRating(rating);
 		setLogo(logo);
 		setOwner(owner);
-		setVersion(version);
 		this.mBillingAddressList = new ArrayList<BillingAddress>();
 		this.mEmployeeList = new ArrayList<Employee>();
 		this.mOrderList = new ArrayList<Order>();	
@@ -61,8 +59,8 @@ public class BuyerCompany implements  java.io.Serializable{
 		return this.mName;
 	}
 	
-	public void setPriceList(String price_list){
-		this.mPriceList = price_list;
+	public void setPriceList(String priceList){
+		this.mPriceList = priceList;
 	}
 	public String getPriceList(){
 		return this.mPriceList;
@@ -112,9 +110,9 @@ public class BuyerCompany implements  java.io.Serializable{
 		
 	}
 	
-	public  void addBillingAddress(BillingAddress billing_address){
-		billing_address.setCompany(this);
-		getBillingAddressList().add(billing_address);
+	public  void addBillingAddress(BillingAddress billingAddress){
+		billingAddress.setCompany(this);
+		getBillingAddressList().add(billingAddress);
 	}
 	public  void addBillingAddresses(List<BillingAddress> billingAddressList){
 		for( BillingAddress billingAddress:billingAddressList){
@@ -123,8 +121,8 @@ public class BuyerCompany implements  java.io.Serializable{
 		getBillingAddressList().addAll(billingAddressList);
 	}
 	
-	public  void removeBillingAddress(BillingAddress billing_address){
-		getBillingAddressList().remove(billing_address);
+	public  void removeBillingAddress(BillingAddress billingAddress){
+		getBillingAddressList().remove(billingAddress);
 	}
 	public  void cleanUpBillingAddressList(){
 		getBillingAddressList().clear();

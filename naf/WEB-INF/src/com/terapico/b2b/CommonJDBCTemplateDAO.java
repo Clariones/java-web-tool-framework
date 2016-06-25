@@ -1,5 +1,4 @@
 package com.terapico.b2b;
-
 import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -139,7 +138,7 @@ public abstract class CommonJDBCTemplateDAO {
 		stringBuilder.append(",1);");
 		
 		return stringBuilder.toString();
-		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"；
+		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"ï¼
 		
 	}
 	
@@ -152,19 +151,7 @@ public abstract class CommonJDBCTemplateDAO {
 		stringBuilder.append(" where id= ? and version =?;");
 			
 		return stringBuilder.toString();
-		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"；
-		
-	}
-	protected String getDeleteAllSQL() {
-		// TODO Auto-generated method stub
-		//return new String[]{"name","bize_order","card_number","billing_address"};
-		StringBuilder stringBuilder=new StringBuilder();
-		stringBuilder.append("delete from  ");
-		stringBuilder.append(this.getTableName());
-		stringBuilder.append(";");
-			
-		return stringBuilder.toString();
-		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"；
+		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"ï¼
 		
 	}
 
@@ -181,7 +168,7 @@ public abstract class CommonJDBCTemplateDAO {
 		stringBuilder.append("where id=? and version=?");
 		
 		return stringBuilder.toString();
-		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"；
+		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"ï¼
 		
 	}
 	
@@ -247,7 +234,7 @@ public abstract class CommonJDBCTemplateDAO {
 		String columNames[]=getNormalColumnNames();
 		int length=columNames.length;
 		
-		for(int i=0;i<length;i++ ){
+		for(int i=0; i<length; i++){
 			if(i>0){
 				stringBuilder.append(",");
 			}
@@ -272,5 +259,69 @@ public abstract class CommonJDBCTemplateDAO {
 		return stringBuilder.toString();
 	}
 	
+	protected String getDeleteAllSQL() {
+		// TODO Auto-generated method stub
+		//return new String[]{"name","bize_order","card_number","billing_address"};
+		StringBuilder stringBuilder=new StringBuilder();
+		stringBuilder.append("delete from  ");
+		stringBuilder.append(this.getTableName());
+		
+			
+		return stringBuilder.toString();
+		//return ++"("++")values("+getCreateParametersPlaceHolder()+")"ï¼
+		
+	}
+	protected void assertMethodArgumentNotNull(Object object, String method, String parameterName){
+		if(object == null){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud NOT be null");
+		}
+	}
+	protected void assertMethodIntArgumentGreaterThan(int value, int targetValue,String method, String parameterName){
+		if(value <= targetValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud greater than " + targetValue +" but it is: "+ value);
+		}
+	}
+	protected void assertMethodIntArgumentLessThan(int value, int targetValue,String method, String parameterName){
+		if(value >= targetValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud less than " + targetValue +" but it is: "+ value);
+		}
+	}
 	
+	protected void assertMethodIntArgumentInClosedRange(int value, int startValue, int endValue, String method, String parameterName){
+		
+		if(startValue>endValue){
+			throw new IllegalArgumentException("When calling the check method, please note your parameter, endValue < startValue");
+		}
+	
+		if(value < startValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
+		}
+		if(value > endValue){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
+		}
+	}
+	protected void assertMethodStringArgumentLengthInClosedRange(String value, int lengthMin, int lengthMax, String method, String parameterName){
+		
+		if(lengthMin < 0){
+			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin should not less than 0");
+		}
+		
+		if(lengthMin > lengthMax){
+			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin less or equal lengthMax");
+		}
+		
+		if(value == null){		
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is null");
+		}
+		if(value.length() < lengthMin){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
+		}
+		if(value.length() > lengthMax){
+			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
+		}
+	}
 }
+
+
+
+

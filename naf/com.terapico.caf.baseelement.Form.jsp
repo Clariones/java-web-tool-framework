@@ -150,7 +150,7 @@
     <!-- parameterName="${field.name}" parameterType="${field.type.name}" autocomplete="off" -->
     <form class="mainform">
 		<c:forEach var="field" items="${result.fields}" varStatus="status">
-		<div class="col-sm-3">
+		<div class="col-sm-2">
 			<input id="fl${status.index}" class="form-control input-sm" 
 			placeHolder="${field.name}" value="${field.defaultValue}"
 			title="${field.name}" type="text" append="true" />

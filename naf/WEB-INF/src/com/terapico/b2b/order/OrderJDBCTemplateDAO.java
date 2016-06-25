@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.approval.Approval;
 import com.terapico.b2b.confirmation.Confirmation;
@@ -17,7 +20,6 @@ import com.terapico.b2b.action.Action;
 import com.terapico.b2b.delivery.Delivery;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
-
 import com.terapico.b2b.shippinggroup.ShippingGroupDAO;
 import com.terapico.b2b.delivery.DeliveryDAO;
 import com.terapico.b2b.lineitem.LineItemDAO;
@@ -101,7 +103,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  	public void setLineItemDAO(LineItemDAO pLineItemDAO){
  	
  		if(pLineItemDAO == null){
- 			throw new IllegalStateException("Do not trying to set lineItemDAO to null.");
+ 			throw new IllegalStateException("Do not try to set lineItemDAO to null.");
  		}
 	 	this.lineItemDAO = pLineItemDAO;
  	}
@@ -120,7 +122,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  	public void setShippingGroupDAO(ShippingGroupDAO pShippingGroupDAO){
  	
  		if(pShippingGroupDAO == null){
- 			throw new IllegalStateException("Do not trying to set shippingGroupDAO to null.");
+ 			throw new IllegalStateException("Do not try to set shippingGroupDAO to null.");
  		}
 	 	this.shippingGroupDAO = pShippingGroupDAO;
  	}
@@ -139,7 +141,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  	public void setPaymentGroupDAO(PaymentGroupDAO pPaymentGroupDAO){
  	
  		if(pPaymentGroupDAO == null){
- 			throw new IllegalStateException("Do not trying to set paymentGroupDAO to null.");
+ 			throw new IllegalStateException("Do not try to set paymentGroupDAO to null.");
  		}
 	 	this.paymentGroupDAO = pPaymentGroupDAO;
  	}
@@ -158,7 +160,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
  	public void setActionDAO(ActionDAO pActionDAO){
  	
  		if(pActionDAO == null){
- 			throw new IllegalStateException("Do not trying to set actionDAO to null.");
+ 			throw new IllegalStateException("Do not try to set actionDAO to null.");
  		}
 	 	this.actionDAO = pActionDAO;
  	}
@@ -292,7 +294,11 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	}
 	
 	
-	static final String ALL="__all__"; //do not assign this to common users,
+	static final String ALL="__all__"; //do not assign this to common users.
+	static final String SELF="__self__";
+	
+	
+	
 	protected boolean checkOptions(Map<String,Object> options, String optionToCheck){
 	
 		if(options==null){
@@ -499,10 +505,15 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	protected OrderMapper getMapper(){
 		return new OrderMapper();
 	}
-	protected Order extractOrder(String orderId){
+	protected Order extractOrder(String orderId) throws OrderNotFoundException{
 		String SQL = "select * from order_data where id=?";	
-		Order order = getJdbcTemplateObject().queryForObject(SQL, new Object[]{orderId}, getMapper());
-		return order;
+		try{
+			Order order = getJdbcTemplateObject().queryForObject(SQL, new Object[]{orderId}, getMapper());
+			return order;
+		}catch(EmptyResultDataAccessException e){
+			throw new OrderNotFoundException("Order with id '"+orderId+"' is not found!");
+		}
+		
 	}
 
 	protected Order loadInternalOrder(String orderId, Map<String,Object> loadOptions) throws Exception{
@@ -825,6 +836,8 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 			throw new IllegalStateException("The save operation should return value = 1, while the value = "
 				+ affectedNumber +"If the value = 0, that mean the target record has been updated by someone else!");
 		}
+		int newVersion = order.getVersion() + 1;
+		order.setVersion(newVersion);
 		return order;
 	
 	}
@@ -1193,55 +1206,7 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	
 	}
 		
-	protected void assertMethodArgumentNotNull(Object object, String method, String parameterName){
-		if(object == null){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud NOT be null");
-		}
-	}
-	protected void assertMethodIntArgumentGreaterThan(int value, int targetValue,String method, String parameterName){
-		if(value <= targetValue){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud greater than " + targetValue +" but it is: "+ value);
-		}
-	}
-	protected void assertMethodIntArgumentLessThan(int value, int targetValue,String method, String parameterName){
-		if(value >= targetValue){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud less than " + targetValue +" but it is: "+ value);
-		}
-	}
-	
-	protected void assertMethodIntArgumentInClosedRange(int value, int startValue, int endValue, String method, String parameterName){
-		
-		if(startValue>endValue){
-			throw new IllegalArgumentException("When calling the check method, please note your parameter, endValue < startValue");
-		}
-	
-		if(value < startValue){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
-		}
-		if(value > endValue){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' shoud be in closed range: ["+startValue+","+endValue+"] but it is: "+value);
-		}
-	}
-	protected void assertMethodStringArgumentLengthInClosedRange(String value, int lengthMin, int lengthMax, String method, String parameterName){
-		
-		if(lengthMin < 0){
-			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin should not less than 0");
-		}
-		
-		if(lengthMin > lengthMax){
-			throw new IllegalArgumentException("The method assertMethodStringArgumentLengthInClosedRange lengMin less or equal lengthMax");
-		}
-		
-		if(value == null){		
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is null");
-		}
-		if(value.length() < lengthMin){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
-		}
-		if(value.length() > lengthMax){
-			throw new IllegalArgumentException("Method:" + method +": parameter '"+parameterName+"' length shoud be in closed range: ["+lengthMin+","+lengthMax+"] but it is: "+value.length());
-		}
-	}
+
 	
 }
 

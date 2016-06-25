@@ -25,17 +25,15 @@ public class SellerCompany implements  java.io.Serializable{
 	
 		
 	public 	SellerCompany(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	SellerCompany(String	id,String	name,String	owner,String	logo,String	contract_text,int	version)
+	public 	SellerCompany(String name, String owner, String logo, String contractText)
 	{
-		setId(id);
 		setName(name);
 		setOwner(owner);
 		setLogo(logo);
-		setContractText(contract_text);
-		setVersion(version);
+		setContractText(contractText);
 		this.mOrderList = new ArrayList<Order>();
 		this.mCustSvcRepList = new ArrayList<CustSvcRep>();	
 	}
@@ -70,8 +68,8 @@ public class SellerCompany implements  java.io.Serializable{
 		return this.mLogo;
 	}
 	
-	public void setContractText(String contract_text){
-		this.mContractText = contract_text;
+	public void setContractText(String contractText){
+		this.mContractText = contractText;
 	}
 	public String getContractText(){
 		return this.mContractText;
@@ -137,9 +135,9 @@ public class SellerCompany implements  java.io.Serializable{
 		
 	}
 	
-	public  void addCustSvcRep(CustSvcRep cust_svc_rep){
-		cust_svc_rep.setCompany(this);
-		getCustSvcRepList().add(cust_svc_rep);
+	public  void addCustSvcRep(CustSvcRep custSvcRep){
+		custSvcRep.setCompany(this);
+		getCustSvcRepList().add(custSvcRep);
 	}
 	public  void addCustSvcReps(List<CustSvcRep> custSvcRepList){
 		for( CustSvcRep custSvcRep:custSvcRepList){
@@ -148,8 +146,8 @@ public class SellerCompany implements  java.io.Serializable{
 		getCustSvcRepList().addAll(custSvcRepList);
 	}
 	
-	public  void removeCustSvcRep(CustSvcRep cust_svc_rep){
-		getCustSvcRepList().remove(cust_svc_rep);
+	public  void removeCustSvcRep(CustSvcRep custSvcRep){
+		getCustSvcRepList().remove(custSvcRep);
 	}
 	public  void cleanUpCustSvcRepList(){
 		getCustSvcRepList().clear();

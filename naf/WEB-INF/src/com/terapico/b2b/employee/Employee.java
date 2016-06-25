@@ -23,16 +23,14 @@ public class Employee implements  java.io.Serializable{
 	
 		
 	public 	Employee(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Employee(String	id,String	name,BuyerCompany	company,String	email,int	version)
+	public 	Employee(String name, BuyerCompany company, String email)
 	{
-		setId(id);
 		setName(name);
 		setCompany(company);
 		setEmail(email);
-		setVersion(version);
 		this.mAssignmentList = new ArrayList<Assignment>();	
 	}
 	

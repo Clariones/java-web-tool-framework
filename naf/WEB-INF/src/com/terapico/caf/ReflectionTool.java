@@ -165,7 +165,7 @@ public class ReflectionTool {
 		if (DateTime.class.isAssignableFrom((Class) type)) {
 			String defaultFormat = System.getProperty("system.types.datetime.format");
 			if (defaultFormat == null) {
-				defaultFormat = "yyyy-MM-DD HH:mm:ss";
+				defaultFormat = "yyyy-MM-dd HH:mm:ss";
 			}
 			DateFormat formatter = new SimpleDateFormat(defaultFormat);
 			try {
@@ -180,7 +180,7 @@ public class ReflectionTool {
 		if (java.util.Date.class.isAssignableFrom((Class) type)) {
 			String defaultFormat = System.getProperty("system.types.date.format");
 			if (defaultFormat == null) {
-				defaultFormat = "yyyy-MM-DD";
+				defaultFormat = "yyyy-MM-dd";
 			}
 			DateFormat formatter = new SimpleDateFormat(defaultFormat);
 			try {

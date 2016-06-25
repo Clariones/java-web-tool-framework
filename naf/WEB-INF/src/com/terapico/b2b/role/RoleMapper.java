@@ -9,22 +9,33 @@ import com.terapico.b2b.custsvcrep.CustSvcRep;
 public class RoleMapper implements RowMapper<Role>{
 	
 	public Role mapRow(ResultSet rs, int rowNumber) throws SQLException{
-		Role role =new Role();
-
-		
-		role.setId(rs.getString("id"));
-		role.setRoleName(rs.getString("role_name"));
-		role.setVersion(rs.getInt("version"));
-		
+		Role role = getRole();		
+		 		
+ 		setId(role, rs, rowNumber); 		
+ 		setRoleName(role, rs, rowNumber); 		
+ 		setVersion(role, rs, rowNumber);
 
 		return role;
 	}
 	
-
-
+	protected Role getRole(){
+		return new Role();
+	}		
+		
+	protected void setId(Role role, ResultSet rs, int rowNumber) throws SQLException{
+		role.setId(rs.getString("id"));
+	}
+		
+	protected void setRoleName(Role role, ResultSet rs, int rowNumber) throws SQLException{
+		role.setRoleName(rs.getString("role_name"));
+	}
+		
+	protected void setVersion(Role role, ResultSet rs, int rowNumber) throws SQLException{
+		role.setVersion(rs.getInt("version"));
+	}
+		
 		
 
-
-	
 }
+
 

@@ -4,12 +4,17 @@
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	<import resource="classpath*:/META-INF/b2b.xml" />
+	<import resource="classpath*:/META-INF/b2b_manager.xml" />
+	
 	<bean id="service" class="com.terapico.b2b.order.OrderServiceImpl">
 		
 		<property name="orderDAO" ref="orderDAO" />
 	</bean>	
 	
-
+	<bean id="manager" class="com.terapico.b2b.order.OrderManagerMock">
+		
+		
+	</bean>	
 
 
 </beans>

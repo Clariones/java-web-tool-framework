@@ -9,31 +9,57 @@ import com.terapico.b2b.assignment.Assignment;
 public class AccessMapper implements RowMapper<Access>{
 	
 	public Access mapRow(ResultSet rs, int rowNumber) throws SQLException{
-		Access access =new Access();
-
-		
-		access.setId(rs.getString("id"));
-		access.setRoleName(rs.getString("role_name"));
+		Access access = getAccess();		
 		 		
- 		access.setRole(createEmptyRole(rs.getString("role")));
- 		access.setVersion(rs.getInt("version"));
-		
+ 		setId(access, rs, rowNumber); 		
+ 		setRoleName(access, rs, rowNumber); 		
+ 		setRole(access, rs, rowNumber); 		
+ 		setVersion(access, rs, rowNumber);
 
 		return access;
 	}
 	
-
-
+	protected Access getAccess(){
+		return new Access();
+	}		
+		
+	protected void setId(Access access, ResultSet rs, int rowNumber) throws SQLException{
+		access.setId(rs.getString("id"));
+	}
+		
+	protected void setRoleName(Access access, ResultSet rs, int rowNumber) throws SQLException{
+		access.setRoleName(rs.getString("role_name"));
+	}
+		 		
+ 	protected void setRole(Access access, ResultSet rs, int rowNumber) throws SQLException{
+ 		String roleId = rs.getString("role");
+ 		if( roleId == null){
+ 			return;
+ 		}
+ 		if( roleId.isEmpty()){
+ 			return;
+ 		}
+ 		Role role = access.getRole();
+ 		if( role != null ){
+ 			//if the root object 'access' already have the property, just set the id for it;
+ 			role.setId(roleId);
+ 			return;
+ 		}
+ 		access.setRole(createEmptyRole(roleId));
+ 	}
+ 	
+	protected void setVersion(Access access, ResultSet rs, int rowNumber) throws SQLException{
+		access.setVersion(rs.getInt("version"));
+	}
+		
 		
 
- 	protected Role  createEmptyRole (String id){
- 		Role ret=new Role ();
- 		ret.setId(id);
- 		return ret;
- 
- 
+ 	protected Role  createEmptyRole(String roleId){
+ 		Role role = new Role();
+ 		role.setId(roleId);
+ 		return role;
  	}
-
-	
+ 	
 }
+
 

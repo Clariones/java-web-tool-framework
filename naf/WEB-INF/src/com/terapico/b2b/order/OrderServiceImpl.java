@@ -105,16 +105,18 @@ public class OrderServiceImpl {
 			
 			/>*/
 		
-		Map<String, Object> options =OrderOptions.start().withLineItemList().done();
 		
-		Order order = orderDAO.load(orderId, options);
+		
+		
 		LineItem lineItem=new LineItem();
 		lineItem.setSkuId(skuId);
 		lineItem.setSkuName(skuName);
 		lineItem.setAmount(amount);
 		lineItem.setQuantity(quantity);
+		Map<String, Object> options =OrderOptionsTemplate.start().withLineItemList().done();
+		Order order = orderDAO.load(orderId, options);
 		order.addLineItem(lineItem);
-		options =OrderOptions.start().withLineItemList().done();
+		options =OrderOptionsTemplate.start().withLineItemList().done();
 		
 		// theOrder.addAction(action);
 		return orderDAO.save(order, options);
@@ -137,7 +139,7 @@ public class OrderServiceImpl {
 			
 			/>*/
 		
-		Map<String, Object> options =OrderOptions.start().withLineItemList().withShippingGroupList().withPaymentGroupList().done();
+		Map<String, Object> options =OrderOptionsTemplate.start().withLineItemList().withShippingGroupList().withPaymentGroupList().done();
 		
 		
 		PaymentGroup paymengGroup=new PaymentGroup();
@@ -148,7 +150,7 @@ public class OrderServiceImpl {
 		paymengGroup.setBillingAddress(billingAddress);
 		Order order = orderDAO.load(orderId, options);
 		order.addPaymentGroup(paymengGroup);
-		options =OrderOptions.start().withPaymentGroupList().done();
+		options =OrderOptionsTemplate.start().withPaymentGroupList().done();
 		
 		// theOrder.addAction(action);
 		return orderDAO.save(order, options);
@@ -174,7 +176,7 @@ public class OrderServiceImpl {
 		
 		ShippingAddress shippingAddress=new ShippingAddress();
 		shippingAddress.setId(addressId);
-		Map<String, Object> options =OrderOptions.start().withShippingGroupList().withLineItemList().done();
+		Map<String, Object> options =OrderOptionsTemplate.start().withShippingGroupList().withLineItemList().done();
 		
 		Order order = orderDAO.load(orderId, options);
 		ShippingGroup shippingGroup=new ShippingGroup();
@@ -183,7 +185,7 @@ public class OrderServiceImpl {
 		shippingGroup.setAmount(amount);
 		//shippingGroup.setQuantity(quantity);
 		order.addShippingGroup(shippingGroup);
-		options =OrderOptions.start().withShippingGroupList().withLineItemList().done();
+		options =OrderOptionsTemplate.start().withShippingGroupList().withLineItemList().done();
 		
 		
 		//lineItem.setBizOrder(biz_order);

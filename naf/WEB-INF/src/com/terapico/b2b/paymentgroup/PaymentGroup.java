@@ -23,17 +23,15 @@ public class PaymentGroup implements  java.io.Serializable{
 	
 		
 	public 	PaymentGroup(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	PaymentGroup(String	id,String	name,Order	biz_order,String	card_number,BillingAddress	billing_address,int	version)
+	public 	PaymentGroup(String name, Order bizOrder, String cardNumber, BillingAddress billingAddress)
 	{
-		setId(id);
 		setName(name);
-		setBizOrder(biz_order);
-		setCardNumber(card_number);
-		setBillingAddress(billing_address);
-		setVersion(version);	
+		setBizOrder(bizOrder);
+		setCardNumber(cardNumber);
+		setBillingAddress(billingAddress);	
 	}
 	
 
@@ -52,22 +50,22 @@ public class PaymentGroup implements  java.io.Serializable{
 		return this.mName;
 	}
 	
-	public void setBizOrder(Order biz_order){
-		this.mBizOrder = biz_order;
+	public void setBizOrder(Order bizOrder){
+		this.mBizOrder = bizOrder;
 	}
 	public Order getBizOrder(){
 		return this.mBizOrder;
 	}
 	
-	public void setCardNumber(String card_number){
-		this.mCardNumber = card_number;
+	public void setCardNumber(String cardNumber){
+		this.mCardNumber = cardNumber;
 	}
 	public String getCardNumber(){
 		return this.mCardNumber;
 	}
 	
-	public void setBillingAddress(BillingAddress billing_address){
-		this.mBillingAddress = billing_address;
+	public void setBillingAddress(BillingAddress billingAddress){
+		this.mBillingAddress = billingAddress;
 	}
 	public BillingAddress getBillingAddress(){
 		return this.mBillingAddress;

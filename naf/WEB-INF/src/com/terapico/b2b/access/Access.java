@@ -22,15 +22,13 @@ public class Access implements  java.io.Serializable{
 	
 		
 	public 	Access(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Access(String	id,String	role_name,Role	role,int	version)
+	public 	Access(String roleName, Role role)
 	{
-		setId(id);
-		setRoleName(role_name);
+		setRoleName(roleName);
 		setRole(role);
-		setVersion(version);
 		this.mAssignmentList = new ArrayList<Assignment>();	
 	}
 	
@@ -43,8 +41,8 @@ public class Access implements  java.io.Serializable{
 		return this.mId;
 	}
 	
-	public void setRoleName(String role_name){
-		this.mRoleName = role_name;
+	public void setRoleName(String roleName){
+		this.mRoleName = roleName;
 	}
 	public String getRoleName(){
 		return this.mRoleName;

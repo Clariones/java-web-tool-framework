@@ -21,16 +21,14 @@ public class Action implements  java.io.Serializable{
 	
 		
 	public 	Action(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Action(String	id,String	name,String	internal_name,Order	bo,int	version)
+	public 	Action(String name, String internalName, Order bo)
 	{
-		setId(id);
 		setName(name);
-		setInternalName(internal_name);
-		setBo(bo);
-		setVersion(version);	
+		setInternalName(internalName);
+		setBo(bo);	
 	}
 	
 
@@ -49,8 +47,8 @@ public class Action implements  java.io.Serializable{
 		return this.mName;
 	}
 	
-	public void setInternalName(String internal_name){
-		this.mInternalName = internal_name;
+	public void setInternalName(String internalName){
+		this.mInternalName = internalName;
 	}
 	public String getInternalName(){
 		return this.mInternalName;

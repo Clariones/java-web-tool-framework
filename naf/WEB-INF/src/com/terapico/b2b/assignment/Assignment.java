@@ -22,16 +22,14 @@ public class Assignment implements  java.io.Serializable{
 	
 		
 	public 	Assignment(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Assignment(String	id,Employee	user,Access	access,Date	assigned_date,int	version)
+	public 	Assignment(Employee user, Access access, Date assignedDate)
 	{
-		setId(id);
 		setUser(user);
 		setAccess(access);
-		setAssignedDate(assigned_date);
-		setVersion(version);	
+		setAssignedDate(assignedDate);	
 	}
 	
 
@@ -57,8 +55,8 @@ public class Assignment implements  java.io.Serializable{
 		return this.mAccess;
 	}
 	
-	public void setAssignedDate(Date assigned_date){
-		this.mAssignedDate = assigned_date;
+	public void setAssignedDate(Date assignedDate){
+		this.mAssignedDate = assignedDate;
 	}
 	public Date getAssignedDate(){
 		return this.mAssignedDate;

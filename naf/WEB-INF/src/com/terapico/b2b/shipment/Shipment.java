@@ -13,7 +13,7 @@ public class Shipment implements  java.io.Serializable{
 
 	protected		String	mId;
 	protected		String	mWho;
-	protected		Date	mShupTime;
+	protected		Date	mShipTime;
 	protected		int	mVersion;
 	
 	
@@ -21,15 +21,13 @@ public class Shipment implements  java.io.Serializable{
 	
 		
 	public 	Shipment(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Shipment(String	id,String	who,Date	shup_time,int	version)
+	public 	Shipment(String who, Date shipTime)
 	{
-		setId(id);
 		setWho(who);
-		setShupTime(shup_time);
-		setVersion(version);
+		setShipTime(shipTime);
 		this.mOrderList = new ArrayList<Order>();	
 	}
 	
@@ -49,11 +47,11 @@ public class Shipment implements  java.io.Serializable{
 		return this.mWho;
 	}
 	
-	public void setShupTime(Date shup_time){
-		this.mShupTime = shup_time;
+	public void setShipTime(Date shipTime){
+		this.mShipTime = shipTime;
 	}
-	public Date getShupTime(){
-		return this.mShupTime;
+	public Date getShipTime(){
+		return this.mShipTime;
 	}
 	
 	public void setVersion(int version){
@@ -107,7 +105,7 @@ public class Shipment implements  java.io.Serializable{
 		stringBuilder.append("shipment{");
 		stringBuilder.append("\tid='"+getId()+"';");
 		stringBuilder.append("\twho='"+getWho()+"';");
-		stringBuilder.append("\tshup_time='"+getShupTime()+"';");
+		stringBuilder.append("\tship_time='"+getShipTime()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

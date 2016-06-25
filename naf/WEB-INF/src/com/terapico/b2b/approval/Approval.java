@@ -21,15 +21,13 @@ public class Approval implements  java.io.Serializable{
 	
 		
 	public 	Approval(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Approval(String	id,String	who,Date	approve_time,int	version)
+	public 	Approval(String who, Date approveTime)
 	{
-		setId(id);
 		setWho(who);
-		setApproveTime(approve_time);
-		setVersion(version);
+		setApproveTime(approveTime);
 		this.mOrderList = new ArrayList<Order>();	
 	}
 	
@@ -49,8 +47,8 @@ public class Approval implements  java.io.Serializable{
 		return this.mWho;
 	}
 	
-	public void setApproveTime(Date approve_time){
-		this.mApproveTime = approve_time;
+	public void setApproveTime(Date approveTime){
+		this.mApproveTime = approveTime;
 	}
 	public Date getApproveTime(){
 		return this.mApproveTime;

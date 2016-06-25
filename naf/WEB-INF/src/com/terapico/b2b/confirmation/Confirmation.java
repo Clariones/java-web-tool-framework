@@ -21,15 +21,13 @@ public class Confirmation implements  java.io.Serializable{
 	
 		
 	public 	Confirmation(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	Confirmation(String	id,String	who,Date	confirm_time,int	version)
+	public 	Confirmation(String who, Date confirmTime)
 	{
-		setId(id);
 		setWho(who);
-		setConfirmTime(confirm_time);
-		setVersion(version);
+		setConfirmTime(confirmTime);
 		this.mOrderList = new ArrayList<Order>();	
 	}
 	
@@ -49,8 +47,8 @@ public class Confirmation implements  java.io.Serializable{
 		return this.mWho;
 	}
 	
-	public void setConfirmTime(Date confirm_time){
-		this.mConfirmTime = confirm_time;
+	public void setConfirmTime(Date confirmTime){
+		this.mConfirmTime = confirmTime;
 	}
 	public Date getConfirmTime(){
 		return this.mConfirmTime;

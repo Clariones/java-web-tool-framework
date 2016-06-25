@@ -101,7 +101,7 @@ public class SingleFileSplitter {
 	
 	protected static void doSplit(String objectToSplit, String destination) throws Exception
 	{
-		URI uri=new URI("http://localhost:8080/sky/javaweb/javaobj.jsp?name="+objectToSplit);
+		URI uri=new URI("http://localhost:8080/sky/javaweb/java_app_index.jsp?name="+objectToSplit);
 		File dir=new File(destination);
 		new SingleFileSplitter().splitIntoFiles(uri, dir);
 	}

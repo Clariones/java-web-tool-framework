@@ -1,4 +1,4 @@
-=================Excute Report @Sun Jun 19 22:44:37 CST 2016========================
+=================Execute Report @Sun Jun 26 01:04:35 CST 2016========================
 
 
 buyer_company
@@ -352,7 +352,7 @@ shipment{
 	fields(4){
 		string	id('ABCD000001'), verb: false;
 		string	who('carrier'), verb: false;
-		date	shup_time('2018-07-09'), verb: false;
+		date	ship_time('2018-07-09'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(1){

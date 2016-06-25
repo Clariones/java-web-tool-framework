@@ -11,29 +11,13 @@ import com.terapico.b2b.order.Order;
 import com.terapico.b2b.order.OrderJDBCTemplateDAO;
 import com.terapico.b2b.order.OrderNotFoundException;
 import com.terapico.b2b.sellercompany.SellerCompany;
-import com.terapico.b2btemplate.OrderDAOImpl;
+
 import com.terapico.caf.SpringBeanFactory;
 
 public class OrderPerformanceTest {
 
 	
-	public void test() {
-		//fail("Not yet implemented");
-		
-		SpringBeanFactory factory=new SpringBeanFactory();
-		
-		OrderDAOImpl order=(OrderDAOImpl)factory.getBean("order");
-		
-		/*
-		Order o=order.loadOrder("O000001");
-		System.out.print(o.toString());
-		*/
-		OrderJDBCTemplateDAO gorder=(OrderJDBCTemplateDAO)factory.getBean("orderDAO");
-		
-		
-		
-		
-	}
+	
 	
 	public void test1() throws Exception {
 		//fail("Not yet implemented");

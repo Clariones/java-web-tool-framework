@@ -22,16 +22,14 @@ public class CustSvcRep implements  java.io.Serializable{
 	
 		
 	public 	CustSvcRep(){
-
+		//lazy load for all the properties
 	}
 	
-	public 	CustSvcRep(String	id,String	email,Role	role,SellerCompany	company,int	version)
+	public 	CustSvcRep(String email, Role role, SellerCompany company)
 	{
-		setId(id);
 		setEmail(email);
 		setRole(role);
-		setCompany(company);
-		setVersion(version);	
+		setCompany(company);	
 	}
 	
 

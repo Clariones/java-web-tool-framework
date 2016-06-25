@@ -10,26 +10,53 @@ import com.terapico.b2b.employee.Employee;
 public class BuyerCompanyMapper implements RowMapper<BuyerCompany>{
 	
 	public BuyerCompany mapRow(ResultSet rs, int rowNumber) throws SQLException{
-		BuyerCompany buyerCompany =new BuyerCompany();
-
-		
-		buyerCompany.setId(rs.getString("id"));
-		buyerCompany.setName(rs.getString("name"));
-		buyerCompany.setPriceList(rs.getString("price_list"));
-		buyerCompany.setRating(rs.getInt("rating"));
-		buyerCompany.setLogo(rs.getString("logo"));
-		buyerCompany.setOwner(rs.getString("owner"));
-		buyerCompany.setVersion(rs.getInt("version"));
-		
+		BuyerCompany buyerCompany = getBuyerCompany();		
+		 		
+ 		setId(buyerCompany, rs, rowNumber); 		
+ 		setName(buyerCompany, rs, rowNumber); 		
+ 		setPriceList(buyerCompany, rs, rowNumber); 		
+ 		setRating(buyerCompany, rs, rowNumber); 		
+ 		setLogo(buyerCompany, rs, rowNumber); 		
+ 		setOwner(buyerCompany, rs, rowNumber); 		
+ 		setVersion(buyerCompany, rs, rowNumber);
 
 		return buyerCompany;
 	}
 	
-
-
+	protected BuyerCompany getBuyerCompany(){
+		return new BuyerCompany();
+	}		
+		
+	protected void setId(BuyerCompany buyerCompany, ResultSet rs, int rowNumber) throws SQLException{
+		buyerCompany.setId(rs.getString("id"));
+	}
+		
+	protected void setName(BuyerCompany buyerCompany, ResultSet rs, int rowNumber) throws SQLException{
+		buyerCompany.setName(rs.getString("name"));
+	}
+		
+	protected void setPriceList(BuyerCompany buyerCompany, ResultSet rs, int rowNumber) throws SQLException{
+		buyerCompany.setPriceList(rs.getString("price_list"));
+	}
+		
+	protected void setRating(BuyerCompany buyerCompany, ResultSet rs, int rowNumber) throws SQLException{
+		buyerCompany.setRating(rs.getInt("rating"));
+	}
+		
+	protected void setLogo(BuyerCompany buyerCompany, ResultSet rs, int rowNumber) throws SQLException{
+		buyerCompany.setLogo(rs.getString("logo"));
+	}
+		
+	protected void setOwner(BuyerCompany buyerCompany, ResultSet rs, int rowNumber) throws SQLException{
+		buyerCompany.setOwner(rs.getString("owner"));
+	}
+		
+	protected void setVersion(BuyerCompany buyerCompany, ResultSet rs, int rowNumber) throws SQLException{
+		buyerCompany.setVersion(rs.getInt("version"));
+	}
+		
 		
 
-
-	
 }
+
 

@@ -103,6 +103,12 @@ public class NavigationService extends ReflectionTool {
 		List<MenuItem> itemList = new ArrayList<MenuItem>();
 
 		for (Method method : safeMethods) {
+			if(method.getName().startsWith("get")){
+				continue;
+			}
+			if(method.getName().startsWith("set")){
+				continue;
+			}
 			MenuItem item = createItem(beanName, method.getName());
 			itemList.add(item);
 		}
@@ -220,7 +226,8 @@ public class NavigationService extends ReflectionTool {
 		}
 		try {
 			Gson serializer = new GsonBuilder().setPrettyPrinting().create();
-			return "class: '" + target.getClass().getName() + "'\r\n" + serializer.toJson(target);
+			String stringExpr = serializer.toJson(target);
+			return "class: '" + target.getClass().getName() + "'\r\n" ;
 		} catch (Throwable e) {
 			return e.getMessage();
 		}
