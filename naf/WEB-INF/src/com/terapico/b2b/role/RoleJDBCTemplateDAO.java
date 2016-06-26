@@ -182,32 +182,32 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 
 
 		
-	protected static final String ACCESS_LIST = "accessList";
+	//protected static final String ACCESS_LIST = "accessList";
 	
 	protected boolean isExtractAccessListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ACCESS_LIST);
+ 		return checkOptions(options,RoleTokens.ACCESS_LIST);
 		
  	}
 
 	protected boolean isSaveAccessListEnabled(Map<String,Object> options){
-		return checkOptions(options, ACCESS_LIST);
+		return checkOptions(options, RoleTokens.ACCESS_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String CUST_SVC_REP_LIST = "custSvcRepList";
+	//protected static final String CUST_SVC_REP_LIST = "custSvcRepList";
 	
 	protected boolean isExtractCustSvcRepListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,CUST_SVC_REP_LIST);
+ 		return checkOptions(options,RoleTokens.CUST_SVC_REP_LIST);
 		
  	}
 
 	protected boolean isSaveCustSvcRepListEnabled(Map<String,Object> options){
-		return checkOptions(options, CUST_SVC_REP_LIST);
+		return checkOptions(options, RoleTokens.CUST_SVC_REP_LIST);
 		
  	}
  	

@@ -34,7 +34,7 @@ public class BuyerCompanyManagerMock implements BuyerCompanyManager {
 		return new BuyerCompany();
 	}
 
-	public  BuyerCompany addEmployee(String buyerCompanyId, String name, String email)
+	public  BuyerCompany addEmployee(String buyerCompanyId, String name, String email, String passwd, String cellPhone)
 	{
 		return new BuyerCompany();
 	}

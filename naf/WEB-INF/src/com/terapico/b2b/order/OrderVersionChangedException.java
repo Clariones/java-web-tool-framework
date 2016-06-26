@@ -8,5 +8,3 @@ public class OrderVersionChangedException extends EntityNotFoundException {
 	}
 
 }
-
-

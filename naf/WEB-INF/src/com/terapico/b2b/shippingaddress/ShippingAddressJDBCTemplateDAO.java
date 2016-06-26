@@ -154,16 +154,16 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 
 
 		
-	protected static final String SHIPPING_GROUP_LIST = "shippingGroupList";
+	//protected static final String SHIPPING_GROUP_LIST = "shippingGroupList";
 	
 	protected boolean isExtractShippingGroupListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,SHIPPING_GROUP_LIST);
+ 		return checkOptions(options,ShippingAddressTokens.SHIPPING_GROUP_LIST);
 		
  	}
 
 	protected boolean isSaveShippingGroupListEnabled(Map<String,Object> options){
-		return checkOptions(options, SHIPPING_GROUP_LIST);
+		return checkOptions(options, ShippingAddressTokens.SHIPPING_GROUP_LIST);
 		
  	}
  	

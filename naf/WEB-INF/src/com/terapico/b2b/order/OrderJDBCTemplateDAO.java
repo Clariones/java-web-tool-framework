@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-
-import org.springframework.dao.EmptyResultDataAccessException;
-
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.approval.Approval;
 import com.terapico.b2b.confirmation.Confirmation;
@@ -20,6 +17,7 @@ import com.terapico.b2b.action.Action;
 import com.terapico.b2b.delivery.Delivery;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
+
 import com.terapico.b2b.shippinggroup.ShippingGroupDAO;
 import com.terapico.b2b.delivery.DeliveryDAO;
 import com.terapico.b2b.lineitem.LineItemDAO;
@@ -317,183 +315,183 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 
  
  	//private boolean extractBuyerEnabled = true;
- 	private static final String BUYER = "buyer";
+ 	//private static final String BUYER = "buyer";
  	protected boolean isExtractBuyerEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, BUYER);
+	 	return checkOptions(options, OrderTokens.BUYER);
  	}
  	
  	
  	//private boolean saveBuyerEnabled = true;
  	protected boolean isSaveBuyerEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, BUYER);
+ 		return checkOptions(options, OrderTokens.BUYER);
  	}
  	
 
  	
   
  	//private boolean extractSellerEnabled = true;
- 	private static final String SELLER = "seller";
+ 	//private static final String SELLER = "seller";
  	protected boolean isExtractSellerEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, SELLER);
+	 	return checkOptions(options, OrderTokens.SELLER);
  	}
  	
  	
  	//private boolean saveSellerEnabled = true;
  	protected boolean isSaveSellerEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, SELLER);
+ 		return checkOptions(options, OrderTokens.SELLER);
  	}
  	
 
  	
   
  	//private boolean extractConfirmationEnabled = true;
- 	private static final String CONFIRMATION = "confirmation";
+ 	//private static final String CONFIRMATION = "confirmation";
  	protected boolean isExtractConfirmationEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, CONFIRMATION);
+	 	return checkOptions(options, OrderTokens.CONFIRMATION);
  	}
  	
  	
  	//private boolean saveConfirmationEnabled = true;
  	protected boolean isSaveConfirmationEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, CONFIRMATION);
+ 		return checkOptions(options, OrderTokens.CONFIRMATION);
  	}
  	
 
  	
   
  	//private boolean extractApprovalEnabled = true;
- 	private static final String APPROVAL = "approval";
+ 	//private static final String APPROVAL = "approval";
  	protected boolean isExtractApprovalEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, APPROVAL);
+	 	return checkOptions(options, OrderTokens.APPROVAL);
  	}
  	
  	
  	//private boolean saveApprovalEnabled = true;
  	protected boolean isSaveApprovalEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, APPROVAL);
+ 		return checkOptions(options, OrderTokens.APPROVAL);
  	}
  	
 
  	
   
  	//private boolean extractProcessingEnabled = true;
- 	private static final String PROCESSING = "processing";
+ 	//private static final String PROCESSING = "processing";
  	protected boolean isExtractProcessingEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, PROCESSING);
+	 	return checkOptions(options, OrderTokens.PROCESSING);
  	}
  	
  	
  	//private boolean saveProcessingEnabled = true;
  	protected boolean isSaveProcessingEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, PROCESSING);
+ 		return checkOptions(options, OrderTokens.PROCESSING);
  	}
  	
 
  	
   
  	//private boolean extractShipmentEnabled = true;
- 	private static final String SHIPMENT = "shipment";
+ 	//private static final String SHIPMENT = "shipment";
  	protected boolean isExtractShipmentEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, SHIPMENT);
+	 	return checkOptions(options, OrderTokens.SHIPMENT);
  	}
  	
  	
  	//private boolean saveShipmentEnabled = true;
  	protected boolean isSaveShipmentEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, SHIPMENT);
+ 		return checkOptions(options, OrderTokens.SHIPMENT);
  	}
  	
 
  	
   
  	//private boolean extractDeliveryEnabled = true;
- 	private static final String DELIVERY = "delivery";
+ 	//private static final String DELIVERY = "delivery";
  	protected boolean isExtractDeliveryEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, DELIVERY);
+	 	return checkOptions(options, OrderTokens.DELIVERY);
  	}
  	
  	
  	//private boolean saveDeliveryEnabled = true;
  	protected boolean isSaveDeliveryEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, DELIVERY);
+ 		return checkOptions(options, OrderTokens.DELIVERY);
  	}
  	
 
  	
  
 		
-	protected static final String LINE_ITEM_LIST = "lineItemList";
+	//protected static final String LINE_ITEM_LIST = "lineItemList";
 	
 	protected boolean isExtractLineItemListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,LINE_ITEM_LIST);
+ 		return checkOptions(options,OrderTokens.LINE_ITEM_LIST);
 		
  	}
 
 	protected boolean isSaveLineItemListEnabled(Map<String,Object> options){
-		return checkOptions(options, LINE_ITEM_LIST);
+		return checkOptions(options, OrderTokens.LINE_ITEM_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String SHIPPING_GROUP_LIST = "shippingGroupList";
+	//protected static final String SHIPPING_GROUP_LIST = "shippingGroupList";
 	
 	protected boolean isExtractShippingGroupListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,SHIPPING_GROUP_LIST);
+ 		return checkOptions(options,OrderTokens.SHIPPING_GROUP_LIST);
 		
  	}
 
 	protected boolean isSaveShippingGroupListEnabled(Map<String,Object> options){
-		return checkOptions(options, SHIPPING_GROUP_LIST);
+		return checkOptions(options, OrderTokens.SHIPPING_GROUP_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String PAYMENT_GROUP_LIST = "paymentGroupList";
+	//protected static final String PAYMENT_GROUP_LIST = "paymentGroupList";
 	
 	protected boolean isExtractPaymentGroupListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,PAYMENT_GROUP_LIST);
+ 		return checkOptions(options,OrderTokens.PAYMENT_GROUP_LIST);
 		
  	}
 
 	protected boolean isSavePaymentGroupListEnabled(Map<String,Object> options){
-		return checkOptions(options, PAYMENT_GROUP_LIST);
+		return checkOptions(options, OrderTokens.PAYMENT_GROUP_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String ACTION_LIST = "actionList";
+	//protected static final String ACTION_LIST = "actionList";
 	
 	protected boolean isExtractActionListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ACTION_LIST);
+ 		return checkOptions(options,OrderTokens.ACTION_LIST);
 		
  	}
 
 	protected boolean isSaveActionListEnabled(Map<String,Object> options){
-		return checkOptions(options, ACTION_LIST);
+		return checkOptions(options, OrderTokens.ACTION_LIST);
 		
  	}
  	
@@ -505,15 +503,10 @@ public class OrderJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Order
 	protected OrderMapper getMapper(){
 		return new OrderMapper();
 	}
-	protected Order extractOrder(String orderId) throws OrderNotFoundException{
+	protected Order extractOrder(String orderId){
 		String SQL = "select * from order_data where id=?";	
-		try{
-			Order order = getJdbcTemplateObject().queryForObject(SQL, new Object[]{orderId}, getMapper());
-			return order;
-		}catch(EmptyResultDataAccessException e){
-			throw new OrderNotFoundException("Order with id '"+orderId+"' is not found!");
-		}
-		
+		Order order = getJdbcTemplateObject().queryForObject(SQL, new Object[]{orderId}, getMapper());
+		return order;
 	}
 
 	protected Order loadInternalOrder(String orderId, Map<String,Object> loadOptions) throws Exception{

@@ -148,34 +148,34 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 
  
  	//private boolean extractBizOrderEnabled = true;
- 	private static final String BIZORDER = "bizOrder";
+ 	//private static final String BIZORDER = "bizOrder";
  	protected boolean isExtractBizOrderEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, BIZORDER);
+	 	return checkOptions(options, ShippingGroupTokens.BIZORDER);
  	}
  	
  	
  	//private boolean saveBizOrderEnabled = true;
  	protected boolean isSaveBizOrderEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, BIZORDER);
+ 		return checkOptions(options, ShippingGroupTokens.BIZORDER);
  	}
  	
 
  	
   
  	//private boolean extractAddressEnabled = true;
- 	private static final String ADDRESS = "address";
+ 	//private static final String ADDRESS = "address";
  	protected boolean isExtractAddressEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, ADDRESS);
+	 	return checkOptions(options, ShippingGroupTokens.ADDRESS);
  	}
  	
  	
  	//private boolean saveAddressEnabled = true;
  	protected boolean isSaveAddressEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, ADDRESS);
+ 		return checkOptions(options, ShippingGroupTokens.ADDRESS);
  	}
  	
 

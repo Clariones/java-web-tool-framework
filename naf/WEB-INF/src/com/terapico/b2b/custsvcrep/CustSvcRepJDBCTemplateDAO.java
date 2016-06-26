@@ -148,34 +148,34 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 
  
  	//private boolean extractRoleEnabled = true;
- 	private static final String ROLE = "role";
+ 	//private static final String ROLE = "role";
  	protected boolean isExtractRoleEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, ROLE);
+	 	return checkOptions(options, CustSvcRepTokens.ROLE);
  	}
  	
  	
  	//private boolean saveRoleEnabled = true;
  	protected boolean isSaveRoleEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, ROLE);
+ 		return checkOptions(options, CustSvcRepTokens.ROLE);
  	}
  	
 
  	
   
  	//private boolean extractCompanyEnabled = true;
- 	private static final String COMPANY = "company";
+ 	//private static final String COMPANY = "company";
  	protected boolean isExtractCompanyEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, COMPANY);
+	 	return checkOptions(options, CustSvcRepTokens.COMPANY);
  	}
  	
  	
  	//private boolean saveCompanyEnabled = true;
  	protected boolean isSaveCompanyEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, COMPANY);
+ 		return checkOptions(options, CustSvcRepTokens.COMPANY);
  	}
  	
 

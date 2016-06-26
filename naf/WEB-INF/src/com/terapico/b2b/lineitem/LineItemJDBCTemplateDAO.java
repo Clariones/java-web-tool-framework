@@ -137,17 +137,17 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 
  
  	//private boolean extractBizOrderEnabled = true;
- 	private static final String BIZORDER = "bizOrder";
+ 	//private static final String BIZORDER = "bizOrder";
  	protected boolean isExtractBizOrderEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, BIZORDER);
+	 	return checkOptions(options, LineItemTokens.BIZORDER);
  	}
  	
  	
  	//private boolean saveBizOrderEnabled = true;
  	protected boolean isSaveBizOrderEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, BIZORDER);
+ 		return checkOptions(options, LineItemTokens.BIZORDER);
  	}
  	
 

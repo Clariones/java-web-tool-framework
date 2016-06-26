@@ -137,17 +137,17 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 
  
  	//private boolean extractBoEnabled = true;
- 	private static final String BO = "bo";
+ 	//private static final String BO = "bo";
  	protected boolean isExtractBoEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, BO);
+	 	return checkOptions(options, ActionTokens.BO);
  	}
  	
  	
  	//private boolean saveBoEnabled = true;
  	protected boolean isSaveBoEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, BO);
+ 		return checkOptions(options, ActionTokens.BO);
  	}
  	
 

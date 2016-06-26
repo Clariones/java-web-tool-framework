@@ -182,32 +182,32 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 
 
 		
-	protected static final String ORDER_LIST = "orderList";
+	//protected static final String ORDER_LIST = "orderList";
 	
 	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ORDER_LIST);
+ 		return checkOptions(options,SellerCompanyTokens.ORDER_LIST);
 		
  	}
 
 	protected boolean isSaveOrderListEnabled(Map<String,Object> options){
-		return checkOptions(options, ORDER_LIST);
+		return checkOptions(options, SellerCompanyTokens.ORDER_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String CUST_SVC_REP_LIST = "custSvcRepList";
+	//protected static final String CUST_SVC_REP_LIST = "custSvcRepList";
 	
 	protected boolean isExtractCustSvcRepListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,CUST_SVC_REP_LIST);
+ 		return checkOptions(options,SellerCompanyTokens.CUST_SVC_REP_LIST);
 		
  	}
 
 	protected boolean isSaveCustSvcRepListEnabled(Map<String,Object> options){
-		return checkOptions(options, CUST_SVC_REP_LIST);
+		return checkOptions(options, SellerCompanyTokens.CUST_SVC_REP_LIST);
 		
  	}
  	

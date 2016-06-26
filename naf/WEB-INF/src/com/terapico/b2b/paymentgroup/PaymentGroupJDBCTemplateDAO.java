@@ -148,34 +148,34 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 
  
  	//private boolean extractBizOrderEnabled = true;
- 	private static final String BIZORDER = "bizOrder";
+ 	//private static final String BIZORDER = "bizOrder";
  	protected boolean isExtractBizOrderEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, BIZORDER);
+	 	return checkOptions(options, PaymentGroupTokens.BIZORDER);
  	}
  	
  	
  	//private boolean saveBizOrderEnabled = true;
  	protected boolean isSaveBizOrderEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, BIZORDER);
+ 		return checkOptions(options, PaymentGroupTokens.BIZORDER);
  	}
  	
 
  	
   
  	//private boolean extractBillingAddressEnabled = true;
- 	private static final String BILLINGADDRESS = "billingAddress";
+ 	//private static final String BILLINGADDRESS = "billingAddress";
  	protected boolean isExtractBillingAddressEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, BILLINGADDRESS);
+	 	return checkOptions(options, PaymentGroupTokens.BILLINGADDRESS);
  	}
  	
  	
  	//private boolean saveBillingAddressEnabled = true;
  	protected boolean isSaveBillingAddressEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, BILLINGADDRESS);
+ 		return checkOptions(options, PaymentGroupTokens.BILLINGADDRESS);
  	}
  	
 

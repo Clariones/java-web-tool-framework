@@ -154,16 +154,16 @@ public class ConfirmationJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 
 
 		
-	protected static final String ORDER_LIST = "orderList";
+	//protected static final String ORDER_LIST = "orderList";
 	
 	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ORDER_LIST);
+ 		return checkOptions(options,ConfirmationTokens.ORDER_LIST);
 		
  	}
 
 	protected boolean isSaveOrderListEnabled(Map<String,Object> options){
-		return checkOptions(options, ORDER_LIST);
+		return checkOptions(options, ConfirmationTokens.ORDER_LIST);
 		
  	}
  	

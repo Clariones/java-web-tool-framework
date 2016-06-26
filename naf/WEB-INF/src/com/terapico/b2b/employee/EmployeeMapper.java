@@ -15,6 +15,8 @@ public class EmployeeMapper implements RowMapper<Employee>{
  		setName(employee, rs, rowNumber); 		
  		setCompany(employee, rs, rowNumber); 		
  		setEmail(employee, rs, rowNumber); 		
+ 		setPasswd(employee, rs, rowNumber); 		
+ 		setCellPhone(employee, rs, rowNumber); 		
  		setVersion(employee, rs, rowNumber);
 
 		return employee;
@@ -51,6 +53,14 @@ public class EmployeeMapper implements RowMapper<Employee>{
  	
 	protected void setEmail(Employee employee, ResultSet rs, int rowNumber) throws SQLException{
 		employee.setEmail(rs.getString("email"));
+	}
+		
+	protected void setPasswd(Employee employee, ResultSet rs, int rowNumber) throws SQLException{
+		employee.setPasswd(rs.getString("passwd"));
+	}
+		
+	protected void setCellPhone(Employee employee, ResultSet rs, int rowNumber) throws SQLException{
+		employee.setCellPhone(rs.getString("cell_phone"));
 	}
 		
 	protected void setVersion(Employee employee, ResultSet rs, int rowNumber) throws SQLException{

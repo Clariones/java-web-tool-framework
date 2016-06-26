@@ -22,6 +22,11 @@ public class DateTest {
 		dateTime.setTime(date.getTime());
 		System.out.println(date);
 		
+		String pattern = "^(13|15|18)[0-9]{9}$";
+		
+		assertTrue("should match","18699084765".matches(pattern));
+		
+		
 	}
 	@Test
 	public void test2() throws ParseException {

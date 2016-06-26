@@ -210,48 +210,48 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 
 
 		
-	protected static final String BILLING_ADDRESS_LIST = "billingAddressList";
+	//protected static final String BILLING_ADDRESS_LIST = "billingAddressList";
 	
 	protected boolean isExtractBillingAddressListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,BILLING_ADDRESS_LIST);
+ 		return checkOptions(options,BuyerCompanyTokens.BILLING_ADDRESS_LIST);
 		
  	}
 
 	protected boolean isSaveBillingAddressListEnabled(Map<String,Object> options){
-		return checkOptions(options, BILLING_ADDRESS_LIST);
+		return checkOptions(options, BuyerCompanyTokens.BILLING_ADDRESS_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String EMPLOYEE_LIST = "employeeList";
+	//protected static final String EMPLOYEE_LIST = "employeeList";
 	
 	protected boolean isExtractEmployeeListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,EMPLOYEE_LIST);
+ 		return checkOptions(options,BuyerCompanyTokens.EMPLOYEE_LIST);
 		
  	}
 
 	protected boolean isSaveEmployeeListEnabled(Map<String,Object> options){
-		return checkOptions(options, EMPLOYEE_LIST);
+		return checkOptions(options, BuyerCompanyTokens.EMPLOYEE_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String ORDER_LIST = "orderList";
+	//protected static final String ORDER_LIST = "orderList";
 	
 	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ORDER_LIST);
+ 		return checkOptions(options,BuyerCompanyTokens.ORDER_LIST);
 		
  	}
 
 	protected boolean isSaveOrderListEnabled(Map<String,Object> options){
-		return checkOptions(options, ORDER_LIST);
+		return checkOptions(options, BuyerCompanyTokens.ORDER_LIST);
 		
  	}
  	

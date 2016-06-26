@@ -8,9 +8,3 @@ public class ActionVersionChangedException extends EntityNotFoundException {
 	}
 
 }
-
-
-
-
-
-

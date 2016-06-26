@@ -8,5 +8,3 @@ public class BillingAddressVersionChangedException extends EntityNotFoundExcepti
 	}
 
 }
-
-

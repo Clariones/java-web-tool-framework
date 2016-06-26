@@ -8,5 +8,3 @@ public class AssignmentVersionChangedException extends EntityNotFoundException {
 	}
 
 }
-
-

@@ -8,5 +8,3 @@ public class BuyerCompanyVersionChangedException extends EntityNotFoundException
 	}
 
 }
-
-

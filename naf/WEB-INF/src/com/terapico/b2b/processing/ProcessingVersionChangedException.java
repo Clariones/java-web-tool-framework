@@ -8,5 +8,3 @@ public class ProcessingVersionChangedException extends EntityNotFoundException {
 	}
 
 }
-
-

@@ -165,33 +165,33 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 
  
  	//private boolean extractCompanyEnabled = true;
- 	private static final String COMPANY = "company";
+ 	//private static final String COMPANY = "company";
  	protected boolean isExtractCompanyEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, COMPANY);
+	 	return checkOptions(options, BillingAddressTokens.COMPANY);
  	}
  	
  	
  	//private boolean saveCompanyEnabled = true;
  	protected boolean isSaveCompanyEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, COMPANY);
+ 		return checkOptions(options, BillingAddressTokens.COMPANY);
  	}
  	
 
  	
  
 		
-	protected static final String PAYMENT_GROUP_LIST = "paymentGroupList";
+	//protected static final String PAYMENT_GROUP_LIST = "paymentGroupList";
 	
 	protected boolean isExtractPaymentGroupListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,PAYMENT_GROUP_LIST);
+ 		return checkOptions(options,BillingAddressTokens.PAYMENT_GROUP_LIST);
 		
  	}
 
 	protected boolean isSavePaymentGroupListEnabled(Map<String,Object> options){
-		return checkOptions(options, PAYMENT_GROUP_LIST);
+		return checkOptions(options, BillingAddressTokens.PAYMENT_GROUP_LIST);
 		
  	}
  	

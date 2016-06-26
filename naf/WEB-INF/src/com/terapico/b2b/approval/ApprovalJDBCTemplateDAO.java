@@ -154,16 +154,16 @@ public class ApprovalJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Ap
 
 
 		
-	protected static final String ORDER_LIST = "orderList";
+	//protected static final String ORDER_LIST = "orderList";
 	
 	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ORDER_LIST);
+ 		return checkOptions(options,ApprovalTokens.ORDER_LIST);
 		
  	}
 
 	protected boolean isSaveOrderListEnabled(Map<String,Object> options){
-		return checkOptions(options, ORDER_LIST);
+		return checkOptions(options, ApprovalTokens.ORDER_LIST);
 		
  	}
  	

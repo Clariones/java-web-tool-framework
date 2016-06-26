@@ -8,5 +8,3 @@ public class EmployeeVersionChangedException extends EntityNotFoundException {
 	}
 
 }
-
-

@@ -8,5 +8,3 @@ public class DeliveryVersionChangedException extends EntityNotFoundException {
 	}
 
 }
-
-

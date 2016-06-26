@@ -8,5 +8,3 @@ public class CustSvcRepVersionChangedException extends EntityNotFoundException {
 	}
 
 }
-
-

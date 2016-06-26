@@ -148,34 +148,34 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 
  
  	//private boolean extractUserEnabled = true;
- 	private static final String USER = "user";
+ 	//private static final String USER = "user";
  	protected boolean isExtractUserEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, USER);
+	 	return checkOptions(options, AssignmentTokens.USER);
  	}
  	
  	
  	//private boolean saveUserEnabled = true;
  	protected boolean isSaveUserEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, USER);
+ 		return checkOptions(options, AssignmentTokens.USER);
  	}
  	
 
  	
   
  	//private boolean extractAccessEnabled = true;
- 	private static final String ACCESS = "access";
+ 	//private static final String ACCESS = "access";
  	protected boolean isExtractAccessEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, ACCESS);
+	 	return checkOptions(options, AssignmentTokens.ACCESS);
  	}
  	
  	
  	//private boolean saveAccessEnabled = true;
  	protected boolean isSaveAccessEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, ACCESS);
+ 		return checkOptions(options, AssignmentTokens.ACCESS);
  	}
  	
 

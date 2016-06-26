@@ -1,4 +1,4 @@
-=================Execute Report @Sun Jun 26 01:04:35 CST 2016========================
+=================Execute Report @Sun Jun 26 22:44:07 CST 2016========================
 
 
 buyer_company
@@ -252,11 +252,13 @@ billing_address{
 }
 
 employee{
-	fields(5){
+	fields(7){
 		string	id('ABCD000001'), verb: false;
 		string	name('Philip'), verb: false;
 		buyer_company	company('$(object)'), verb: false;
 		string_email	email('philip@aaxischina.com'), verb: false;
+		string_password	passwd('*******'), verb: false;
+		string_cn_phone	cell_phone('13878786655'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(1){

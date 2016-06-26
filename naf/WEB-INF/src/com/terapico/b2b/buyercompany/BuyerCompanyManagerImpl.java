@@ -132,9 +132,9 @@ public class BuyerCompanyManagerImpl implements BuyerCompanyManager {
 		return new BuyerCompany();
 	}
 
-	public  BuyerCompany addEmployee(String buyerCompanyId, String name, String email) throws Exception
+	public  BuyerCompany addEmployee(String buyerCompanyId, String name, String email, String passwd, String cellPhone) throws Exception
 	{		
-		Employee employee = createEmployee(name, email);
+		Employee employee = createEmployee(name, email, passwd, cellPhone);
 		
 		BuyerCompany buyerCompany = loadBuyerCompany(buyerCompanyId, allTokens());
 		
@@ -142,13 +142,15 @@ public class BuyerCompanyManagerImpl implements BuyerCompanyManager {
 		
 		return saveBuyerCompany(buyerCompany, tokens().withEmployeeList().done());
 	}
-	protected Employee createEmployee(String name, String email){
+	protected Employee createEmployee(String name, String email, String passwd, String cellPhone){
 
 		Employee employee = new Employee();
 		
 		
 		employee.setName(name);		
-		employee.setEmail(email);
+		employee.setEmail(email);		
+		employee.setPasswd(passwd);		
+		employee.setCellPhone(cellPhone);
 	
 		
 		return employee;			

@@ -197,6 +197,10 @@ public class OrderManagerImpl implements OrderManager {
  	public Order confirm(String orderId, String who, Date confirmTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
+		if(order.getConfirmation() != null){
+			throw new OrderManagerException("The Order("+orderId+") has already confirmed");
+		}
+		
 		Confirmation confirmation = createConfirmation(who, confirmTime);		
 		order.setConfirmation(confirmation);		
 		return saveOrder(order, tokens().withConfirmation().done());
@@ -208,6 +212,10 @@ public class OrderManagerImpl implements OrderManager {
 	public Order approve(String orderId, String who, Date approveTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
+		if(order.getApproval() != null){
+			throw new OrderManagerException("The Order("+orderId+") has already approved");
+		}
+		
 		Approval approval = createApproval(who, approveTime);		
 		order.setApproval(approval);		
 		return saveOrder(order, tokens().withApproval().done());
@@ -219,6 +227,10 @@ public class OrderManagerImpl implements OrderManager {
 	public Order process(String orderId, String who, Date processTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
+		if(order.getProcessing() != null){
+			throw new OrderManagerException("The Order("+orderId+") has already processed");
+		}
+		
 		Processing processing = createProcessing(who, processTime);		
 		order.setProcessing(processing);		
 		return saveOrder(order, tokens().withProcessing().done());
@@ -230,6 +242,10 @@ public class OrderManagerImpl implements OrderManager {
 	public Order ship(String orderId, String who, Date shipTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
+		if(order.getShipment() != null){
+			throw new OrderManagerException("The Order("+orderId+") has already shipped");
+		}
+		
 		Shipment shipment = createShipment(who, shipTime);		
 		order.setShipment(shipment);		
 		return saveOrder(order, tokens().withShipment().done());
@@ -241,6 +257,10 @@ public class OrderManagerImpl implements OrderManager {
 	public Order deliver(String orderId, String who, Date deliveryTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
+		if(order.getDelivery() != null){
+			throw new OrderManagerException("The Order("+orderId+") has already delivered");
+		}
+		
 		Delivery delivery = createDelivery(who, deliveryTime);		
 		order.setDelivery(delivery);		
 		return saveOrder(order, tokens().withDelivery().done());

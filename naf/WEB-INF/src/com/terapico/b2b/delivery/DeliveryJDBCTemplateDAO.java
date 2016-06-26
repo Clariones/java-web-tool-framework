@@ -154,16 +154,16 @@ public class DeliveryJDBCTemplateDAO extends CommonJDBCTemplateDAO implements De
 
 
 		
-	protected static final String ORDER_LIST = "orderList";
+	//protected static final String ORDER_LIST = "orderList";
 	
 	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ORDER_LIST);
+ 		return checkOptions(options,DeliveryTokens.ORDER_LIST);
 		
  	}
 
 	protected boolean isSaveOrderListEnabled(Map<String,Object> options){
-		return checkOptions(options, ORDER_LIST);
+		return checkOptions(options, DeliveryTokens.ORDER_LIST);
 		
  	}
  	

@@ -15,7 +15,7 @@ public interface BuyerCompanyManager{
 	public  BuyerCompany removeBillingAddress(String buyerCompanyId, String billingAddressId)  throws Exception;
 	public  BuyerCompany updateBillingAddress(String buyerCompanyId, String billingAddressId, String property, Object newValue)  throws Exception;
 
-	public  BuyerCompany addEmployee(String buyerCompanyId, String name, String email)  throws Exception;
+	public  BuyerCompany addEmployee(String buyerCompanyId, String name, String email, String passwd, String cellPhone)  throws Exception;
 	public  BuyerCompany removeEmployee(String buyerCompanyId, String employeeId)  throws Exception;
 	public  BuyerCompany updateEmployee(String buyerCompanyId, String employeeId, String property, Object newValue)  throws Exception;
 

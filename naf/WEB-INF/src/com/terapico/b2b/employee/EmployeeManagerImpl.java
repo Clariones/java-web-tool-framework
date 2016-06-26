@@ -51,7 +51,7 @@ public class EmployeeManagerImpl implements EmployeeManager {
 
  	
  	
-	public Employee createEmployee(String name, String companyId, String email, String[] optionsExpr) throws Exception
+	public Employee createEmployee(String name, String companyId, String email, String passwd, String cellPhone, String[] optionsExpr) throws Exception
 	{
 		
 		
@@ -61,6 +61,8 @@ public class EmployeeManagerImpl implements EmployeeManager {
 		BuyerCompany company = loadCompany(companyId,emptyOptions());
 		employee.setCompany(company);
 		employee.setEmail(email);
+		employee.setPasswd(passwd);
+		employee.setCellPhone(cellPhone);
 		//save for later setOrderValues(employee);
 		Map<String, Object> options = new HashMap<String, Object>();
 		
