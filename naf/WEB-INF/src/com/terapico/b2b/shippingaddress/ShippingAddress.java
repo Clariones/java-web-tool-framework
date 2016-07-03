@@ -3,12 +3,10 @@ package com.terapico.b2b.shippingaddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
-
+@JsonSerialize(using = ShippingAddressSerializer.class)
 public class ShippingAddress implements  java.io.Serializable{
 
 	protected		String	mId;

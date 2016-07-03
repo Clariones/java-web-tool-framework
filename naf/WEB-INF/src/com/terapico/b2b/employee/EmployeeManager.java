@@ -4,7 +4,7 @@ package com.terapico.b2b.employee;
 import java.util.Date;
 public interface EmployeeManager{
 
-	public Employee createEmployee(String name, String companyId, String email, String[] options) throws Exception;	
+	public Employee createEmployee(String name, String companyId, String email, String passwd, String cellPhone, String[] options) throws Exception;	
 	public Employee updateEmployee(String employeeId, String property, Object newValue)  throws Exception;
 	
 	public Employee transferToNewCompany(String employeeId, String newCompanyId)  throws Exception;

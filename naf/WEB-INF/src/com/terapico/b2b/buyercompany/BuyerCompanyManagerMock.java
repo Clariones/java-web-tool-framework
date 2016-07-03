@@ -23,6 +23,28 @@ public class BuyerCompanyManagerMock implements BuyerCompanyManager {
 	{
 		return 0;
 	}
+	public  BuyerCompany addCostCenter(String buyerCompanyId, String name)
+	{
+		return new BuyerCompany();
+	}
+	public  BuyerCompany removeCostCenter(String buyerCompanyId, String costCenterId){
+		return new BuyerCompany();
+	}
+	public  BuyerCompany updateCostCenter(String buyerCompanyId, String costCenterId, String property, Object newValue){
+		return new BuyerCompany();
+	}
+
+	public  BuyerCompany addCreditAccount(String buyerCompanyId, String name, String sellerId, double authorized, double remain)
+	{
+		return new BuyerCompany();
+	}
+	public  BuyerCompany removeCreditAccount(String buyerCompanyId, String creditAccountId){
+		return new BuyerCompany();
+	}
+	public  BuyerCompany updateCreditAccount(String buyerCompanyId, String creditAccountId, String property, Object newValue){
+		return new BuyerCompany();
+	}
+
 	public  BuyerCompany addBillingAddress(String buyerCompanyId, String line1, String line2, String city, String state, String country)
 	{
 		return new BuyerCompany();
@@ -34,7 +56,7 @@ public class BuyerCompanyManagerMock implements BuyerCompanyManager {
 		return new BuyerCompany();
 	}
 
-	public  BuyerCompany addEmployee(String buyerCompanyId, String name, String email)
+	public  BuyerCompany addEmployee(String buyerCompanyId, String name, String email, String passwd, String cellPhone)
 	{
 		return new BuyerCompany();
 	}
@@ -45,7 +67,7 @@ public class BuyerCompanyManagerMock implements BuyerCompanyManager {
 		return new BuyerCompany();
 	}
 
-	public  BuyerCompany addOrder(String buyerCompanyId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)
+	public  BuyerCompany addOrder(String buyerCompanyId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)
 	{
 		return new BuyerCompany();
 	}

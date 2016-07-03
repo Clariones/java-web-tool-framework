@@ -11,7 +11,7 @@ public interface DeliveryManager{
 
 	public void delete(String deliveryId, int version) throws Exception;
 	public int deleteAll() throws Exception;
-	public  Delivery addOrder(String deliveryId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)  throws Exception;
+	public  Delivery addOrder(String deliveryId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)  throws Exception;
 	public  Delivery removeOrder(String deliveryId, String orderId)  throws Exception;
 	public  Delivery updateOrder(String deliveryId, String orderId, String property, Object newValue)  throws Exception;
 

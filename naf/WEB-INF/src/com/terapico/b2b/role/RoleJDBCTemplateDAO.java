@@ -4,13 +4,15 @@ package com.terapico.b2b.role;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
 
 import com.terapico.b2b.custsvcrep.CustSvcRepDAO;
 import com.terapico.b2b.access.AccessDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDAO{
 
@@ -59,7 +61,7 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 	}
 	public Role save(Role role,Map<String,Object> options){
 		
-		String methodName="save(Role role,Map<String,Object> options){";
+		String methodName="save(Role role,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(role, methodName, "role");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -182,32 +184,32 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 
 
 		
-	protected static final String ACCESS_LIST = "accessList";
+	//protected static final String ACCESS_LIST = "accessList";
 	
 	protected boolean isExtractAccessListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ACCESS_LIST);
+ 		return checkOptions(options,RoleTokens.ACCESS_LIST);
 		
  	}
 
 	protected boolean isSaveAccessListEnabled(Map<String,Object> options){
-		return checkOptions(options, ACCESS_LIST);
+		return checkOptions(options, RoleTokens.ACCESS_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String CUST_SVC_REP_LIST = "custSvcRepList";
+	//protected static final String CUST_SVC_REP_LIST = "custSvcRepList";
 	
 	protected boolean isExtractCustSvcRepListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,CUST_SVC_REP_LIST);
+ 		return checkOptions(options,RoleTokens.CUST_SVC_REP_LIST);
 		
  	}
 
 	protected boolean isSaveCustSvcRepListEnabled(Map<String,Object> options){
-		return checkOptions(options, CUST_SVC_REP_LIST);
+		return checkOptions(options, RoleTokens.CUST_SVC_REP_LIST);
 		
  	}
  	
@@ -219,10 +221,17 @@ public class RoleJDBCTemplateDAO extends CommonJDBCTemplateDAO implements RoleDA
 	protected RoleMapper getMapper(){
 		return new RoleMapper();
 	}
-	protected Role extractRole(String roleId){
+	protected Role extractRole(String roleId) throws Exception{
 		String SQL = "select * from role_data where id=?";	
-		Role role = getJdbcTemplateObject().queryForObject(SQL, new Object[]{roleId}, getMapper());
-		return role;
+		try{
+		
+			Role role = getJdbcTemplateObject().queryForObject(SQL, new Object[]{roleId}, getMapper());
+			return role;
+		}catch(EmptyResultDataAccessException e){
+			throw new RoleNotFoundException("Role("+roleId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Role loadInternalRole(String roleId, Map<String,Object> loadOptions) throws Exception{

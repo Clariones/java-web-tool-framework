@@ -8,7 +8,6 @@ import com.terapico.b2b.role.Role;
 import com.terapico.b2b.assignment.Assignment;
 
 import com.terapico.b2b.role.RoleDAO;
-import com.terapico.b2b.assignment.AssignmentDAO;
 
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.employee.Employee;
@@ -60,11 +59,8 @@ public class AccessManagerImpl implements AccessManager {
 		access.setRoleName(roleName);
 		Role role = loadRole(roleId,emptyOptions());
 		access.setRole(role);
-		//save for later setOrderValues(access);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return accessDAO.save(access, options);
-		return saveAccess(access, options);
+
+		return saveAccess(access, emptyOptions());
 		
 
 		
@@ -92,10 +88,15 @@ public class AccessManagerImpl implements AccessManager {
 	
 	public Access transferToNewRole(String accessId, String newRoleId) throws Exception
  	{
- 		Access access = loadAccess(accessId, allTokens());	
-		Role role = loadRole(newRoleId, emptyOptions());		
-		access.setRole(role);		
-		return saveAccess(access, emptyOptions());
+ 
+		Access access = loadAccess(accessId, allTokens());	
+		synchronized(access){
+			//will be good when the access loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			Role role = loadRole(newRoleId, emptyOptions());		
+			access.setRole(role);		
+			return saveAccess(access, emptyOptions());
+		}
  	}
  	
  	protected Role loadRole(String newRoleId, Map<String,Object> options) throws Exception
@@ -118,10 +119,12 @@ public class AccessManagerImpl implements AccessManager {
 		Assignment assignment = createAssignment(userId, assignedDate);
 		
 		Access access = loadAccess(accessId, allTokens());
-		
-		access.addAssignment( assignment );
-		
-		return saveAccess(access, tokens().withAssignmentList().done());
+		synchronized(access){ 
+			//will be good when the access loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			access.addAssignment( assignment );		
+			return saveAccess(access, tokens().withAssignmentList().done());
+		}
 	}
 	protected Assignment createAssignment(String userId, Date assignedDate){
 

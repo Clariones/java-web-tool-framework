@@ -3,13 +3,11 @@ package com.terapico.b2b.assignment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.employee.Employee;
 
-
+@JsonSerialize(using = AssignmentSerializer.class)
 public class Assignment implements  java.io.Serializable{
 
 	protected		String	mId;

@@ -23,7 +23,7 @@ public class ShipmentManagerMock implements ShipmentManager {
 	{
 		return 0;
 	}
-	public  Shipment addOrder(String shipmentId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)
+	public  Shipment addOrder(String shipmentId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)
 	{
 		return new Shipment();
 	}

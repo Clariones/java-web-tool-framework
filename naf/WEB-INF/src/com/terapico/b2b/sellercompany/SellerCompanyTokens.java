@@ -10,6 +10,8 @@ public class SellerCompanyTokens extends CommonTokens{
 	}
 	public static Map <String,Object> all(){
 		return new SellerCompanyTokens()
+			.withProfitCenterList()
+			.withCreditAccountList()
 			.withOrderList()
 			.withCustSvcRepList()
 			.done();
@@ -23,6 +25,24 @@ public class SellerCompanyTokens extends CommonTokens{
 			.done();
 	}
 
+	protected static final String PROFIT_CENTER_LIST = "profitCenterList";
+	public String getProfitCenterList(){
+		return PROFIT_CENTER_LIST;
+	}
+	public SellerCompanyTokens withProfitCenterList(){		
+		addSimpleOptions(PROFIT_CENTER_LIST);
+		return this;
+	}	
+		
+	protected static final String CREDIT_ACCOUNT_LIST = "creditAccountList";
+	public String getCreditAccountList(){
+		return CREDIT_ACCOUNT_LIST;
+	}
+	public SellerCompanyTokens withCreditAccountList(){		
+		addSimpleOptions(CREDIT_ACCOUNT_LIST);
+		return this;
+	}	
+		
 	protected static final String ORDER_LIST = "orderList";
 	public String getOrderList(){
 		return ORDER_LIST;

@@ -1,10 +1,43 @@
-=================Execute Report @Sun Jun 26 01:04:35 CST 2016========================
+=================Execute Report @Sun Jul 03 17:13:05 CST 2016========================
 
 
 buyer_company
 
 
 seller_company
+
+
+cost_center
+
+
+cost_center.buyer_company
+
+Info: Add virtual field [cost_centers(es)] to <buyer_company>
+	cost_center.belongs_to
+
+
+profit_center
+
+
+profit_center.seller_company
+
+Info: Add virtual field [profit_centers(es)] to <seller_company>
+	profit_center.belongs_to
+
+
+credit_account
+
+
+credit_account.buyer_company
+
+Info: Add virtual field [credit_accounts(es)] to <buyer_company>
+	credit_account.buyer
+
+
+credit_account.seller_company
+
+Info: Add virtual field [credit_accounts(es)] to <seller_company>
+	credit_account.seller
 
 
 shipping_address
@@ -70,6 +103,18 @@ Info: Add virtual field [orders(es)] to <seller_company>
 	order.seller
 
 
+order.cost_center
+
+Info: Add virtual field [orders(es)] to <cost_center>
+	order.cost_center
+
+
+order.profit_center
+
+Info: Add virtual field [orders(es)] to <profit_center>
+	order.profit_center
+
+
 order.confirmation
 
 Info: Add virtual field [orders(es)] to <confirmation>
@@ -98,6 +143,15 @@ order.delivery
 
 Info: Add virtual field [orders(es)] to <delivery>
 	order.delivery
+
+
+order.recurring_info
+
+Info: Add virtual field [orders(es)] to <recurring_info>
+	order.recurring_info
+
+
+recurring_info
 
 
 confirmation
@@ -190,7 +244,9 @@ buyer_company{
 		string_email	owner('philip@aaxischina.com'), verb: false;
 		int	version('10'), verb: false;
 	}
-	references field(3){
+	references field(5){
+		cost_center	belongs_to;
+		credit_account	buyer;
 		billing_address	company;
 		employee	company;
 		order	buyer;
@@ -208,9 +264,55 @@ seller_company{
 		string_document	contract_text('x.doc'), verb: false;
 		int	version('10'), verb: false;
 	}
-	references field(2){
+	references field(4){
+		profit_center	belongs_to;
+		credit_account	seller;
 		order	seller;
 		cust_svc_rep	company;
+	}
+	vitual fields(0){
+	}
+}
+
+cost_center{
+	fields(4){
+		string	id('ABCD000001'), verb: false;
+		string	name('Cost Center - HR'), verb: false;
+		buyer_company	belongs_to('$(object)'), verb: false;
+		int	version('10'), verb: false;
+	}
+	references field(1){
+		order	cost_center;
+	}
+	vitual fields(0){
+	}
+}
+
+profit_center{
+	fields(4){
+		string	id('ABCD000001'), verb: false;
+		string	name('Cost Center - HR'), verb: false;
+		seller_company	belongs_to('$(object)'), verb: false;
+		int	version('10'), verb: false;
+	}
+	references field(1){
+		order	profit_center;
+	}
+	vitual fields(0){
+	}
+}
+
+credit_account{
+	fields(7){
+		string	id('ABCD000001'), verb: false;
+		string	name('Main Account Payable - '), verb: false;
+		buyer_company	buyer('$(object)'), verb: false;
+		seller_company	seller('$(object)'), verb: false;
+		double	authorized('100000.99'), verb: false;
+		double	remain('100000.99'), verb: false;
+		int	version('10'), verb: false;
+	}
+	references field(0){
 	}
 	vitual fields(0){
 	}
@@ -252,11 +354,13 @@ billing_address{
 }
 
 employee{
-	fields(5){
+	fields(7){
 		string	id('ABCD000001'), verb: false;
 		string	name('Philip'), verb: false;
 		buyer_company	company('$(object)'), verb: false;
 		string_email	email('philip@aaxischina.com'), verb: false;
+		string_password	passwd('*******'), verb: false;
+		string_cn_phone	cell_phone('13878786655'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(1){
@@ -309,11 +413,13 @@ access{
 }
 
 order{
-	fields(13){
+	fields(17){
 		string	id('ABCD000001'), verb: false;
 		buyer_company	buyer('$(object)'), verb: false;
 		seller_company	seller('$(object)'), verb: false;
 		string	title('House Buiding - '), verb: false;
+		cost_center	cost_center('$(object)'), verb: false;
+		profit_center	profit_center('$(object)'), verb: false;
 		double	total_amount('3000000000.88'), verb: false;
 		string	type('ORDER|QUOTE|INVOICE'), verb: false;
 		bool	mark_as_delete('true'), verb: false;
@@ -322,6 +428,8 @@ order{
 		processing	processing('$(object)'), verb: true;
 		shipment	shipment('$(object)'), verb: true;
 		delivery	delivery('$(object)'), verb: true;
+		recurring_info	recurring_info('$(object)'), verb: false;
+		string	status('auth;confirm,cancel;approve,reject(auth);'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(4){
@@ -329,6 +437,21 @@ order{
 		shipping_group	biz_order;
 		payment_group	biz_order;
 		action	bo;
+	}
+	vitual fields(0){
+	}
+}
+
+recurring_info{
+	fields(5){
+		string	id('ABCD000001'), verb: false;
+		string	name('Order Recurring - '), verb: false;
+		date	next_time('2018-07-09'), verb: false;
+		string	cron_expr('*****08'), verb: false;
+		int	version('10'), verb: false;
+	}
+	references field(1){
+		order	recurring_info;
 	}
 	vitual fields(0){
 	}
@@ -405,13 +528,14 @@ approval{
 }
 
 line_item{
-	fields(7){
+	fields(8){
 		string	id('ABCD000001'), verb: false;
 		order	biz_order('$(object)'), verb: false;
 		string	sku_id('SKU'), verb: false;
 		string	sku_name('iPhone - '), verb: false;
 		money	amount('$23.97'), verb: false;
 		int	quantity('10'), verb: false;
+		bool	active('true'), verb: false;
 		int	version('10'), verb: false;
 	}
 	references field(0){
@@ -451,9 +575,10 @@ payment_group{
 }
 
 cust_svc_rep{
-	fields(5){
+	fields(6){
 		string	id('ABCD000001'), verb: false;
-		string_email	email('philip_chang@174.com'), verb: false;
+		string_email	email('pzhang@aaxischina.com'), verb: false;
+		string_password	passwd('*******'), verb: false;
 		role	role('$(object)'), verb: false;
 		seller_company	company('$(object)'), verb: false;
 		int	version('10'), verb: false;
@@ -467,7 +592,7 @@ cust_svc_rep{
 action{
 	fields(5){
 		string	id('ABCD000001'), verb: false;
-		string	name('view'), verb: false;
+		string	name('ACTION'), verb: false;
 		string	internal_name('load'), verb: false;
 		order	bo('$(object)'), verb: false;
 		int	version('10'), verb: false;

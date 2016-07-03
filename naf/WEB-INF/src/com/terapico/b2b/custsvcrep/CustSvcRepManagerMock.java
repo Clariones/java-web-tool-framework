@@ -4,7 +4,7 @@ package com.terapico.b2b.custsvcrep;
 import java.util.Date;
 public class CustSvcRepManagerMock implements CustSvcRepManager {
 
-	public CustSvcRep createCustSvcRep(String email, String roleId, String companyId, String[] options) throws Exception
+	public CustSvcRep createCustSvcRep(String email, String passwd, String roleId, String companyId, String[] options) throws Exception
 	{
 		return new CustSvcRep();
 	}

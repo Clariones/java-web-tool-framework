@@ -4,7 +4,7 @@ package com.terapico.b2b.order;
 import java.util.Date;
 public class OrderManagerMock implements OrderManager {
 
-	public Order createOrder(String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete, String[] options) throws Exception
+	public Order createOrder(String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status, String[] options) throws Exception
 	{
 		return new Order();
 	}
@@ -19,6 +19,16 @@ public class OrderManagerMock implements OrderManager {
  
  	}
  	public Order transferToNewSeller(String orderId, String newSellerId) throws Exception
+ 	{
+ 		return new Order();
+ 
+ 	}
+ 	public Order transferToNewCostCenter(String orderId, String newCostCenterId) throws Exception
+ 	{
+ 		return new Order();
+ 
+ 	}
+ 	public Order transferToNewProfitCenter(String orderId, String newProfitCenterId) throws Exception
  	{
  		return new Order();
  
@@ -43,7 +53,12 @@ public class OrderManagerMock implements OrderManager {
  	{
  		return new Order();
  	}
-
+	public Order transferToNewRecurringInfo(String orderId, String newRecurringInfoId) throws Exception
+ 	{
+ 		return new Order();
+ 
+ 	}
+ 
 
 	public void delete(String orderId, int version) throws Exception
 	{
@@ -53,7 +68,7 @@ public class OrderManagerMock implements OrderManager {
 	{
 		return 0;
 	}
-	public  Order addLineItem(String orderId, String skuId, String skuName, double amount, int quantity)
+	public  Order addLineItem(String orderId, String skuId, String skuName, double amount, int quantity, boolean active)
 	{
 		return new Order();
 	}

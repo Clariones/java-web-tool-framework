@@ -12,11 +12,14 @@ public class OrderTokens extends CommonTokens{
 		return new OrderTokens()
 			.withBuyer()
 			.withSeller()
+			.withCostCenter()
+			.withProfitCenter()
 			.withConfirmation()
 			.withApproval()
 			.withProcessing()
 			.withShipment()
 			.withDelivery()
+			.withRecurringInfo()
 			.withLineItemList()
 			.withShippingGroupList()
 			.withPaymentGroupList()
@@ -27,11 +30,14 @@ public class OrderTokens extends CommonTokens{
 		return new OrderTokens()
 			.withBuyer()
 			.withSeller()
+			.withCostCenter()
+			.withProfitCenter()
 			.withConfirmation()
 			.withApproval()
 			.withProcessing()
 			.withShipment()
 			.withDelivery()
+			.withRecurringInfo()
 			.done();
 	}
 	public static Map <String,Object> empty(){
@@ -55,6 +61,26 @@ public class OrderTokens extends CommonTokens{
 	}
 	public OrderTokens withSeller(){		
 		addSimpleOptions(SELLER);
+		return this;
+	}
+	
+	
+	protected static final String COSTCENTER = "costCenter";
+	public String getCostCenter(){
+		return COSTCENTER;
+	}
+	public OrderTokens withCostCenter(){		
+		addSimpleOptions(COSTCENTER);
+		return this;
+	}
+	
+	
+	protected static final String PROFITCENTER = "profitCenter";
+	public String getProfitCenter(){
+		return PROFITCENTER;
+	}
+	public OrderTokens withProfitCenter(){		
+		addSimpleOptions(PROFITCENTER);
 		return this;
 	}
 	
@@ -105,6 +131,16 @@ public class OrderTokens extends CommonTokens{
 	}
 	public OrderTokens withDelivery(){		
 		addSimpleOptions(DELIVERY);
+		return this;
+	}
+	
+	
+	protected static final String RECURRINGINFO = "recurringInfo";
+	public String getRecurringInfo(){
+		return RECURRINGINFO;
+	}
+	public OrderTokens withRecurringInfo(){		
+		addSimpleOptions(RECURRINGINFO);
 		return this;
 	}
 	

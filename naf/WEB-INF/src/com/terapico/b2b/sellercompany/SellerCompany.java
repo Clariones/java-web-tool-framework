@@ -3,13 +3,13 @@ package com.terapico.b2b.sellercompany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.order.Order;
+import com.terapico.b2b.creditaccount.CreditAccount;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
+import com.terapico.b2b.profitcenter.ProfitCenter;
 
-
+@JsonSerialize(using = SellerCompanySerializer.class)
 public class SellerCompany implements  java.io.Serializable{
 
 	protected		String	mId;
@@ -20,6 +20,8 @@ public class SellerCompany implements  java.io.Serializable{
 	protected		int	mVersion;
 	
 	
+	protected		List<ProfitCenter> mProfitCenterList;
+	protected		List<CreditAccount> mCreditAccountList;
 	protected		List<Order> mOrderList;
 	protected		List<CustSvcRep> mCustSvcRepList;
 	
@@ -34,6 +36,8 @@ public class SellerCompany implements  java.io.Serializable{
 		setOwner(owner);
 		setLogo(logo);
 		setContractText(contractText);
+		this.mProfitCenterList = new ArrayList<ProfitCenter>();
+		this.mCreditAccountList = new ArrayList<CreditAccount>();
 		this.mOrderList = new ArrayList<Order>();
 		this.mCustSvcRepList = new ArrayList<CustSvcRep>();	
 	}
@@ -81,6 +85,80 @@ public class SellerCompany implements  java.io.Serializable{
 	public int getVersion(){
 		return this.mVersion;
 	}
+	
+	public  List<ProfitCenter> getProfitCenterList(){
+		if(this.mProfitCenterList == null){
+			this.mProfitCenterList = new ArrayList<ProfitCenter>();
+		}
+		return this.mProfitCenterList;	
+	}
+	public  void setProfitCenterList(List<ProfitCenter> profitCenterList){
+		for( ProfitCenter profitCenter:profitCenterList){
+			profitCenter.setBelongsTo(this);
+		}
+		
+		
+		this.mProfitCenterList = profitCenterList;
+		
+	}
+	
+	public  void addProfitCenter(ProfitCenter profitCenter){
+		profitCenter.setBelongsTo(this);
+		getProfitCenterList().add(profitCenter);
+	}
+	public  void addProfitCenters(List<ProfitCenter> profitCenterList){
+		for( ProfitCenter profitCenter:profitCenterList){
+			profitCenter.setBelongsTo(this);
+		}
+		getProfitCenterList().addAll(profitCenterList);
+	}
+	
+	public  void removeProfitCenter(ProfitCenter profitCenter){
+		getProfitCenterList().remove(profitCenter);
+	}
+	public  void cleanUpProfitCenterList(){
+		getProfitCenterList().clear();
+	}
+	
+	
+	
+	
+	public  List<CreditAccount> getCreditAccountList(){
+		if(this.mCreditAccountList == null){
+			this.mCreditAccountList = new ArrayList<CreditAccount>();
+		}
+		return this.mCreditAccountList;	
+	}
+	public  void setCreditAccountList(List<CreditAccount> creditAccountList){
+		for( CreditAccount creditAccount:creditAccountList){
+			creditAccount.setSeller(this);
+		}
+		
+		
+		this.mCreditAccountList = creditAccountList;
+		
+	}
+	
+	public  void addCreditAccount(CreditAccount creditAccount){
+		creditAccount.setSeller(this);
+		getCreditAccountList().add(creditAccount);
+	}
+	public  void addCreditAccounts(List<CreditAccount> creditAccountList){
+		for( CreditAccount creditAccount:creditAccountList){
+			creditAccount.setSeller(this);
+		}
+		getCreditAccountList().addAll(creditAccountList);
+	}
+	
+	public  void removeCreditAccount(CreditAccount creditAccount){
+		getCreditAccountList().remove(creditAccount);
+	}
+	public  void cleanUpCreditAccountList(){
+		getCreditAccountList().clear();
+	}
+	
+	
+	
 	
 	public  List<Order> getOrderList(){
 		if(this.mOrderList == null){

@@ -4,13 +4,15 @@ package com.terapico.b2b.assignment;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.employee.Employee;
 
 import com.terapico.b2b.employee.EmployeeDAO;
 import com.terapico.b2b.access.AccessDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements AssignmentDAO{
  
@@ -39,7 +41,7 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	}
 	public Assignment save(Assignment assignment,Map<String,Object> options){
 		
-		String methodName="save(Assignment assignment,Map<String,Object> options){";
+		String methodName="save(Assignment assignment,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(assignment, methodName, "assignment");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -148,34 +150,34 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 
  
  	//private boolean extractUserEnabled = true;
- 	private static final String USER = "user";
+ 	//private static final String USER = "user";
  	protected boolean isExtractUserEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, USER);
+	 	return checkOptions(options, AssignmentTokens.USER);
  	}
  	
  	
  	//private boolean saveUserEnabled = true;
  	protected boolean isSaveUserEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, USER);
+ 		return checkOptions(options, AssignmentTokens.USER);
  	}
  	
 
  	
   
  	//private boolean extractAccessEnabled = true;
- 	private static final String ACCESS = "access";
+ 	//private static final String ACCESS = "access";
  	protected boolean isExtractAccessEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, ACCESS);
+	 	return checkOptions(options, AssignmentTokens.ACCESS);
  	}
  	
  	
  	//private boolean saveAccessEnabled = true;
  	protected boolean isSaveAccessEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, ACCESS);
+ 		return checkOptions(options, AssignmentTokens.ACCESS);
  	}
  	
 
@@ -187,10 +189,17 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	protected AssignmentMapper getMapper(){
 		return new AssignmentMapper();
 	}
-	protected Assignment extractAssignment(String assignmentId){
+	protected Assignment extractAssignment(String assignmentId) throws Exception{
 		String SQL = "select * from assignment_data where id=?";	
-		Assignment assignment = getJdbcTemplateObject().queryForObject(SQL, new Object[]{assignmentId}, getMapper());
-		return assignment;
+		try{
+		
+			Assignment assignment = getJdbcTemplateObject().queryForObject(SQL, new Object[]{assignmentId}, getMapper());
+			return assignment;
+		}catch(EmptyResultDataAccessException e){
+			throw new AssignmentNotFoundException("Assignment("+assignmentId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Assignment loadInternalAssignment(String assignmentId, Map<String,Object> loadOptions) throws Exception{

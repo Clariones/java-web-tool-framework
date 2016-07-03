@@ -3,16 +3,28 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	
+	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		if you do not like to use apache one, you can use spring, spring version is very slow.
+	  -->
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
+	
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url"	value="jdbc:mysql://localhost:3306/b2b?characterEncoding=utf8" />
 		<property name="username" value="root" />
 		<property name="password" value="0254891276" />
+		<property name="removeAbandoned" value="true"/>
+		<property name="initialSize" value="20" />
+		<property name="maxActive" value="30" />
+
 	</bean>
 
 	
 	<bean id="buyerCompanyDAO" class="com.terapico.b2b.buyercompany.BuyerCompanyJDBCTemplateDAO">
 		<property name="dataSource" ref="dataSource" />
+		<property name="costCenterDAO" ref="costCenterDAO" />
+		<property name="creditAccountDAO" ref="creditAccountDAO" />
 		<property name="billingAddressDAO" ref="billingAddressDAO" />
 		<property name="employeeDAO" ref="employeeDAO" />
 		<property name="orderDAO" ref="orderDAO" />
@@ -21,8 +33,31 @@
 	
 	<bean id="sellerCompanyDAO" class="com.terapico.b2b.sellercompany.SellerCompanyJDBCTemplateDAO">
 		<property name="dataSource" ref="dataSource" />
+		<property name="profitCenterDAO" ref="profitCenterDAO" />
+		<property name="creditAccountDAO" ref="creditAccountDAO" />
 		<property name="orderDAO" ref="orderDAO" />
 		<property name="custSvcRepDAO" ref="custSvcRepDAO" />
+	</bean>	
+	
+	
+	<bean id="costCenterDAO" class="com.terapico.b2b.costcenter.CostCenterJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+	
+	<bean id="profitCenterDAO" class="com.terapico.b2b.profitcenter.ProfitCenterJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+		<property name="orderDAO" ref="orderDAO" />
+	</bean>	
+	
+	
+	<bean id="creditAccountDAO" class="com.terapico.b2b.creditaccount.CreditAccountJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+ 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+ 		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
 	</bean>	
 	
 	
@@ -71,15 +106,24 @@
 		<property name="dataSource" ref="dataSource" />
  		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
  		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+ 		<property name="costCenterDAO" ref="costCenterDAO" />
+ 		<property name="profitCenterDAO" ref="profitCenterDAO" />
  		<property name="confirmationDAO" ref="confirmationDAO" />
  		<property name="approvalDAO" ref="approvalDAO" />
  		<property name="processingDAO" ref="processingDAO" />
  		<property name="shipmentDAO" ref="shipmentDAO" />
  		<property name="deliveryDAO" ref="deliveryDAO" />
+ 		<property name="recurringInfoDAO" ref="recurringInfoDAO" />
 		<property name="lineItemDAO" ref="lineItemDAO" />
 		<property name="shippingGroupDAO" ref="shippingGroupDAO" />
 		<property name="paymentGroupDAO" ref="paymentGroupDAO" />
 		<property name="actionDAO" ref="actionDAO" />
+	</bean>	
+	
+	
+	<bean id="recurringInfoDAO" class="com.terapico.b2b.recurringinfo.RecurringInfoJDBCTemplateDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="orderDAO" ref="orderDAO" />
 	</bean>	
 	
 	

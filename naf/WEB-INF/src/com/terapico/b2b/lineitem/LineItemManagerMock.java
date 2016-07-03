@@ -4,7 +4,7 @@ package com.terapico.b2b.lineitem;
 import java.util.Date;
 public class LineItemManagerMock implements LineItemManager {
 
-	public LineItem createLineItem(String bizOrderId, String skuId, String skuName, double amount, int quantity, String[] options) throws Exception
+	public LineItem createLineItem(String bizOrderId, String skuId, String skuName, double amount, int quantity, boolean active, String[] options) throws Exception
 	{
 		return new LineItem();
 	}

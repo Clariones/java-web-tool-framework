@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.HashMap;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
-import com.terapico.b2b.shippinggroup.ShippingGroupDAO;
 
 import com.terapico.b2b.order.Order;
 import com.terapico.b2b.shippingaddress.ShippingAddress;
@@ -51,11 +50,8 @@ public class ShippingAddressManagerImpl implements ShippingAddressManager {
 		shippingAddress.setCity(city);
 		shippingAddress.setState(state);
 		shippingAddress.setCountry(country);
-		//save for later setOrderValues(shippingAddress);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return shippingAddressDAO.save(shippingAddress, options);
-		return saveShippingAddress(shippingAddress, options);
+
+		return saveShippingAddress(shippingAddress, emptyOptions());
 		
 
 		
@@ -96,10 +92,12 @@ public class ShippingAddressManagerImpl implements ShippingAddressManager {
 		ShippingGroup shippingGroup = createShippingGroup(name, bizOrderId, amount);
 		
 		ShippingAddress shippingAddress = loadShippingAddress(shippingAddressId, allTokens());
-		
-		shippingAddress.addShippingGroup( shippingGroup );
-		
-		return saveShippingAddress(shippingAddress, tokens().withShippingGroupList().done());
+		synchronized(shippingAddress){ 
+			//will be good when the shippingAddress loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			shippingAddress.addShippingGroup( shippingGroup );		
+			return saveShippingAddress(shippingAddress, tokens().withShippingGroupList().done());
+		}
 	}
 	protected ShippingGroup createShippingGroup(String name, String bizOrderId, double amount){
 

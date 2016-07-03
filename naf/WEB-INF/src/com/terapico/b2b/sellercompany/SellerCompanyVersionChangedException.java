@@ -8,5 +8,3 @@ public class SellerCompanyVersionChangedException extends EntityNotFoundExceptio
 	}
 
 }
-
-

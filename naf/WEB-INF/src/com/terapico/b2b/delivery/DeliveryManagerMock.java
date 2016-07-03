@@ -23,7 +23,7 @@ public class DeliveryManagerMock implements DeliveryManager {
 	{
 		return 0;
 	}
-	public  Delivery addOrder(String deliveryId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)
+	public  Delivery addOrder(String deliveryId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)
 	{
 		return new Delivery();
 	}

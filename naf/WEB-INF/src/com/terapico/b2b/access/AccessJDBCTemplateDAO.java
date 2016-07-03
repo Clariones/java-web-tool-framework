@@ -4,13 +4,15 @@ package com.terapico.b2b.access;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.role.Role;
 import com.terapico.b2b.assignment.Assignment;
 
 import com.terapico.b2b.role.RoleDAO;
 import com.terapico.b2b.assignment.AssignmentDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements AccessDAO{
  
@@ -49,7 +51,7 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 	}
 	public Access save(Access access,Map<String,Object> options){
 		
-		String methodName="save(Access access,Map<String,Object> options){";
+		String methodName="save(Access access,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(access, methodName, "access");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -165,33 +167,33 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 
  
  	//private boolean extractRoleEnabled = true;
- 	private static final String ROLE = "role";
+ 	//private static final String ROLE = "role";
  	protected boolean isExtractRoleEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, ROLE);
+	 	return checkOptions(options, AccessTokens.ROLE);
  	}
  	
  	
  	//private boolean saveRoleEnabled = true;
  	protected boolean isSaveRoleEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, ROLE);
+ 		return checkOptions(options, AccessTokens.ROLE);
  	}
  	
 
  	
  
 		
-	protected static final String ASSIGNMENT_LIST = "assignmentList";
+	//protected static final String ASSIGNMENT_LIST = "assignmentList";
 	
 	protected boolean isExtractAssignmentListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ASSIGNMENT_LIST);
+ 		return checkOptions(options,AccessTokens.ASSIGNMENT_LIST);
 		
  	}
 
 	protected boolean isSaveAssignmentListEnabled(Map<String,Object> options){
-		return checkOptions(options, ASSIGNMENT_LIST);
+		return checkOptions(options, AccessTokens.ASSIGNMENT_LIST);
 		
  	}
  	
@@ -203,10 +205,17 @@ public class AccessJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acce
 	protected AccessMapper getMapper(){
 		return new AccessMapper();
 	}
-	protected Access extractAccess(String accessId){
+	protected Access extractAccess(String accessId) throws Exception{
 		String SQL = "select * from access_data where id=?";	
-		Access access = getJdbcTemplateObject().queryForObject(SQL, new Object[]{accessId}, getMapper());
-		return access;
+		try{
+		
+			Access access = getJdbcTemplateObject().queryForObject(SQL, new Object[]{accessId}, getMapper());
+			return access;
+		}catch(EmptyResultDataAccessException e){
+			throw new AccessNotFoundException("Access("+accessId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Access loadInternalAccess(String accessId, Map<String,Object> loadOptions) throws Exception{

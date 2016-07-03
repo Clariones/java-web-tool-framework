@@ -8,5 +8,3 @@ public class ShippingGroupVersionChangedException extends EntityNotFoundExceptio
 	}
 
 }
-
-

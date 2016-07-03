@@ -4,11 +4,13 @@ package com.terapico.b2b.action;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
 import com.terapico.b2b.order.OrderDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements ActionDAO{
  
@@ -28,7 +30,7 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 	}
 	public Action save(Action action,Map<String,Object> options){
 		
-		String methodName="save(Action action,Map<String,Object> options){";
+		String methodName="save(Action action,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(action, methodName, "action");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -137,17 +139,17 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 
  
  	//private boolean extractBoEnabled = true;
- 	private static final String BO = "bo";
+ 	//private static final String BO = "bo";
  	protected boolean isExtractBoEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, BO);
+	 	return checkOptions(options, ActionTokens.BO);
  	}
  	
  	
  	//private boolean saveBoEnabled = true;
  	protected boolean isSaveBoEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, BO);
+ 		return checkOptions(options, ActionTokens.BO);
  	}
  	
 
@@ -159,10 +161,17 @@ public class ActionJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Acti
 	protected ActionMapper getMapper(){
 		return new ActionMapper();
 	}
-	protected Action extractAction(String actionId){
+	protected Action extractAction(String actionId) throws Exception{
 		String SQL = "select * from action_data where id=?";	
-		Action action = getJdbcTemplateObject().queryForObject(SQL, new Object[]{actionId}, getMapper());
-		return action;
+		try{
+		
+			Action action = getJdbcTemplateObject().queryForObject(SQL, new Object[]{actionId}, getMapper());
+			return action;
+		}catch(EmptyResultDataAccessException e){
+			throw new ActionNotFoundException("Action("+actionId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Action loadInternalAction(String actionId, Map<String,Object> loadOptions) throws Exception{

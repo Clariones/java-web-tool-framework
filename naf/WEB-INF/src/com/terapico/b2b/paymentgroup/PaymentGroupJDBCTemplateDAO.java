@@ -4,13 +4,15 @@ package com.terapico.b2b.paymentgroup;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 import com.terapico.b2b.billingaddress.BillingAddress;
 
 import com.terapico.b2b.billingaddress.BillingAddressDAO;
 import com.terapico.b2b.order.OrderDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implements PaymentGroupDAO{
  
@@ -39,7 +41,7 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	}
 	public PaymentGroup save(PaymentGroup paymentGroup,Map<String,Object> options){
 		
-		String methodName="save(PaymentGroup paymentGroup,Map<String,Object> options){";
+		String methodName="save(PaymentGroup paymentGroup,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(paymentGroup, methodName, "paymentGroup");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -148,34 +150,34 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 
  
  	//private boolean extractBizOrderEnabled = true;
- 	private static final String BIZORDER = "bizOrder";
+ 	//private static final String BIZORDER = "bizOrder";
  	protected boolean isExtractBizOrderEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, BIZORDER);
+	 	return checkOptions(options, PaymentGroupTokens.BIZORDER);
  	}
  	
  	
  	//private boolean saveBizOrderEnabled = true;
  	protected boolean isSaveBizOrderEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, BIZORDER);
+ 		return checkOptions(options, PaymentGroupTokens.BIZORDER);
  	}
  	
 
  	
   
  	//private boolean extractBillingAddressEnabled = true;
- 	private static final String BILLINGADDRESS = "billingAddress";
+ 	//private static final String BILLINGADDRESS = "billingAddress";
  	protected boolean isExtractBillingAddressEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, BILLINGADDRESS);
+	 	return checkOptions(options, PaymentGroupTokens.BILLINGADDRESS);
  	}
  	
  	
  	//private boolean saveBillingAddressEnabled = true;
  	protected boolean isSaveBillingAddressEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, BILLINGADDRESS);
+ 		return checkOptions(options, PaymentGroupTokens.BILLINGADDRESS);
  	}
  	
 
@@ -187,10 +189,17 @@ public class PaymentGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	protected PaymentGroupMapper getMapper(){
 		return new PaymentGroupMapper();
 	}
-	protected PaymentGroup extractPaymentGroup(String paymentGroupId){
+	protected PaymentGroup extractPaymentGroup(String paymentGroupId) throws Exception{
 		String SQL = "select * from payment_group_data where id=?";	
-		PaymentGroup paymentGroup = getJdbcTemplateObject().queryForObject(SQL, new Object[]{paymentGroupId}, getMapper());
-		return paymentGroup;
+		try{
+		
+			PaymentGroup paymentGroup = getJdbcTemplateObject().queryForObject(SQL, new Object[]{paymentGroupId}, getMapper());
+			return paymentGroup;
+		}catch(EmptyResultDataAccessException e){
+			throw new PaymentGroupNotFoundException("PaymentGroup("+paymentGroupId+") is not found!");
+		}
+		
+		
 	}
 
 	protected PaymentGroup loadInternalPaymentGroup(String paymentGroupId, Map<String,Object> loadOptions) throws Exception{

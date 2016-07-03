@@ -8,5 +8,3 @@ public class ConfirmationVersionChangedException extends EntityNotFoundException
 	}
 
 }
-
-

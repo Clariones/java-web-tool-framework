@@ -4,13 +4,15 @@ package com.terapico.b2b.employee;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.assignment.Assignment;
 
 import com.terapico.b2b.assignment.AssignmentDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements EmployeeDAO{
  
@@ -49,7 +51,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	}
 	public Employee save(Employee employee,Map<String,Object> options){
 		
-		String methodName="save(Employee employee,Map<String,Object> options){";
+		String methodName="save(Employee employee,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(employee, methodName, "employee");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -133,7 +135,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"name","company","email"};
+		return new String[]{"name","company","email","passwd","cell_phone"};
 	}
 	@Override
 	protected String getName() {
@@ -165,33 +167,33 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 
  
  	//private boolean extractCompanyEnabled = true;
- 	private static final String COMPANY = "company";
+ 	//private static final String COMPANY = "company";
  	protected boolean isExtractCompanyEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, COMPANY);
+	 	return checkOptions(options, EmployeeTokens.COMPANY);
  	}
  	
  	
  	//private boolean saveCompanyEnabled = true;
  	protected boolean isSaveCompanyEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, COMPANY);
+ 		return checkOptions(options, EmployeeTokens.COMPANY);
  	}
  	
 
  	
  
 		
-	protected static final String ASSIGNMENT_LIST = "assignmentList";
+	//protected static final String ASSIGNMENT_LIST = "assignmentList";
 	
 	protected boolean isExtractAssignmentListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ASSIGNMENT_LIST);
+ 		return checkOptions(options,EmployeeTokens.ASSIGNMENT_LIST);
 		
  	}
 
 	protected boolean isSaveAssignmentListEnabled(Map<String,Object> options){
-		return checkOptions(options, ASSIGNMENT_LIST);
+		return checkOptions(options, EmployeeTokens.ASSIGNMENT_LIST);
 		
  	}
  	
@@ -203,10 +205,17 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	protected EmployeeMapper getMapper(){
 		return new EmployeeMapper();
 	}
-	protected Employee extractEmployee(String employeeId){
+	protected Employee extractEmployee(String employeeId) throws Exception{
 		String SQL = "select * from employee_data where id=?";	
-		Employee employee = getJdbcTemplateObject().queryForObject(SQL, new Object[]{employeeId}, getMapper());
-		return employee;
+		try{
+		
+			Employee employee = getJdbcTemplateObject().queryForObject(SQL, new Object[]{employeeId}, getMapper());
+			return employee;
+		}catch(EmptyResultDataAccessException e){
+			throw new EmployeeNotFoundException("Employee("+employeeId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Employee loadInternalEmployee(String employeeId, Map<String,Object> loadOptions) throws Exception{
@@ -383,21 +392,23 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
  		return prepareCreateEmployeeParameters(employee);
  	}
  	protected Object[] prepareUpdateEmployeeParameters(Employee employee){
- 		Object[] parameters = new Object[5];
+ 		Object[] parameters = new Object[7];
  
  		parameters[0] = employee.getName(); 	
  		if(employee.getCompany() != null){
  			parameters[1] = employee.getCompany().getId();
  		}
  
- 		parameters[2] = employee.getEmail();		
- 		parameters[3] = employee.getId();
- 		parameters[4] = employee.getVersion();
+ 		parameters[2] = employee.getEmail();
+ 		parameters[3] = employee.getPasswd();
+ 		parameters[4] = employee.getCellPhone();		
+ 		parameters[5] = employee.getId();
+ 		parameters[6] = employee.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateEmployeeParameters(Employee employee){
-		Object[] parameters = new Object[4];
+		Object[] parameters = new Object[6];
 		String newEmployeeId=getNextId();
 		employee.setId(newEmployeeId);
 		parameters[0] =  employee.getId();
@@ -408,7 +419,9 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
  		
  		}
  		
- 		parameters[3] = employee.getEmail();		
+ 		parameters[3] = employee.getEmail();
+ 		parameters[4] = employee.getPasswd();
+ 		parameters[5] = employee.getCellPhone();		
  				
  		return parameters;
  	}

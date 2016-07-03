@@ -8,5 +8,3 @@ public class ApprovalVersionChangedException extends EntityNotFoundException {
 	}
 
 }
-
-

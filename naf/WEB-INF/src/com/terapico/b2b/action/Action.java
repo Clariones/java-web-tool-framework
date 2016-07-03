@@ -3,12 +3,10 @@ package com.terapico.b2b.action;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.order.Order;
 
-
+@JsonSerialize(using = ActionSerializer.class)
 public class Action implements  java.io.Serializable{
 
 	protected		String	mId;

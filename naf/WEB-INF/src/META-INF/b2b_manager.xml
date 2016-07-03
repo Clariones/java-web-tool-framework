@@ -16,6 +16,25 @@
 	</bean>	
 	
 	
+	<bean id="costCenterManager" class="com.terapico.b2b.costcenter.CostCenterManagerImpl">
+		<property name="costCenterDAO" ref="costCenterDAO" />
+	 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+	</bean>	
+	
+	
+	<bean id="profitCenterManager" class="com.terapico.b2b.profitcenter.ProfitCenterManagerImpl">
+		<property name="profitCenterDAO" ref="profitCenterDAO" />
+	 		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+	</bean>	
+	
+	
+	<bean id="creditAccountManager" class="com.terapico.b2b.creditaccount.CreditAccountManagerImpl">
+		<property name="creditAccountDAO" ref="creditAccountDAO" />
+	 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
+	 		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+	</bean>	
+	
+	
 	<bean id="shippingAddressManager" class="com.terapico.b2b.shippingaddress.ShippingAddressManagerImpl">
 		<property name="shippingAddressDAO" ref="shippingAddressDAO" />
 	</bean>	
@@ -55,11 +74,19 @@
 		<property name="orderDAO" ref="orderDAO" />
 	 		<property name="buyerCompanyDAO" ref="buyerCompanyDAO" />
 	 		<property name="sellerCompanyDAO" ref="sellerCompanyDAO" />
+	 		<property name="costCenterDAO" ref="costCenterDAO" />
+	 		<property name="profitCenterDAO" ref="profitCenterDAO" />
 	 		<property name="confirmationDAO" ref="confirmationDAO" />
 	 		<property name="approvalDAO" ref="approvalDAO" />
 	 		<property name="processingDAO" ref="processingDAO" />
 	 		<property name="shipmentDAO" ref="shipmentDAO" />
 	 		<property name="deliveryDAO" ref="deliveryDAO" />
+	 		<property name="recurringInfoDAO" ref="recurringInfoDAO" />
+	</bean>	
+	
+	
+	<bean id="recurringInfoManager" class="com.terapico.b2b.recurringinfo.RecurringInfoManagerImpl">
+		<property name="recurringInfoDAO" ref="recurringInfoDAO" />
 	</bean>	
 	
 	

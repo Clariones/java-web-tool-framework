@@ -8,5 +8,3 @@ public class LineItemVersionChangedException extends EntityNotFoundException {
 	}
 
 }
-
-

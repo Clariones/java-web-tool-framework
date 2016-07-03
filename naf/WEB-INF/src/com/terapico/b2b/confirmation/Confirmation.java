@@ -3,12 +3,10 @@ package com.terapico.b2b.confirmation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.order.Order;
 
-
+@JsonSerialize(using = ConfirmationSerializer.class)
 public class Confirmation implements  java.io.Serializable{
 
 	protected		String	mId;

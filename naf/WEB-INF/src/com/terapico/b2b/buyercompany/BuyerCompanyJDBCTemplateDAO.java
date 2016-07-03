@@ -4,18 +4,62 @@ package com.terapico.b2b.buyercompany;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
+import com.terapico.b2b.creditaccount.CreditAccount;
 import com.terapico.b2b.billingaddress.BillingAddress;
+import com.terapico.b2b.costcenter.CostCenter;
 import com.terapico.b2b.employee.Employee;
 
 import com.terapico.b2b.employee.EmployeeDAO;
+import com.terapico.b2b.costcenter.CostCenterDAO;
+import com.terapico.b2b.creditaccount.CreditAccountDAO;
 import com.terapico.b2b.billingaddress.BillingAddressDAO;
 import com.terapico.b2b.order.OrderDAO;
 
+
+import org.springframework.dao.EmptyResultDataAccessException;
+
 public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implements BuyerCompanyDAO{
 
+		
+	
+  	private  CostCenterDAO  costCenterDAO;
+ 	public void setCostCenterDAO(CostCenterDAO pCostCenterDAO){
+ 	
+ 		if(pCostCenterDAO == null){
+ 			throw new IllegalStateException("Do not try to set costCenterDAO to null.");
+ 		}
+	 	this.costCenterDAO = pCostCenterDAO;
+ 	}
+ 	public CostCenterDAO getCostCenterDAO(){
+ 		if(this.costCenterDAO == null){
+ 			throw new IllegalStateException("The costCenterDAO is not configured yet, please config it some where.");
+ 		}
+ 		
+	 	return this.costCenterDAO;
+ 	}	
+ 	
+			
+		
+	
+  	private  CreditAccountDAO  creditAccountDAO;
+ 	public void setCreditAccountDAO(CreditAccountDAO pCreditAccountDAO){
+ 	
+ 		if(pCreditAccountDAO == null){
+ 			throw new IllegalStateException("Do not try to set creditAccountDAO to null.");
+ 		}
+	 	this.creditAccountDAO = pCreditAccountDAO;
+ 	}
+ 	public CreditAccountDAO getCreditAccountDAO(){
+ 		if(this.creditAccountDAO == null){
+ 			throw new IllegalStateException("The creditAccountDAO is not configured yet, please config it some where.");
+ 		}
+ 		
+	 	return this.creditAccountDAO;
+ 	}	
+ 	
+			
 		
 	
   	private  BillingAddressDAO  billingAddressDAO;
@@ -80,7 +124,7 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	}
 	public BuyerCompany save(BuyerCompany buyerCompany,Map<String,Object> options){
 		
-		String methodName="save(BuyerCompany buyerCompany,Map<String,Object> options){";
+		String methodName="save(BuyerCompany buyerCompany,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(buyerCompany, methodName, "buyerCompany");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -97,6 +141,20 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		BuyerCompany newBuyerCompany = load(buyerCompanyId, options);
 		newBuyerCompany.setVersion(0);
 		
+		
+ 		
+ 		if(isSaveCostCenterListEnabled(options)){
+ 			for(CostCenter item: newBuyerCompany.getCostCenterList()){
+ 				item.setVersion(0);
+ 			}
+ 		}
+		
+ 		
+ 		if(isSaveCreditAccountListEnabled(options)){
+ 			for(CreditAccount item: newBuyerCompany.getCreditAccountList()){
+ 				item.setVersion(0);
+ 			}
+ 		}
 		
  		
  		if(isSaveBillingAddressListEnabled(options)){
@@ -210,48 +268,80 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 
 
 		
-	protected static final String BILLING_ADDRESS_LIST = "billingAddressList";
+	//protected static final String COST_CENTER_LIST = "costCenterList";
+	
+	protected boolean isExtractCostCenterListEnabled(Map<String,Object> options){
+		
+ 		return checkOptions(options,BuyerCompanyTokens.COST_CENTER_LIST);
+		
+ 	}
+
+	protected boolean isSaveCostCenterListEnabled(Map<String,Object> options){
+		return checkOptions(options, BuyerCompanyTokens.COST_CENTER_LIST);
+		
+ 	}
+ 	
+ 	
+			
+		
+	//protected static final String CREDIT_ACCOUNT_LIST = "creditAccountList";
+	
+	protected boolean isExtractCreditAccountListEnabled(Map<String,Object> options){
+		
+ 		return checkOptions(options,BuyerCompanyTokens.CREDIT_ACCOUNT_LIST);
+		
+ 	}
+
+	protected boolean isSaveCreditAccountListEnabled(Map<String,Object> options){
+		return checkOptions(options, BuyerCompanyTokens.CREDIT_ACCOUNT_LIST);
+		
+ 	}
+ 	
+ 	
+			
+		
+	//protected static final String BILLING_ADDRESS_LIST = "billingAddressList";
 	
 	protected boolean isExtractBillingAddressListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,BILLING_ADDRESS_LIST);
+ 		return checkOptions(options,BuyerCompanyTokens.BILLING_ADDRESS_LIST);
 		
  	}
 
 	protected boolean isSaveBillingAddressListEnabled(Map<String,Object> options){
-		return checkOptions(options, BILLING_ADDRESS_LIST);
+		return checkOptions(options, BuyerCompanyTokens.BILLING_ADDRESS_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String EMPLOYEE_LIST = "employeeList";
+	//protected static final String EMPLOYEE_LIST = "employeeList";
 	
 	protected boolean isExtractEmployeeListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,EMPLOYEE_LIST);
+ 		return checkOptions(options,BuyerCompanyTokens.EMPLOYEE_LIST);
 		
  	}
 
 	protected boolean isSaveEmployeeListEnabled(Map<String,Object> options){
-		return checkOptions(options, EMPLOYEE_LIST);
+		return checkOptions(options, BuyerCompanyTokens.EMPLOYEE_LIST);
 		
  	}
  	
  	
 			
 		
-	protected static final String ORDER_LIST = "orderList";
+	//protected static final String ORDER_LIST = "orderList";
 	
 	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ORDER_LIST);
+ 		return checkOptions(options,BuyerCompanyTokens.ORDER_LIST);
 		
  	}
 
 	protected boolean isSaveOrderListEnabled(Map<String,Object> options){
-		return checkOptions(options, ORDER_LIST);
+		return checkOptions(options, BuyerCompanyTokens.ORDER_LIST);
 		
  	}
  	
@@ -263,16 +353,31 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	protected BuyerCompanyMapper getMapper(){
 		return new BuyerCompanyMapper();
 	}
-	protected BuyerCompany extractBuyerCompany(String buyerCompanyId){
+	protected BuyerCompany extractBuyerCompany(String buyerCompanyId) throws Exception{
 		String SQL = "select * from buyer_company_data where id=?";	
-		BuyerCompany buyerCompany = getJdbcTemplateObject().queryForObject(SQL, new Object[]{buyerCompanyId}, getMapper());
-		return buyerCompany;
+		try{
+		
+			BuyerCompany buyerCompany = getJdbcTemplateObject().queryForObject(SQL, new Object[]{buyerCompanyId}, getMapper());
+			return buyerCompany;
+		}catch(EmptyResultDataAccessException e){
+			throw new BuyerCompanyNotFoundException("BuyerCompany("+buyerCompanyId+") is not found!");
+		}
+		
+		
 	}
 
 	protected BuyerCompany loadInternalBuyerCompany(String buyerCompanyId, Map<String,Object> loadOptions) throws Exception{
 		
 		BuyerCompany buyerCompany = extractBuyerCompany(buyerCompanyId);
 
+		
+		if(isExtractCostCenterListEnabled(loadOptions)){
+	 		extractCostCenterList(buyerCompany, loadOptions);
+ 		}		
+		
+		if(isExtractCreditAccountListEnabled(loadOptions)){
+	 		extractCreditAccountList(buyerCompany, loadOptions);
+ 		}		
 		
 		if(isExtractBillingAddressListEnabled(loadOptions)){
 	 		extractBillingAddressList(buyerCompany, loadOptions);
@@ -292,6 +397,28 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	
 	
 	
+		
+	protected BuyerCompany extractCostCenterList(BuyerCompany buyerCompany, Map<String,Object> options){
+		
+		List<CostCenter> costCenterList = getCostCenterDAO().findCostCenterByBelongsTo(buyerCompany.getId());
+		if(costCenterList != null){
+			buyerCompany.setCostCenterList(costCenterList);
+		}
+		
+		return buyerCompany;
+	
+	}	
+		
+	protected BuyerCompany extractCreditAccountList(BuyerCompany buyerCompany, Map<String,Object> options){
+		
+		List<CreditAccount> creditAccountList = getCreditAccountDAO().findCreditAccountByBuyer(buyerCompany.getId());
+		if(creditAccountList != null){
+			buyerCompany.setCreditAccountList(creditAccountList);
+		}
+		
+		return buyerCompany;
+	
+	}	
 		
 	protected BuyerCompany extractBillingAddressList(BuyerCompany buyerCompany, Map<String,Object> options){
 		
@@ -472,6 +599,14 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 		saveBuyerCompany(buyerCompany);
 
 		
+		if(isSaveCostCenterListEnabled(options)){
+	 		saveCostCenterList(buyerCompany, options);
+ 		}		
+		
+		if(isSaveCreditAccountListEnabled(options)){
+	 		saveCreditAccountList(buyerCompany, options);
+ 		}		
+		
 		if(isSaveBillingAddressListEnabled(options)){
 	 		saveBillingAddressList(buyerCompany, options);
  		}		
@@ -492,6 +627,38 @@ public class BuyerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	
 	//======================================================================================
 	
+		
+	protected BuyerCompany saveCostCenterList(BuyerCompany buyerCompany, Map<String,Object> options){
+		List<CostCenter> costCenterList = buyerCompany.getCostCenterList();
+		if(costCenterList == null){
+			return buyerCompany;
+		}
+		if(costCenterList.isEmpty()){
+			return buyerCompany;// Does this mean delete all from the parent object?
+		}
+		//Call DAO to save the list
+		
+		getCostCenterDAO().saveList(buyerCompany.getCostCenterList(),options);
+		
+		return buyerCompany;
+	
+	}
+		
+	protected BuyerCompany saveCreditAccountList(BuyerCompany buyerCompany, Map<String,Object> options){
+		List<CreditAccount> creditAccountList = buyerCompany.getCreditAccountList();
+		if(creditAccountList == null){
+			return buyerCompany;
+		}
+		if(creditAccountList.isEmpty()){
+			return buyerCompany;// Does this mean delete all from the parent object?
+		}
+		//Call DAO to save the list
+		
+		getCreditAccountDAO().saveList(buyerCompany.getCreditAccountList(),options);
+		
+		return buyerCompany;
+	
+	}
 		
 	protected BuyerCompany saveBillingAddressList(BuyerCompany buyerCompany, Map<String,Object> options){
 		List<BillingAddress> billingAddressList = buyerCompany.getBillingAddressList();

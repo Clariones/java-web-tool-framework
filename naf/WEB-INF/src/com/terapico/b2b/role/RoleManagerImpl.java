@@ -7,8 +7,6 @@ import java.util.HashMap;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
 
-import com.terapico.b2b.custsvcrep.CustSvcRepDAO;
-import com.terapico.b2b.access.AccessDAO;
 
 import com.terapico.b2b.role.Role;
 import com.terapico.b2b.sellercompany.SellerCompany;
@@ -49,11 +47,8 @@ public class RoleManagerImpl implements RoleManager {
 		Role role=createNewRole(optionsExpr);	
 
 		role.setRoleName(roleName);
-		//save for later setOrderValues(role);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return roleDAO.save(role, options);
-		return saveRole(role, options);
+
+		return saveRole(role, emptyOptions());
 		
 
 		
@@ -94,10 +89,12 @@ public class RoleManagerImpl implements RoleManager {
 		Access access = createAccess(roleName);
 		
 		Role role = loadRole(roleId, allTokens());
-		
-		role.addAccess( access );
-		
-		return saveRole(role, tokens().withAccessList().done());
+		synchronized(role){ 
+			//will be good when the role loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			role.addAccess( access );		
+			return saveRole(role, tokens().withAccessList().done());
+		}
 	}
 	protected Access createAccess(String roleName){
 
@@ -117,22 +114,25 @@ public class RoleManagerImpl implements RoleManager {
 		return new Role();
 	}
 
-	public  Role addCustSvcRep(String roleId, String email, String companyId) throws Exception
+	public  Role addCustSvcRep(String roleId, String email, String passwd, String companyId) throws Exception
 	{		
-		CustSvcRep custSvcRep = createCustSvcRep(email, companyId);
+		CustSvcRep custSvcRep = createCustSvcRep(email, passwd, companyId);
 		
 		Role role = loadRole(roleId, allTokens());
-		
-		role.addCustSvcRep( custSvcRep );
-		
-		return saveRole(role, tokens().withCustSvcRepList().done());
+		synchronized(role){ 
+			//will be good when the role loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			role.addCustSvcRep( custSvcRep );		
+			return saveRole(role, tokens().withCustSvcRepList().done());
+		}
 	}
-	protected CustSvcRep createCustSvcRep(String email, String companyId){
+	protected CustSvcRep createCustSvcRep(String email, String passwd, String companyId){
 
 		CustSvcRep custSvcRep = new CustSvcRep();
 		
 		
 		custSvcRep.setEmail(email);		
+		custSvcRep.setPasswd(passwd);		
 		SellerCompany  company = new SellerCompany();
 		company.setId(companyId);		
 		custSvcRep.setCompany(company);

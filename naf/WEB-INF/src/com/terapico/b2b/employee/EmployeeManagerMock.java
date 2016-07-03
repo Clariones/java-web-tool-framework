@@ -4,7 +4,7 @@ package com.terapico.b2b.employee;
 import java.util.Date;
 public class EmployeeManagerMock implements EmployeeManager {
 
-	public Employee createEmployee(String name, String companyId, String email, String[] options) throws Exception
+	public Employee createEmployee(String name, String companyId, String email, String passwd, String cellPhone, String[] options) throws Exception
 	{
 		return new Employee();
 	}

@@ -57,11 +57,8 @@ public class ActionManagerImpl implements ActionManager {
 		action.setInternalName(internalName);
 		Order bo = loadBo(boId,emptyOptions());
 		action.setBo(bo);
-		//save for later setOrderValues(action);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return actionDAO.save(action, options);
-		return saveAction(action, options);
+
+		return saveAction(action, emptyOptions());
 		
 
 		
@@ -89,10 +86,15 @@ public class ActionManagerImpl implements ActionManager {
 	
 	public Action transferToNewBo(String actionId, String newBoId) throws Exception
  	{
- 		Action action = loadAction(actionId, allTokens());	
-		Order bo = loadBo(newBoId, emptyOptions());		
-		action.setBo(bo);		
-		return saveAction(action, emptyOptions());
+ 
+		Action action = loadAction(actionId, allTokens());	
+		synchronized(action){
+			//will be good when the action loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			Order bo = loadBo(newBoId, emptyOptions());		
+			action.setBo(bo);		
+			return saveAction(action, emptyOptions());
+		}
  	}
  	
  	protected Order loadBo(String newBoId, Map<String,Object> options) throws Exception

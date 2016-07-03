@@ -4,11 +4,13 @@ package com.terapico.b2b.approval;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
 import com.terapico.b2b.order.OrderDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class ApprovalJDBCTemplateDAO extends CommonJDBCTemplateDAO implements ApprovalDAO{
 
@@ -38,7 +40,7 @@ public class ApprovalJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Ap
 	}
 	public Approval save(Approval approval,Map<String,Object> options){
 		
-		String methodName="save(Approval approval,Map<String,Object> options){";
+		String methodName="save(Approval approval,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(approval, methodName, "approval");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -154,16 +156,16 @@ public class ApprovalJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Ap
 
 
 		
-	protected static final String ORDER_LIST = "orderList";
+	//protected static final String ORDER_LIST = "orderList";
 	
 	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
 		
- 		return checkOptions(options,ORDER_LIST);
+ 		return checkOptions(options,ApprovalTokens.ORDER_LIST);
 		
  	}
 
 	protected boolean isSaveOrderListEnabled(Map<String,Object> options){
-		return checkOptions(options, ORDER_LIST);
+		return checkOptions(options, ApprovalTokens.ORDER_LIST);
 		
  	}
  	
@@ -175,10 +177,17 @@ public class ApprovalJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Ap
 	protected ApprovalMapper getMapper(){
 		return new ApprovalMapper();
 	}
-	protected Approval extractApproval(String approvalId){
+	protected Approval extractApproval(String approvalId) throws Exception{
 		String SQL = "select * from approval_data where id=?";	
-		Approval approval = getJdbcTemplateObject().queryForObject(SQL, new Object[]{approvalId}, getMapper());
-		return approval;
+		try{
+		
+			Approval approval = getJdbcTemplateObject().queryForObject(SQL, new Object[]{approvalId}, getMapper());
+			return approval;
+		}catch(EmptyResultDataAccessException e){
+			throw new ApprovalNotFoundException("Approval("+approvalId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Approval loadInternalApproval(String approvalId, Map<String,Object> loadOptions) throws Exception{

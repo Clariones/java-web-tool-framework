@@ -3,12 +3,10 @@ package com.terapico.b2b.lineitem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.order.Order;
 
-
+@JsonSerialize(using = LineItemSerializer.class)
 public class LineItem implements  java.io.Serializable{
 
 	protected		String	mId;
@@ -17,6 +15,7 @@ public class LineItem implements  java.io.Serializable{
 	protected		String	mSkuName;
 	protected		double	mAmount;
 	protected		int	mQuantity;
+	protected		boolean	mActive;
 	protected		int	mVersion;
 	
 	
@@ -26,13 +25,14 @@ public class LineItem implements  java.io.Serializable{
 		//lazy load for all the properties
 	}
 	
-	public 	LineItem(Order bizOrder, String skuId, String skuName, double amount, int quantity)
+	public 	LineItem(Order bizOrder, String skuId, String skuName, double amount, int quantity, boolean active)
 	{
 		setBizOrder(bizOrder);
 		setSkuId(skuId);
 		setSkuName(skuName);
 		setAmount(amount);
-		setQuantity(quantity);	
+		setQuantity(quantity);
+		setActive(active);	
 	}
 	
 
@@ -79,6 +79,13 @@ public class LineItem implements  java.io.Serializable{
 		return this.mQuantity;
 	}
 	
+	public void setActive(boolean active){
+		this.mActive = active;
+	}
+	public boolean getActive(){
+		return this.mActive;
+	}
+	
 	public void setVersion(int version){
 		this.mVersion = version;
 	}
@@ -97,6 +104,7 @@ public class LineItem implements  java.io.Serializable{
 		stringBuilder.append("\tsku_name='"+getSkuName()+"';");
 		stringBuilder.append("\tamount='"+getAmount()+"';");
 		stringBuilder.append("\tquantity='"+getQuantity()+"';");
+		stringBuilder.append("\tactive='"+getActive()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

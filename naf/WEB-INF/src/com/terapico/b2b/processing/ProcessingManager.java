@@ -11,7 +11,7 @@ public interface ProcessingManager{
 
 	public void delete(String processingId, int version) throws Exception;
 	public int deleteAll() throws Exception;
-	public  Processing addOrder(String processingId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)  throws Exception;
+	public  Processing addOrder(String processingId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)  throws Exception;
 	public  Processing removeOrder(String processingId, String orderId)  throws Exception;
 	public  Processing updateOrder(String processingId, String orderId, String property, Object newValue)  throws Exception;
 

@@ -4,13 +4,15 @@ package com.terapico.b2b.custsvcrep;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.role.Role;
 import com.terapico.b2b.sellercompany.SellerCompany;
 
 import com.terapico.b2b.role.RoleDAO;
 import com.terapico.b2b.sellercompany.SellerCompanyDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements CustSvcRepDAO{
  
@@ -39,7 +41,7 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	}
 	public CustSvcRep save(CustSvcRep custSvcRep,Map<String,Object> options){
 		
-		String methodName="save(CustSvcRep custSvcRep,Map<String,Object> options){";
+		String methodName="save(CustSvcRep custSvcRep,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(custSvcRep, methodName, "custSvcRep");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -116,7 +118,7 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"email","role","company"};
+		return new String[]{"email","passwd","role","company"};
 	}
 	@Override
 	protected String getName() {
@@ -148,34 +150,34 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 
  
  	//private boolean extractRoleEnabled = true;
- 	private static final String ROLE = "role";
+ 	//private static final String ROLE = "role";
  	protected boolean isExtractRoleEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, ROLE);
+	 	return checkOptions(options, CustSvcRepTokens.ROLE);
  	}
  	
  	
  	//private boolean saveRoleEnabled = true;
  	protected boolean isSaveRoleEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, ROLE);
+ 		return checkOptions(options, CustSvcRepTokens.ROLE);
  	}
  	
 
  	
   
  	//private boolean extractCompanyEnabled = true;
- 	private static final String COMPANY = "company";
+ 	//private static final String COMPANY = "company";
  	protected boolean isExtractCompanyEnabled(Map<String,Object> options){
  		
-	 	return checkOptions(options, COMPANY);
+	 	return checkOptions(options, CustSvcRepTokens.COMPANY);
  	}
  	
  	
  	//private boolean saveCompanyEnabled = true;
  	protected boolean isSaveCompanyEnabled(Map<String,Object> options){
 	 	
- 		return checkOptions(options, COMPANY);
+ 		return checkOptions(options, CustSvcRepTokens.COMPANY);
  	}
  	
 
@@ -187,10 +189,17 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	protected CustSvcRepMapper getMapper(){
 		return new CustSvcRepMapper();
 	}
-	protected CustSvcRep extractCustSvcRep(String custSvcRepId){
+	protected CustSvcRep extractCustSvcRep(String custSvcRepId) throws Exception{
 		String SQL = "select * from cust_svc_rep_data where id=?";	
-		CustSvcRep custSvcRep = getJdbcTemplateObject().queryForObject(SQL, new Object[]{custSvcRepId}, getMapper());
-		return custSvcRep;
+		try{
+		
+			CustSvcRep custSvcRep = getJdbcTemplateObject().queryForObject(SQL, new Object[]{custSvcRepId}, getMapper());
+			return custSvcRep;
+		}catch(EmptyResultDataAccessException e){
+			throw new CustSvcRepNotFoundException("CustSvcRep("+custSvcRepId+") is not found!");
+		}
+		
+		
 	}
 
 	protected CustSvcRep loadInternalCustSvcRep(String custSvcRepId, Map<String,Object> loadOptions) throws Exception{
@@ -385,36 +394,38 @@ public class CustSvcRepJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
  		return prepareCreateCustSvcRepParameters(custSvcRep);
  	}
  	protected Object[] prepareUpdateCustSvcRepParameters(CustSvcRep custSvcRep){
- 		Object[] parameters = new Object[5];
+ 		Object[] parameters = new Object[6];
  
- 		parameters[0] = custSvcRep.getEmail(); 	
+ 		parameters[0] = custSvcRep.getEmail();
+ 		parameters[1] = custSvcRep.getPasswd(); 	
  		if(custSvcRep.getRole() != null){
- 			parameters[1] = custSvcRep.getRole().getId();
+ 			parameters[2] = custSvcRep.getRole().getId();
  		}
   	
  		if(custSvcRep.getCompany() != null){
- 			parameters[2] = custSvcRep.getCompany().getId();
+ 			parameters[3] = custSvcRep.getCompany().getId();
  		}
  		
- 		parameters[3] = custSvcRep.getId();
- 		parameters[4] = custSvcRep.getVersion();
+ 		parameters[4] = custSvcRep.getId();
+ 		parameters[5] = custSvcRep.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateCustSvcRepParameters(CustSvcRep custSvcRep){
-		Object[] parameters = new Object[4];
+		Object[] parameters = new Object[5];
 		String newCustSvcRepId=getNextId();
 		custSvcRep.setId(newCustSvcRepId);
 		parameters[0] =  custSvcRep.getId();
  
- 		parameters[1] = custSvcRep.getEmail(); 	
+ 		parameters[1] = custSvcRep.getEmail();
+ 		parameters[2] = custSvcRep.getPasswd(); 	
  		if(custSvcRep.getRole() != null){
- 			parameters[2] = custSvcRep.getRole().getId();
+ 			parameters[3] = custSvcRep.getRole().getId();
  		
  		}
  		 	
  		if(custSvcRep.getCompany() != null){
- 			parameters[3] = custSvcRep.getCompany().getId();
+ 			parameters[4] = custSvcRep.getCompany().getId();
  		
  		}
  				

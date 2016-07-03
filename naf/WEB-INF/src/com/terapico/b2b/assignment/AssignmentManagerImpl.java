@@ -69,11 +69,8 @@ public class AssignmentManagerImpl implements AssignmentManager {
 		Access access = loadAccess(accessId,emptyOptions());
 		assignment.setAccess(access);
 		assignment.setAssignedDate(assignedDate);
-		//save for later setOrderValues(assignment);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return assignmentDAO.save(assignment, options);
-		return saveAssignment(assignment, options);
+
+		return saveAssignment(assignment, emptyOptions());
 		
 
 		
@@ -101,10 +98,15 @@ public class AssignmentManagerImpl implements AssignmentManager {
 	
 	public Assignment transferToNewUser(String assignmentId, String newUserId) throws Exception
  	{
- 		Assignment assignment = loadAssignment(assignmentId, allTokens());	
-		Employee user = loadUser(newUserId, emptyOptions());		
-		assignment.setUser(user);		
-		return saveAssignment(assignment, emptyOptions());
+ 
+		Assignment assignment = loadAssignment(assignmentId, allTokens());	
+		synchronized(assignment){
+			//will be good when the assignment loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			Employee user = loadUser(newUserId, emptyOptions());		
+			assignment.setUser(user);		
+			return saveAssignment(assignment, emptyOptions());
+		}
  	}
  	
  	protected Employee loadUser(String newUserId, Map<String,Object> options) throws Exception
@@ -114,10 +116,15 @@ public class AssignmentManagerImpl implements AssignmentManager {
  	
  	public Assignment transferToNewAccess(String assignmentId, String newAccessId) throws Exception
  	{
- 		Assignment assignment = loadAssignment(assignmentId, allTokens());	
-		Access access = loadAccess(newAccessId, emptyOptions());		
-		assignment.setAccess(access);		
-		return saveAssignment(assignment, emptyOptions());
+ 
+		Assignment assignment = loadAssignment(assignmentId, allTokens());	
+		synchronized(assignment){
+			//will be good when the assignment loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			Access access = loadAccess(newAccessId, emptyOptions());		
+			assignment.setAccess(access);		
+			return saveAssignment(assignment, emptyOptions());
+		}
  	}
  	
  	protected Access loadAccess(String newAccessId, Map<String,Object> options) throws Exception

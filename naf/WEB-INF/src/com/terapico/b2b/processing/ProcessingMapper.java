@@ -3,7 +3,6 @@ package com.terapico.b2b.processing;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
-import com.terapico.b2b.order.Order;
 
 public class ProcessingMapper implements RowMapper<Processing>{
 	

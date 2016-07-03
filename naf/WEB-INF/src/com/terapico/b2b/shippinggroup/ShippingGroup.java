@@ -3,13 +3,11 @@ package com.terapico.b2b.shippinggroup;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.order.Order;
 import com.terapico.b2b.shippingaddress.ShippingAddress;
 
-
+@JsonSerialize(using = ShippingGroupSerializer.class)
 public class ShippingGroup implements  java.io.Serializable{
 
 	protected		String	mId;

@@ -3,19 +3,19 @@ package com.terapico.b2b.employee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.assignment.Assignment;
 
-
+@JsonSerialize(using = EmployeeSerializer.class)
 public class Employee implements  java.io.Serializable{
 
 	protected		String	mId;
 	protected		String	mName;
 	protected		BuyerCompany	mCompany;
 	protected		String	mEmail;
+	protected		String	mPasswd;
+	protected		String	mCellPhone;
 	protected		int	mVersion;
 	
 	
@@ -26,11 +26,13 @@ public class Employee implements  java.io.Serializable{
 		//lazy load for all the properties
 	}
 	
-	public 	Employee(String name, BuyerCompany company, String email)
+	public 	Employee(String name, BuyerCompany company, String email, String passwd, String cellPhone)
 	{
 		setName(name);
 		setCompany(company);
 		setEmail(email);
+		setPasswd(passwd);
+		setCellPhone(cellPhone);
 		this.mAssignmentList = new ArrayList<Assignment>();	
 	}
 	
@@ -62,6 +64,20 @@ public class Employee implements  java.io.Serializable{
 	}
 	public String getEmail(){
 		return this.mEmail;
+	}
+	
+	public void setPasswd(String passwd){
+		this.mPasswd = passwd;
+	}
+	public String getPasswd(){
+		return this.mPasswd;
+	}
+	
+	public void setCellPhone(String cellPhone){
+		this.mCellPhone = cellPhone;
+	}
+	public String getCellPhone(){
+		return this.mCellPhone;
 	}
 	
 	public void setVersion(int version){
@@ -117,6 +133,8 @@ public class Employee implements  java.io.Serializable{
 		stringBuilder.append("\tname='"+getName()+"';");
 		stringBuilder.append("\tcompany='buyer_company("+getCompany().getId()+")';");
 		stringBuilder.append("\temail='"+getEmail()+"';");
+		stringBuilder.append("\tpasswd='"+getPasswd()+"';");
+		stringBuilder.append("\tcell_phone='"+getCellPhone()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 
