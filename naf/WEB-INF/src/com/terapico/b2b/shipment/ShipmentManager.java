@@ -11,7 +11,7 @@ public interface ShipmentManager{
 
 	public void delete(String shipmentId, int version) throws Exception;
 	public int deleteAll() throws Exception;
-	public  Shipment addOrder(String shipmentId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)  throws Exception;
+	public  Shipment addOrder(String shipmentId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)  throws Exception;
 	public  Shipment removeOrder(String shipmentId, String orderId)  throws Exception;
 	public  Shipment updateOrder(String shipmentId, String orderId, String property, Object newValue)  throws Exception;
 

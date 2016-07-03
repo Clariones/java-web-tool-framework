@@ -4,11 +4,13 @@ package com.terapico.b2b.lineitem;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
 import com.terapico.b2b.order.OrderDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements LineItemDAO{
  
@@ -28,7 +30,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	}
 	public LineItem save(LineItem lineItem,Map<String,Object> options){
 		
-		String methodName="save(LineItem lineItem,Map<String,Object> options){";
+		String methodName="save(LineItem lineItem,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(lineItem, methodName, "lineItem");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -105,7 +107,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	@Override
 	protected String[] getNormalColumnNames() {
 		
-		return new String[]{"biz_order","sku_id","sku_name","amount","quantity"};
+		return new String[]{"biz_order","sku_id","sku_name","amount","quantity","active"};
 	}
 	@Override
 	protected String getName() {
@@ -159,10 +161,17 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
 	protected LineItemMapper getMapper(){
 		return new LineItemMapper();
 	}
-	protected LineItem extractLineItem(String lineItemId){
+	protected LineItem extractLineItem(String lineItemId) throws Exception{
 		String SQL = "select * from line_item_data where id=?";	
-		LineItem lineItem = getJdbcTemplateObject().queryForObject(SQL, new Object[]{lineItemId}, getMapper());
-		return lineItem;
+		try{
+		
+			LineItem lineItem = getJdbcTemplateObject().queryForObject(SQL, new Object[]{lineItemId}, getMapper());
+			return lineItem;
+		}catch(EmptyResultDataAccessException e){
+			throw new LineItemNotFoundException("LineItem("+lineItemId+") is not found!");
+		}
+		
+		
 	}
 
 	protected LineItem loadInternalLineItem(String lineItemId, Map<String,Object> loadOptions) throws Exception{
@@ -324,7 +333,7 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  		return prepareCreateLineItemParameters(lineItem);
  	}
  	protected Object[] prepareUpdateLineItemParameters(LineItem lineItem){
- 		Object[] parameters = new Object[7];
+ 		Object[] parameters = new Object[8];
   	
  		if(lineItem.getBizOrder() != null){
  			parameters[0] = lineItem.getBizOrder().getId();
@@ -333,14 +342,15 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  		parameters[1] = lineItem.getSkuId();
  		parameters[2] = lineItem.getSkuName();
  		parameters[3] = lineItem.getAmount();
- 		parameters[4] = lineItem.getQuantity();		
- 		parameters[5] = lineItem.getId();
- 		parameters[6] = lineItem.getVersion();
+ 		parameters[4] = lineItem.getQuantity();
+ 		parameters[5] = lineItem.getActive();		
+ 		parameters[6] = lineItem.getId();
+ 		parameters[7] = lineItem.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareCreateLineItemParameters(LineItem lineItem){
-		Object[] parameters = new Object[6];
+		Object[] parameters = new Object[7];
 		String newLineItemId=getNextId();
 		lineItem.setId(newLineItemId);
 		parameters[0] =  lineItem.getId();
@@ -353,7 +363,8 @@ public class LineItemJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Li
  		parameters[2] = lineItem.getSkuId();
  		parameters[3] = lineItem.getSkuName();
  		parameters[4] = lineItem.getAmount();
- 		parameters[5] = lineItem.getQuantity();		
+ 		parameters[5] = lineItem.getQuantity();
+ 		parameters[6] = lineItem.getActive();		
  				
  		return parameters;
  	}

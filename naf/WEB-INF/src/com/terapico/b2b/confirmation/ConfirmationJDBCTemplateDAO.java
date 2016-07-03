@@ -4,11 +4,13 @@ package com.terapico.b2b.confirmation;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
 import com.terapico.b2b.order.OrderDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class ConfirmationJDBCTemplateDAO extends CommonJDBCTemplateDAO implements ConfirmationDAO{
 
@@ -38,7 +40,7 @@ public class ConfirmationJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	}
 	public Confirmation save(Confirmation confirmation,Map<String,Object> options){
 		
-		String methodName="save(Confirmation confirmation,Map<String,Object> options){";
+		String methodName="save(Confirmation confirmation,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(confirmation, methodName, "confirmation");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -175,10 +177,17 @@ public class ConfirmationJDBCTemplateDAO extends CommonJDBCTemplateDAO implement
 	protected ConfirmationMapper getMapper(){
 		return new ConfirmationMapper();
 	}
-	protected Confirmation extractConfirmation(String confirmationId){
+	protected Confirmation extractConfirmation(String confirmationId) throws Exception{
 		String SQL = "select * from confirmation_data where id=?";	
-		Confirmation confirmation = getJdbcTemplateObject().queryForObject(SQL, new Object[]{confirmationId}, getMapper());
-		return confirmation;
+		try{
+		
+			Confirmation confirmation = getJdbcTemplateObject().queryForObject(SQL, new Object[]{confirmationId}, getMapper());
+			return confirmation;
+		}catch(EmptyResultDataAccessException e){
+			throw new ConfirmationNotFoundException("Confirmation("+confirmationId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Confirmation loadInternalConfirmation(String confirmationId, Map<String,Object> loadOptions) throws Exception{

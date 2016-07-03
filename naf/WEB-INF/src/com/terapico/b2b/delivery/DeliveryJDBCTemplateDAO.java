@@ -4,11 +4,13 @@ package com.terapico.b2b.delivery;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
 import com.terapico.b2b.order.OrderDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class DeliveryJDBCTemplateDAO extends CommonJDBCTemplateDAO implements DeliveryDAO{
 
@@ -38,7 +40,7 @@ public class DeliveryJDBCTemplateDAO extends CommonJDBCTemplateDAO implements De
 	}
 	public Delivery save(Delivery delivery,Map<String,Object> options){
 		
-		String methodName="save(Delivery delivery,Map<String,Object> options){";
+		String methodName="save(Delivery delivery,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(delivery, methodName, "delivery");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -175,10 +177,17 @@ public class DeliveryJDBCTemplateDAO extends CommonJDBCTemplateDAO implements De
 	protected DeliveryMapper getMapper(){
 		return new DeliveryMapper();
 	}
-	protected Delivery extractDelivery(String deliveryId){
+	protected Delivery extractDelivery(String deliveryId) throws Exception{
 		String SQL = "select * from delivery_data where id=?";	
-		Delivery delivery = getJdbcTemplateObject().queryForObject(SQL, new Object[]{deliveryId}, getMapper());
-		return delivery;
+		try{
+		
+			Delivery delivery = getJdbcTemplateObject().queryForObject(SQL, new Object[]{deliveryId}, getMapper());
+			return delivery;
+		}catch(EmptyResultDataAccessException e){
+			throw new DeliveryNotFoundException("Delivery("+deliveryId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Delivery loadInternalDelivery(String deliveryId, Map<String,Object> loadOptions) throws Exception{

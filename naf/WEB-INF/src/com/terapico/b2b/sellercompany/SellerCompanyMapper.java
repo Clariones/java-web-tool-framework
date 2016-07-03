@@ -3,8 +3,6 @@ package com.terapico.b2b.sellercompany;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
-import com.terapico.b2b.order.Order;
-import com.terapico.b2b.custsvcrep.CustSvcRep;
 
 public class SellerCompanyMapper implements RowMapper<SellerCompany>{
 	

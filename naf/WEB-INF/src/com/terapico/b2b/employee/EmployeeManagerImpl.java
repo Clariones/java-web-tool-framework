@@ -7,7 +7,6 @@ import java.util.HashMap;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.assignment.Assignment;
 
-import com.terapico.b2b.assignment.AssignmentDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
 
 import com.terapico.b2b.access.Access;
@@ -63,11 +62,8 @@ public class EmployeeManagerImpl implements EmployeeManager {
 		employee.setEmail(email);
 		employee.setPasswd(passwd);
 		employee.setCellPhone(cellPhone);
-		//save for later setOrderValues(employee);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return employeeDAO.save(employee, options);
-		return saveEmployee(employee, options);
+
+		return saveEmployee(employee, emptyOptions());
 		
 
 		
@@ -95,10 +91,15 @@ public class EmployeeManagerImpl implements EmployeeManager {
 	
 	public Employee transferToNewCompany(String employeeId, String newCompanyId) throws Exception
  	{
- 		Employee employee = loadEmployee(employeeId, allTokens());	
-		BuyerCompany company = loadCompany(newCompanyId, emptyOptions());		
-		employee.setCompany(company);		
-		return saveEmployee(employee, emptyOptions());
+ 
+		Employee employee = loadEmployee(employeeId, allTokens());	
+		synchronized(employee){
+			//will be good when the employee loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			BuyerCompany company = loadCompany(newCompanyId, emptyOptions());		
+			employee.setCompany(company);		
+			return saveEmployee(employee, emptyOptions());
+		}
  	}
  	
  	protected BuyerCompany loadCompany(String newCompanyId, Map<String,Object> options) throws Exception
@@ -121,10 +122,12 @@ public class EmployeeManagerImpl implements EmployeeManager {
 		Assignment assignment = createAssignment(accessId, assignedDate);
 		
 		Employee employee = loadEmployee(employeeId, allTokens());
-		
-		employee.addAssignment( assignment );
-		
-		return saveEmployee(employee, tokens().withAssignmentList().done());
+		synchronized(employee){ 
+			//will be good when the employee loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			employee.addAssignment( assignment );		
+			return saveEmployee(employee, tokens().withAssignmentList().done());
+		}
 	}
 	protected Assignment createAssignment(String accessId, Date assignedDate){
 

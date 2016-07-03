@@ -23,7 +23,29 @@ public class SellerCompanyManagerMock implements SellerCompanyManager {
 	{
 		return 0;
 	}
-	public  SellerCompany addOrder(String sellerCompanyId, String buyerId, String title, double totalAmount, String type, boolean markAsDelete)
+	public  SellerCompany addProfitCenter(String sellerCompanyId, String name)
+	{
+		return new SellerCompany();
+	}
+	public  SellerCompany removeProfitCenter(String sellerCompanyId, String profitCenterId){
+		return new SellerCompany();
+	}
+	public  SellerCompany updateProfitCenter(String sellerCompanyId, String profitCenterId, String property, Object newValue){
+		return new SellerCompany();
+	}
+
+	public  SellerCompany addCreditAccount(String sellerCompanyId, String name, String buyerId, double authorized, double remain)
+	{
+		return new SellerCompany();
+	}
+	public  SellerCompany removeCreditAccount(String sellerCompanyId, String creditAccountId){
+		return new SellerCompany();
+	}
+	public  SellerCompany updateCreditAccount(String sellerCompanyId, String creditAccountId, String property, Object newValue){
+		return new SellerCompany();
+	}
+
+	public  SellerCompany addOrder(String sellerCompanyId, String buyerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)
 	{
 		return new SellerCompany();
 	}
@@ -34,7 +56,7 @@ public class SellerCompanyManagerMock implements SellerCompanyManager {
 		return new SellerCompany();
 	}
 
-	public  SellerCompany addCustSvcRep(String sellerCompanyId, String email, String roleId)
+	public  SellerCompany addCustSvcRep(String sellerCompanyId, String email, String passwd, String roleId)
 	{
 		return new SellerCompany();
 	}

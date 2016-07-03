@@ -4,16 +4,60 @@ package com.terapico.b2b.sellercompany;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
+import com.terapico.b2b.creditaccount.CreditAccount;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
+import com.terapico.b2b.profitcenter.ProfitCenter;
 
+import com.terapico.b2b.profitcenter.ProfitCenterDAO;
+import com.terapico.b2b.creditaccount.CreditAccountDAO;
 import com.terapico.b2b.custsvcrep.CustSvcRepDAO;
 import com.terapico.b2b.order.OrderDAO;
 
+
+import org.springframework.dao.EmptyResultDataAccessException;
+
 public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implements SellerCompanyDAO{
 
+		
+	
+  	private  ProfitCenterDAO  profitCenterDAO;
+ 	public void setProfitCenterDAO(ProfitCenterDAO pProfitCenterDAO){
+ 	
+ 		if(pProfitCenterDAO == null){
+ 			throw new IllegalStateException("Do not try to set profitCenterDAO to null.");
+ 		}
+	 	this.profitCenterDAO = pProfitCenterDAO;
+ 	}
+ 	public ProfitCenterDAO getProfitCenterDAO(){
+ 		if(this.profitCenterDAO == null){
+ 			throw new IllegalStateException("The profitCenterDAO is not configured yet, please config it some where.");
+ 		}
+ 		
+	 	return this.profitCenterDAO;
+ 	}	
+ 	
+			
+		
+	
+  	private  CreditAccountDAO  creditAccountDAO;
+ 	public void setCreditAccountDAO(CreditAccountDAO pCreditAccountDAO){
+ 	
+ 		if(pCreditAccountDAO == null){
+ 			throw new IllegalStateException("Do not try to set creditAccountDAO to null.");
+ 		}
+	 	this.creditAccountDAO = pCreditAccountDAO;
+ 	}
+ 	public CreditAccountDAO getCreditAccountDAO(){
+ 		if(this.creditAccountDAO == null){
+ 			throw new IllegalStateException("The creditAccountDAO is not configured yet, please config it some where.");
+ 		}
+ 		
+	 	return this.creditAccountDAO;
+ 	}	
+ 	
+			
 		
 	
   	private  OrderDAO  orderDAO;
@@ -59,7 +103,7 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	}
 	public SellerCompany save(SellerCompany sellerCompany,Map<String,Object> options){
 		
-		String methodName="save(SellerCompany sellerCompany,Map<String,Object> options){";
+		String methodName="save(SellerCompany sellerCompany,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(sellerCompany, methodName, "sellerCompany");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -76,6 +120,20 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		SellerCompany newSellerCompany = load(sellerCompanyId, options);
 		newSellerCompany.setVersion(0);
 		
+		
+ 		
+ 		if(isSaveProfitCenterListEnabled(options)){
+ 			for(ProfitCenter item: newSellerCompany.getProfitCenterList()){
+ 				item.setVersion(0);
+ 			}
+ 		}
+		
+ 		
+ 		if(isSaveCreditAccountListEnabled(options)){
+ 			for(CreditAccount item: newSellerCompany.getCreditAccountList()){
+ 				item.setVersion(0);
+ 			}
+ 		}
 		
  		
  		if(isSaveOrderListEnabled(options)){
@@ -182,6 +240,38 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 
 
 		
+	//protected static final String PROFIT_CENTER_LIST = "profitCenterList";
+	
+	protected boolean isExtractProfitCenterListEnabled(Map<String,Object> options){
+		
+ 		return checkOptions(options,SellerCompanyTokens.PROFIT_CENTER_LIST);
+		
+ 	}
+
+	protected boolean isSaveProfitCenterListEnabled(Map<String,Object> options){
+		return checkOptions(options, SellerCompanyTokens.PROFIT_CENTER_LIST);
+		
+ 	}
+ 	
+ 	
+			
+		
+	//protected static final String CREDIT_ACCOUNT_LIST = "creditAccountList";
+	
+	protected boolean isExtractCreditAccountListEnabled(Map<String,Object> options){
+		
+ 		return checkOptions(options,SellerCompanyTokens.CREDIT_ACCOUNT_LIST);
+		
+ 	}
+
+	protected boolean isSaveCreditAccountListEnabled(Map<String,Object> options){
+		return checkOptions(options, SellerCompanyTokens.CREDIT_ACCOUNT_LIST);
+		
+ 	}
+ 	
+ 	
+			
+		
 	//protected static final String ORDER_LIST = "orderList";
 	
 	protected boolean isExtractOrderListEnabled(Map<String,Object> options){
@@ -219,16 +309,31 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	protected SellerCompanyMapper getMapper(){
 		return new SellerCompanyMapper();
 	}
-	protected SellerCompany extractSellerCompany(String sellerCompanyId){
+	protected SellerCompany extractSellerCompany(String sellerCompanyId) throws Exception{
 		String SQL = "select * from seller_company_data where id=?";	
-		SellerCompany sellerCompany = getJdbcTemplateObject().queryForObject(SQL, new Object[]{sellerCompanyId}, getMapper());
-		return sellerCompany;
+		try{
+		
+			SellerCompany sellerCompany = getJdbcTemplateObject().queryForObject(SQL, new Object[]{sellerCompanyId}, getMapper());
+			return sellerCompany;
+		}catch(EmptyResultDataAccessException e){
+			throw new SellerCompanyNotFoundException("SellerCompany("+sellerCompanyId+") is not found!");
+		}
+		
+		
 	}
 
 	protected SellerCompany loadInternalSellerCompany(String sellerCompanyId, Map<String,Object> loadOptions) throws Exception{
 		
 		SellerCompany sellerCompany = extractSellerCompany(sellerCompanyId);
 
+		
+		if(isExtractProfitCenterListEnabled(loadOptions)){
+	 		extractProfitCenterList(sellerCompany, loadOptions);
+ 		}		
+		
+		if(isExtractCreditAccountListEnabled(loadOptions)){
+	 		extractCreditAccountList(sellerCompany, loadOptions);
+ 		}		
 		
 		if(isExtractOrderListEnabled(loadOptions)){
 	 		extractOrderList(sellerCompany, loadOptions);
@@ -244,6 +349,28 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	
 	
 	
+		
+	protected SellerCompany extractProfitCenterList(SellerCompany sellerCompany, Map<String,Object> options){
+		
+		List<ProfitCenter> profitCenterList = getProfitCenterDAO().findProfitCenterByBelongsTo(sellerCompany.getId());
+		if(profitCenterList != null){
+			sellerCompany.setProfitCenterList(profitCenterList);
+		}
+		
+		return sellerCompany;
+	
+	}	
+		
+	protected SellerCompany extractCreditAccountList(SellerCompany sellerCompany, Map<String,Object> options){
+		
+		List<CreditAccount> creditAccountList = getCreditAccountDAO().findCreditAccountBySeller(sellerCompany.getId());
+		if(creditAccountList != null){
+			sellerCompany.setCreditAccountList(creditAccountList);
+		}
+		
+		return sellerCompany;
+	
+	}	
 		
 	protected SellerCompany extractOrderList(SellerCompany sellerCompany, Map<String,Object> options){
 		
@@ -411,6 +538,14 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 		saveSellerCompany(sellerCompany);
 
 		
+		if(isSaveProfitCenterListEnabled(options)){
+	 		saveProfitCenterList(sellerCompany, options);
+ 		}		
+		
+		if(isSaveCreditAccountListEnabled(options)){
+	 		saveCreditAccountList(sellerCompany, options);
+ 		}		
+		
 		if(isSaveOrderListEnabled(options)){
 	 		saveOrderList(sellerCompany, options);
  		}		
@@ -427,6 +562,38 @@ public class SellerCompanyJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	
 	//======================================================================================
 	
+		
+	protected SellerCompany saveProfitCenterList(SellerCompany sellerCompany, Map<String,Object> options){
+		List<ProfitCenter> profitCenterList = sellerCompany.getProfitCenterList();
+		if(profitCenterList == null){
+			return sellerCompany;
+		}
+		if(profitCenterList.isEmpty()){
+			return sellerCompany;// Does this mean delete all from the parent object?
+		}
+		//Call DAO to save the list
+		
+		getProfitCenterDAO().saveList(sellerCompany.getProfitCenterList(),options);
+		
+		return sellerCompany;
+	
+	}
+		
+	protected SellerCompany saveCreditAccountList(SellerCompany sellerCompany, Map<String,Object> options){
+		List<CreditAccount> creditAccountList = sellerCompany.getCreditAccountList();
+		if(creditAccountList == null){
+			return sellerCompany;
+		}
+		if(creditAccountList.isEmpty()){
+			return sellerCompany;// Does this mean delete all from the parent object?
+		}
+		//Call DAO to save the list
+		
+		getCreditAccountDAO().saveList(sellerCompany.getCreditAccountList(),options);
+		
+		return sellerCompany;
+	
+	}
 		
 	protected SellerCompany saveOrderList(SellerCompany sellerCompany, Map<String,Object> options){
 		List<Order> orderList = sellerCompany.getOrderList();

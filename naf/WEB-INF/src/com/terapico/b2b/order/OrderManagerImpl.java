@@ -6,24 +6,26 @@ import java.util.Map;
 import java.util.HashMap;
 import com.terapico.b2b.approval.Approval;
 import com.terapico.b2b.confirmation.Confirmation;
+import com.terapico.b2b.recurringinfo.RecurringInfo;
 import com.terapico.b2b.shipment.Shipment;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.processing.Processing;
 import com.terapico.b2b.lineitem.LineItem;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
+import com.terapico.b2b.costcenter.CostCenter;
+import com.terapico.b2b.profitcenter.ProfitCenter;
 import com.terapico.b2b.action.Action;
 import com.terapico.b2b.delivery.Delivery;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
-import com.terapico.b2b.shippinggroup.ShippingGroupDAO;
+import com.terapico.b2b.profitcenter.ProfitCenterDAO;
 import com.terapico.b2b.delivery.DeliveryDAO;
-import com.terapico.b2b.lineitem.LineItemDAO;
 import com.terapico.b2b.shipment.ShipmentDAO;
 import com.terapico.b2b.processing.ProcessingDAO;
-import com.terapico.b2b.paymentgroup.PaymentGroupDAO;
-import com.terapico.b2b.action.ActionDAO;
 import com.terapico.b2b.approval.ApprovalDAO;
+import com.terapico.b2b.costcenter.CostCenterDAO;
+import com.terapico.b2b.recurringinfo.RecurringInfoDAO;
 import com.terapico.b2b.confirmation.ConfirmationDAO;
 import com.terapico.b2b.sellercompany.SellerCompanyDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
@@ -78,6 +80,24 @@ public class OrderManagerImpl implements OrderManager {
  	}
  
  	
+ 	private  CostCenterDAO  costCenterDAO;
+ 	public void setCostCenterDAO(CostCenterDAO costCenterDAO){
+	 	this.costCenterDAO = costCenterDAO;
+ 	}
+ 	public CostCenterDAO getCostCenterDAO(){
+	 	return this.costCenterDAO;
+ 	}
+ 
+ 	
+ 	private  ProfitCenterDAO  profitCenterDAO;
+ 	public void setProfitCenterDAO(ProfitCenterDAO profitCenterDAO){
+	 	this.profitCenterDAO = profitCenterDAO;
+ 	}
+ 	public ProfitCenterDAO getProfitCenterDAO(){
+	 	return this.profitCenterDAO;
+ 	}
+ 
+ 	
  	private  ConfirmationDAO  confirmationDAO;
  	public void setConfirmationDAO(ConfirmationDAO confirmationDAO){
 	 	this.confirmationDAO = confirmationDAO;
@@ -121,10 +141,19 @@ public class OrderManagerImpl implements OrderManager {
  	public DeliveryDAO getDeliveryDAO(){
 	 	return this.deliveryDAO;
  	}
+ 
+ 	
+ 	private  RecurringInfoDAO  recurringInfoDAO;
+ 	public void setRecurringInfoDAO(RecurringInfoDAO recurringInfoDAO){
+	 	this.recurringInfoDAO = recurringInfoDAO;
+ 	}
+ 	public RecurringInfoDAO getRecurringInfoDAO(){
+	 	return this.recurringInfoDAO;
+ 	}
 
  	
  	
-	public Order createOrder(String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete, String[] optionsExpr) throws Exception
+	public Order createOrder(String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status, String[] optionsExpr) throws Exception
 	{
 		
 		
@@ -135,14 +164,18 @@ public class OrderManagerImpl implements OrderManager {
 		SellerCompany seller = loadSeller(sellerId,emptyOptions());
 		order.setSeller(seller);
 		order.setTitle(title);
+		CostCenter costCenter = loadCostCenter(costCenterId,emptyOptions());
+		order.setCostCenter(costCenter);
+		ProfitCenter profitCenter = loadProfitCenter(profitCenterId,emptyOptions());
+		order.setProfitCenter(profitCenter);
 		order.setTotalAmount(totalAmount);
 		order.setType(type);
 		order.setMarkAsDelete(markAsDelete);
-		//save for later setOrderValues(order);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return orderDAO.save(order, options);
-		return saveOrder(order, options);
+		RecurringInfo recurringInfo = loadRecurringInfo(recurringInfoId,emptyOptions());
+		order.setRecurringInfo(recurringInfo);
+		order.setStatus(status);
+
+		return saveOrder(order, emptyOptions());
 		
 
 		
@@ -170,10 +203,15 @@ public class OrderManagerImpl implements OrderManager {
 	
 	public Order transferToNewBuyer(String orderId, String newBuyerId) throws Exception
  	{
- 		Order order = loadOrder(orderId, allTokens());	
-		BuyerCompany buyer = loadBuyer(newBuyerId, emptyOptions());		
-		order.setBuyer(buyer);		
-		return saveOrder(order, emptyOptions());
+ 
+		Order order = loadOrder(orderId, allTokens());	
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			BuyerCompany buyer = loadBuyer(newBuyerId, emptyOptions());		
+			order.setBuyer(buyer);		
+			return saveOrder(order, emptyOptions());
+		}
  	}
  	
  	protected BuyerCompany loadBuyer(String newBuyerId, Map<String,Object> options) throws Exception
@@ -183,10 +221,15 @@ public class OrderManagerImpl implements OrderManager {
  	
  	public Order transferToNewSeller(String orderId, String newSellerId) throws Exception
  	{
- 		Order order = loadOrder(orderId, allTokens());	
-		SellerCompany seller = loadSeller(newSellerId, emptyOptions());		
-		order.setSeller(seller);		
-		return saveOrder(order, emptyOptions());
+ 
+		Order order = loadOrder(orderId, allTokens());	
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			SellerCompany seller = loadSeller(newSellerId, emptyOptions());		
+			order.setSeller(seller);		
+			return saveOrder(order, emptyOptions());
+		}
  	}
  	
  	protected SellerCompany loadSeller(String newSellerId, Map<String,Object> options) throws Exception
@@ -194,16 +237,56 @@ public class OrderManagerImpl implements OrderManager {
  		return getSellerCompanyDAO().load(newSellerId, options);
  	}
  	
+ 	public Order transferToNewCostCenter(String orderId, String newCostCenterId) throws Exception
+ 	{
+ 
+		Order order = loadOrder(orderId, allTokens());	
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			CostCenter costCenter = loadCostCenter(newCostCenterId, emptyOptions());		
+			order.setCostCenter(costCenter);		
+			return saveOrder(order, emptyOptions());
+		}
+ 	}
+ 	
+ 	protected CostCenter loadCostCenter(String newCostCenterId, Map<String,Object> options) throws Exception
+ 	{
+ 		return getCostCenterDAO().load(newCostCenterId, options);
+ 	}
+ 	
+ 	public Order transferToNewProfitCenter(String orderId, String newProfitCenterId) throws Exception
+ 	{
+ 
+		Order order = loadOrder(orderId, allTokens());	
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			ProfitCenter profitCenter = loadProfitCenter(newProfitCenterId, emptyOptions());		
+			order.setProfitCenter(profitCenter);		
+			return saveOrder(order, emptyOptions());
+		}
+ 	}
+ 	
+ 	protected ProfitCenter loadProfitCenter(String newProfitCenterId, Map<String,Object> options) throws Exception
+ 	{
+ 		return getProfitCenterDAO().load(newProfitCenterId, options);
+ 	}
+ 	
  	public Order confirm(String orderId, String who, Date confirmTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
-		if(order.getConfirmation() != null){
-			throw new OrderManagerException("The Order("+orderId+") has already confirmed");
-		}
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			if(order.getConfirmation() != null){
+				throw new OrderManagerException("The Order("+orderId+") has already confirmed");
+			}
 		
-		Confirmation confirmation = createConfirmation(who, confirmTime);		
-		order.setConfirmation(confirmation);		
-		return saveOrder(order, tokens().withConfirmation().done());
+			Confirmation confirmation = createConfirmation(who, confirmTime);		
+			order.setConfirmation(confirmation);		
+			return saveOrder(order, tokens().withConfirmation().done());
+		}
  	}
  	protected Confirmation createConfirmation(String who, Date confirmTime){
  		Confirmation confirmation = new Confirmation(who, confirmTime);
@@ -212,13 +295,17 @@ public class OrderManagerImpl implements OrderManager {
 	public Order approve(String orderId, String who, Date approveTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
-		if(order.getApproval() != null){
-			throw new OrderManagerException("The Order("+orderId+") has already approved");
-		}
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			if(order.getApproval() != null){
+				throw new OrderManagerException("The Order("+orderId+") has already approved");
+			}
 		
-		Approval approval = createApproval(who, approveTime);		
-		order.setApproval(approval);		
-		return saveOrder(order, tokens().withApproval().done());
+			Approval approval = createApproval(who, approveTime);		
+			order.setApproval(approval);		
+			return saveOrder(order, tokens().withApproval().done());
+		}
  	}
  	protected Approval createApproval(String who, Date approveTime){
  		Approval approval = new Approval(who, approveTime);
@@ -227,13 +314,17 @@ public class OrderManagerImpl implements OrderManager {
 	public Order process(String orderId, String who, Date processTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
-		if(order.getProcessing() != null){
-			throw new OrderManagerException("The Order("+orderId+") has already processed");
-		}
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			if(order.getProcessing() != null){
+				throw new OrderManagerException("The Order("+orderId+") has already processed");
+			}
 		
-		Processing processing = createProcessing(who, processTime);		
-		order.setProcessing(processing);		
-		return saveOrder(order, tokens().withProcessing().done());
+			Processing processing = createProcessing(who, processTime);		
+			order.setProcessing(processing);		
+			return saveOrder(order, tokens().withProcessing().done());
+		}
  	}
  	protected Processing createProcessing(String who, Date processTime){
  		Processing processing = new Processing(who, processTime);
@@ -242,13 +333,17 @@ public class OrderManagerImpl implements OrderManager {
 	public Order ship(String orderId, String who, Date shipTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
-		if(order.getShipment() != null){
-			throw new OrderManagerException("The Order("+orderId+") has already shipped");
-		}
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			if(order.getShipment() != null){
+				throw new OrderManagerException("The Order("+orderId+") has already shipped");
+			}
 		
-		Shipment shipment = createShipment(who, shipTime);		
-		order.setShipment(shipment);		
-		return saveOrder(order, tokens().withShipment().done());
+			Shipment shipment = createShipment(who, shipTime);		
+			order.setShipment(shipment);		
+			return saveOrder(order, tokens().withShipment().done());
+		}
  	}
  	protected Shipment createShipment(String who, Date shipTime){
  		Shipment shipment = new Shipment(who, shipTime);
@@ -257,19 +352,41 @@ public class OrderManagerImpl implements OrderManager {
 	public Order deliver(String orderId, String who, Date deliveryTime) throws Exception
  	{
 		Order order = loadOrder(orderId, allTokens());	
-		if(order.getDelivery() != null){
-			throw new OrderManagerException("The Order("+orderId+") has already delivered");
-		}
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			if(order.getDelivery() != null){
+				throw new OrderManagerException("The Order("+orderId+") has already delivered");
+			}
 		
-		Delivery delivery = createDelivery(who, deliveryTime);		
-		order.setDelivery(delivery);		
-		return saveOrder(order, tokens().withDelivery().done());
+			Delivery delivery = createDelivery(who, deliveryTime);		
+			order.setDelivery(delivery);		
+			return saveOrder(order, tokens().withDelivery().done());
+		}
  	}
  	protected Delivery createDelivery(String who, Date deliveryTime){
  		Delivery delivery = new Delivery(who, deliveryTime);
  		return getDeliveryDAO().save(delivery,emptyOptions());
  	}
-
+	public Order transferToNewRecurringInfo(String orderId, String newRecurringInfoId) throws Exception
+ 	{
+ 
+		Order order = loadOrder(orderId, allTokens());	
+		synchronized(order){
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			RecurringInfo recurringInfo = loadRecurringInfo(newRecurringInfoId, emptyOptions());		
+			order.setRecurringInfo(recurringInfo);		
+			return saveOrder(order, emptyOptions());
+		}
+ 	}
+ 	
+ 	protected RecurringInfo loadRecurringInfo(String newRecurringInfoId, Map<String,Object> options) throws Exception
+ 	{
+ 		return getRecurringInfoDAO().load(newRecurringInfoId, options);
+ 	}
+ 	
+ 
 
 	public void delete(String orderId, int version) throws Exception
 	{
@@ -279,17 +396,19 @@ public class OrderManagerImpl implements OrderManager {
 	{
 		return 0;
 	}
-	public  Order addLineItem(String orderId, String skuId, String skuName, double amount, int quantity) throws Exception
+	public  Order addLineItem(String orderId, String skuId, String skuName, double amount, int quantity, boolean active) throws Exception
 	{		
-		LineItem lineItem = createLineItem(skuId, skuName, amount, quantity);
+		LineItem lineItem = createLineItem(skuId, skuName, amount, quantity, active);
 		
 		Order order = loadOrder(orderId, allTokens());
-		
-		order.addLineItem( lineItem );
-		
-		return saveOrder(order, tokens().withLineItemList().done());
+		synchronized(order){ 
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			order.addLineItem( lineItem );		
+			return saveOrder(order, tokens().withLineItemList().done());
+		}
 	}
-	protected LineItem createLineItem(String skuId, String skuName, double amount, int quantity){
+	protected LineItem createLineItem(String skuId, String skuName, double amount, int quantity, boolean active){
 
 		LineItem lineItem = new LineItem();
 		
@@ -297,7 +416,8 @@ public class OrderManagerImpl implements OrderManager {
 		lineItem.setSkuId(skuId);		
 		lineItem.setSkuName(skuName);		
 		lineItem.setAmount(amount);		
-		lineItem.setQuantity(quantity);
+		lineItem.setQuantity(quantity);		
+		lineItem.setActive(active);
 	
 		
 		return lineItem;			
@@ -315,10 +435,12 @@ public class OrderManagerImpl implements OrderManager {
 		ShippingGroup shippingGroup = createShippingGroup(name, addressId, amount);
 		
 		Order order = loadOrder(orderId, allTokens());
-		
-		order.addShippingGroup( shippingGroup );
-		
-		return saveOrder(order, tokens().withShippingGroupList().done());
+		synchronized(order){ 
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			order.addShippingGroup( shippingGroup );		
+			return saveOrder(order, tokens().withShippingGroupList().done());
+		}
 	}
 	protected ShippingGroup createShippingGroup(String name, String addressId, double amount){
 
@@ -347,10 +469,12 @@ public class OrderManagerImpl implements OrderManager {
 		PaymentGroup paymentGroup = createPaymentGroup(name, cardNumber, billingAddressId);
 		
 		Order order = loadOrder(orderId, allTokens());
-		
-		order.addPaymentGroup( paymentGroup );
-		
-		return saveOrder(order, tokens().withPaymentGroupList().done());
+		synchronized(order){ 
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			order.addPaymentGroup( paymentGroup );		
+			return saveOrder(order, tokens().withPaymentGroupList().done());
+		}
 	}
 	protected PaymentGroup createPaymentGroup(String name, String cardNumber, String billingAddressId){
 
@@ -379,10 +503,12 @@ public class OrderManagerImpl implements OrderManager {
 		Action action = createAction(name, internalName);
 		
 		Order order = loadOrder(orderId, allTokens());
-		
-		order.addAction( action );
-		
-		return saveOrder(order, tokens().withActionList().done());
+		synchronized(order){ 
+			//will be good when the order loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			order.addAction( action );		
+			return saveOrder(order, tokens().withActionList().done());
+		}
 	}
 	protected Action createAction(String name, String internalName){
 

@@ -4,13 +4,15 @@ package com.terapico.b2b.assignment;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.employee.Employee;
 
 import com.terapico.b2b.employee.EmployeeDAO;
 import com.terapico.b2b.access.AccessDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements AssignmentDAO{
  
@@ -39,7 +41,7 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	}
 	public Assignment save(Assignment assignment,Map<String,Object> options){
 		
-		String methodName="save(Assignment assignment,Map<String,Object> options){";
+		String methodName="save(Assignment assignment,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(assignment, methodName, "assignment");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -187,10 +189,17 @@ public class AssignmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	protected AssignmentMapper getMapper(){
 		return new AssignmentMapper();
 	}
-	protected Assignment extractAssignment(String assignmentId){
+	protected Assignment extractAssignment(String assignmentId) throws Exception{
 		String SQL = "select * from assignment_data where id=?";	
-		Assignment assignment = getJdbcTemplateObject().queryForObject(SQL, new Object[]{assignmentId}, getMapper());
-		return assignment;
+		try{
+		
+			Assignment assignment = getJdbcTemplateObject().queryForObject(SQL, new Object[]{assignmentId}, getMapper());
+			return assignment;
+		}catch(EmptyResultDataAccessException e){
+			throw new AssignmentNotFoundException("Assignment("+assignmentId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Assignment loadInternalAssignment(String assignmentId, Map<String,Object> loadOptions) throws Exception{

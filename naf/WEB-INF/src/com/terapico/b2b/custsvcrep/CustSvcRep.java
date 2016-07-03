@@ -3,17 +3,16 @@ package com.terapico.b2b.custsvcrep;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.role.Role;
 import com.terapico.b2b.sellercompany.SellerCompany;
 
-
+@JsonSerialize(using = CustSvcRepSerializer.class)
 public class CustSvcRep implements  java.io.Serializable{
 
 	protected		String	mId;
 	protected		String	mEmail;
+	protected		String	mPasswd;
 	protected		Role	mRole;
 	protected		SellerCompany	mCompany;
 	protected		int	mVersion;
@@ -25,9 +24,10 @@ public class CustSvcRep implements  java.io.Serializable{
 		//lazy load for all the properties
 	}
 	
-	public 	CustSvcRep(String email, Role role, SellerCompany company)
+	public 	CustSvcRep(String email, String passwd, Role role, SellerCompany company)
 	{
 		setEmail(email);
+		setPasswd(passwd);
 		setRole(role);
 		setCompany(company);	
 	}
@@ -46,6 +46,13 @@ public class CustSvcRep implements  java.io.Serializable{
 	}
 	public String getEmail(){
 		return this.mEmail;
+	}
+	
+	public void setPasswd(String passwd){
+		this.mPasswd = passwd;
+	}
+	public String getPasswd(){
+		return this.mPasswd;
 	}
 	
 	public void setRole(Role role){
@@ -76,6 +83,7 @@ public class CustSvcRep implements  java.io.Serializable{
 		stringBuilder.append("cust_svc_rep{");
 		stringBuilder.append("\tid='"+getId()+"';");
 		stringBuilder.append("\temail='"+getEmail()+"';");
+		stringBuilder.append("\tpasswd='"+getPasswd()+"';");
 		stringBuilder.append("\trole='role("+getRole().getId()+")';");
 		stringBuilder.append("\tcompany='seller_company("+getCompany().getId()+")';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");

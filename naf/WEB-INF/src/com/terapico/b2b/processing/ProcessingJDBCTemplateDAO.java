@@ -4,11 +4,13 @@ package com.terapico.b2b.processing;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
 import com.terapico.b2b.order.OrderDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class ProcessingJDBCTemplateDAO extends CommonJDBCTemplateDAO implements ProcessingDAO{
 
@@ -38,7 +40,7 @@ public class ProcessingJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	}
 	public Processing save(Processing processing,Map<String,Object> options){
 		
-		String methodName="save(Processing processing,Map<String,Object> options){";
+		String methodName="save(Processing processing,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(processing, methodName, "processing");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -175,10 +177,17 @@ public class ProcessingJDBCTemplateDAO extends CommonJDBCTemplateDAO implements 
 	protected ProcessingMapper getMapper(){
 		return new ProcessingMapper();
 	}
-	protected Processing extractProcessing(String processingId){
+	protected Processing extractProcessing(String processingId) throws Exception{
 		String SQL = "select * from processing_data where id=?";	
-		Processing processing = getJdbcTemplateObject().queryForObject(SQL, new Object[]{processingId}, getMapper());
-		return processing;
+		try{
+		
+			Processing processing = getJdbcTemplateObject().queryForObject(SQL, new Object[]{processingId}, getMapper());
+			return processing;
+		}catch(EmptyResultDataAccessException e){
+			throw new ProcessingNotFoundException("Processing("+processingId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Processing loadInternalProcessing(String processingId, Map<String,Object> loadOptions) throws Exception{

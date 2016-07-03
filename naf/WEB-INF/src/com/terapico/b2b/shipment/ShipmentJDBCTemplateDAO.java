@@ -4,11 +4,13 @@ package com.terapico.b2b.shipment;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 
 import com.terapico.b2b.order.OrderDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class ShipmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements ShipmentDAO{
 
@@ -38,7 +40,7 @@ public class ShipmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Sh
 	}
 	public Shipment save(Shipment shipment,Map<String,Object> options){
 		
-		String methodName="save(Shipment shipment,Map<String,Object> options){";
+		String methodName="save(Shipment shipment,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(shipment, methodName, "shipment");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -175,10 +177,17 @@ public class ShipmentJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Sh
 	protected ShipmentMapper getMapper(){
 		return new ShipmentMapper();
 	}
-	protected Shipment extractShipment(String shipmentId){
+	protected Shipment extractShipment(String shipmentId) throws Exception{
 		String SQL = "select * from shipment_data where id=?";	
-		Shipment shipment = getJdbcTemplateObject().queryForObject(SQL, new Object[]{shipmentId}, getMapper());
-		return shipment;
+		try{
+		
+			Shipment shipment = getJdbcTemplateObject().queryForObject(SQL, new Object[]{shipmentId}, getMapper());
+			return shipment;
+		}catch(EmptyResultDataAccessException e){
+			throw new ShipmentNotFoundException("Shipment("+shipmentId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Shipment loadInternalShipment(String shipmentId, Map<String,Object> loadOptions) throws Exception{

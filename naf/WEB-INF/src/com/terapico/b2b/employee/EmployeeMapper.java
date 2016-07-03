@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import com.terapico.b2b.buyercompany.BuyerCompany;
-import com.terapico.b2b.assignment.Assignment;
 
 public class EmployeeMapper implements RowMapper<Employee>{
 	

@@ -3,28 +3,31 @@ package com.terapico.b2b.order;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.approval.Approval;
 import com.terapico.b2b.confirmation.Confirmation;
+import com.terapico.b2b.recurringinfo.RecurringInfo;
 import com.terapico.b2b.shipment.Shipment;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.processing.Processing;
 import com.terapico.b2b.lineitem.LineItem;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
+import com.terapico.b2b.costcenter.CostCenter;
+import com.terapico.b2b.profitcenter.ProfitCenter;
 import com.terapico.b2b.action.Action;
 import com.terapico.b2b.delivery.Delivery;
 import com.terapico.b2b.sellercompany.SellerCompany;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
-
+@JsonSerialize(using = OrderSerializer.class)
 public class Order implements  java.io.Serializable{
 
 	protected		String	mId;
 	protected		BuyerCompany	mBuyer;
 	protected		SellerCompany	mSeller;
 	protected		String	mTitle;
+	protected		CostCenter	mCostCenter;
+	protected		ProfitCenter	mProfitCenter;
 	protected		double	mTotalAmount;
 	protected		String	mType;
 	protected		boolean	mMarkAsDelete;
@@ -33,6 +36,8 @@ public class Order implements  java.io.Serializable{
 	protected		Processing	mProcessing;
 	protected		Shipment	mShipment;
 	protected		Delivery	mDelivery;
+	protected		RecurringInfo	mRecurringInfo;
+	protected		String	mStatus;
 	protected		int	mVersion;
 	
 	
@@ -46,14 +51,18 @@ public class Order implements  java.io.Serializable{
 		//lazy load for all the properties
 	}
 	
-	public 	Order(BuyerCompany buyer, SellerCompany seller, String title, double totalAmount, String type, boolean markAsDelete)
+	public 	Order(BuyerCompany buyer, SellerCompany seller, String title, CostCenter costCenter, ProfitCenter profitCenter, double totalAmount, String type, boolean markAsDelete, RecurringInfo recurringInfo, String status)
 	{
 		setBuyer(buyer);
 		setSeller(seller);
 		setTitle(title);
+		setCostCenter(costCenter);
+		setProfitCenter(profitCenter);
 		setTotalAmount(totalAmount);
 		setType(type);
 		setMarkAsDelete(markAsDelete);
+		setRecurringInfo(recurringInfo);
+		setStatus(status);
 		this.mLineItemList = new ArrayList<LineItem>();
 		this.mShippingGroupList = new ArrayList<ShippingGroup>();
 		this.mPaymentGroupList = new ArrayList<PaymentGroup>();
@@ -88,6 +97,20 @@ public class Order implements  java.io.Serializable{
 	}
 	public String getTitle(){
 		return this.mTitle;
+	}
+	
+	public void setCostCenter(CostCenter costCenter){
+		this.mCostCenter = costCenter;
+	}
+	public CostCenter getCostCenter(){
+		return this.mCostCenter;
+	}
+	
+	public void setProfitCenter(ProfitCenter profitCenter){
+		this.mProfitCenter = profitCenter;
+	}
+	public ProfitCenter getProfitCenter(){
+		return this.mProfitCenter;
 	}
 	
 	public void setTotalAmount(double totalAmount){
@@ -144,6 +167,20 @@ public class Order implements  java.io.Serializable{
 	}
 	public Delivery getDelivery(){
 		return this.mDelivery;
+	}
+	
+	public void setRecurringInfo(RecurringInfo recurringInfo){
+		this.mRecurringInfo = recurringInfo;
+	}
+	public RecurringInfo getRecurringInfo(){
+		return this.mRecurringInfo;
+	}
+	
+	public void setStatus(String status){
+		this.mStatus = status;
+	}
+	public String getStatus(){
+		return this.mStatus;
 	}
 	
 	public void setVersion(int version){
@@ -310,6 +347,8 @@ public class Order implements  java.io.Serializable{
 		stringBuilder.append("\tbuyer='buyer_company("+getBuyer().getId()+")';");
 		stringBuilder.append("\tseller='seller_company("+getSeller().getId()+")';");
 		stringBuilder.append("\ttitle='"+getTitle()+"';");
+		stringBuilder.append("\tcost_center='cost_center("+getCostCenter().getId()+")';");
+		stringBuilder.append("\tprofit_center='profit_center("+getProfitCenter().getId()+")';");
 		stringBuilder.append("\ttotal_amount='"+getTotalAmount()+"';");
 		stringBuilder.append("\ttype='"+getType()+"';");
 		stringBuilder.append("\tmark_as_delete='"+getMarkAsDelete()+"';");
@@ -318,6 +357,8 @@ public class Order implements  java.io.Serializable{
 		stringBuilder.append("\tprocessing='processing("+getProcessing().getId()+")';");
 		stringBuilder.append("\tshipment='shipment("+getShipment().getId()+")';");
 		stringBuilder.append("\tdelivery='delivery("+getDelivery().getId()+")';");
+		stringBuilder.append("\trecurring_info='recurring_info("+getRecurringInfo().getId()+")';");
+		stringBuilder.append("\tstatus='"+getStatus()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

@@ -4,6 +4,9 @@ import java.util.Map;
 
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.sellercompany.SellerCompany;
+import com.terapico.b2b.costcenter.CostCenter;
+import com.terapico.b2b.profitcenter.ProfitCenter;
+import com.terapico.b2b.creditaccount.CreditAccount;
 import com.terapico.b2b.shippingaddress.ShippingAddress;
 import com.terapico.b2b.billingaddress.BillingAddress;
 import com.terapico.b2b.employee.Employee;
@@ -11,6 +14,7 @@ import com.terapico.b2b.role.Role;
 import com.terapico.b2b.assignment.Assignment;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.order.Order;
+import com.terapico.b2b.recurringinfo.RecurringInfo;
 import com.terapico.b2b.confirmation.Confirmation;
 import com.terapico.b2b.shipment.Shipment;
 import com.terapico.b2b.delivery.Delivery;
@@ -32,6 +36,21 @@ public class BeanFactoryImpl{
 
 	public SellerCompany createSellerCompany(Map<String,Object> options){
 		return new SellerCompany();
+	}
+
+
+	public CostCenter createCostCenter(Map<String,Object> options){
+		return new CostCenter();
+	}
+
+
+	public ProfitCenter createProfitCenter(Map<String,Object> options){
+		return new ProfitCenter();
+	}
+
+
+	public CreditAccount createCreditAccount(Map<String,Object> options){
+		return new CreditAccount();
 	}
 
 
@@ -67,6 +86,11 @@ public class BeanFactoryImpl{
 
 	public Order createOrder(Map<String,Object> options){
 		return new Order();
+	}
+
+
+	public RecurringInfo createRecurringInfo(Map<String,Object> options){
+		return new RecurringInfo();
 	}
 
 

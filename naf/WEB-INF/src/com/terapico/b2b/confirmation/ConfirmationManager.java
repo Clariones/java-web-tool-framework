@@ -11,7 +11,7 @@ public interface ConfirmationManager{
 
 	public void delete(String confirmationId, int version) throws Exception;
 	public int deleteAll() throws Exception;
-	public  Confirmation addOrder(String confirmationId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)  throws Exception;
+	public  Confirmation addOrder(String confirmationId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)  throws Exception;
 	public  Confirmation removeOrder(String confirmationId, String orderId)  throws Exception;
 	public  Confirmation updateOrder(String confirmationId, String orderId, String property, Object newValue)  throws Exception;
 

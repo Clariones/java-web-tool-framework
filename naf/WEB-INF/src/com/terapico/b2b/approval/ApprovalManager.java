@@ -11,7 +11,7 @@ public interface ApprovalManager{
 
 	public void delete(String approvalId, int version) throws Exception;
 	public int deleteAll() throws Exception;
-	public  Approval addOrder(String approvalId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)  throws Exception;
+	public  Approval addOrder(String approvalId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)  throws Exception;
 	public  Approval removeOrder(String approvalId, String orderId)  throws Exception;
 	public  Approval updateOrder(String approvalId, String orderId, String property, Object newValue)  throws Exception;
 

@@ -70,11 +70,8 @@ public class PaymentGroupManagerImpl implements PaymentGroupManager {
 		paymentGroup.setCardNumber(cardNumber);
 		BillingAddress billingAddress = loadBillingAddress(billingAddressId,emptyOptions());
 		paymentGroup.setBillingAddress(billingAddress);
-		//save for later setOrderValues(paymentGroup);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return paymentGroupDAO.save(paymentGroup, options);
-		return savePaymentGroup(paymentGroup, options);
+
+		return savePaymentGroup(paymentGroup, emptyOptions());
 		
 
 		
@@ -102,10 +99,15 @@ public class PaymentGroupManagerImpl implements PaymentGroupManager {
 	
 	public PaymentGroup transferToNewBizOrder(String paymentGroupId, String newBizOrderId) throws Exception
  	{
- 		PaymentGroup paymentGroup = loadPaymentGroup(paymentGroupId, allTokens());	
-		Order bizOrder = loadBizOrder(newBizOrderId, emptyOptions());		
-		paymentGroup.setBizOrder(bizOrder);		
-		return savePaymentGroup(paymentGroup, emptyOptions());
+ 
+		PaymentGroup paymentGroup = loadPaymentGroup(paymentGroupId, allTokens());	
+		synchronized(paymentGroup){
+			//will be good when the paymentGroup loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			Order bizOrder = loadBizOrder(newBizOrderId, emptyOptions());		
+			paymentGroup.setBizOrder(bizOrder);		
+			return savePaymentGroup(paymentGroup, emptyOptions());
+		}
  	}
  	
  	protected Order loadBizOrder(String newBizOrderId, Map<String,Object> options) throws Exception
@@ -115,10 +117,15 @@ public class PaymentGroupManagerImpl implements PaymentGroupManager {
  	
  	public PaymentGroup transferToNewBillingAddress(String paymentGroupId, String newBillingAddressId) throws Exception
  	{
- 		PaymentGroup paymentGroup = loadPaymentGroup(paymentGroupId, allTokens());	
-		BillingAddress billingAddress = loadBillingAddress(newBillingAddressId, emptyOptions());		
-		paymentGroup.setBillingAddress(billingAddress);		
-		return savePaymentGroup(paymentGroup, emptyOptions());
+ 
+		PaymentGroup paymentGroup = loadPaymentGroup(paymentGroupId, allTokens());	
+		synchronized(paymentGroup){
+			//will be good when the paymentGroup loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			BillingAddress billingAddress = loadBillingAddress(newBillingAddressId, emptyOptions());		
+			paymentGroup.setBillingAddress(billingAddress);		
+			return savePaymentGroup(paymentGroup, emptyOptions());
+		}
  	}
  	
  	protected BillingAddress loadBillingAddress(String newBillingAddressId, Map<String,Object> options) throws Exception

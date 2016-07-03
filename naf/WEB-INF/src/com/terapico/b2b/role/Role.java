@@ -3,13 +3,11 @@ package com.terapico.b2b.role;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.access.Access;
 import com.terapico.b2b.custsvcrep.CustSvcRep;
 
-
+@JsonSerialize(using = RoleSerializer.class)
 public class Role implements  java.io.Serializable{
 
 	protected		String	mId;

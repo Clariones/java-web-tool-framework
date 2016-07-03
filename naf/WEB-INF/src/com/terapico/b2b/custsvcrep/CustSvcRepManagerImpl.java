@@ -58,22 +58,20 @@ public class CustSvcRepManagerImpl implements CustSvcRepManager {
 
  	
  	
-	public CustSvcRep createCustSvcRep(String email, String roleId, String companyId, String[] optionsExpr) throws Exception
+	public CustSvcRep createCustSvcRep(String email, String passwd, String roleId, String companyId, String[] optionsExpr) throws Exception
 	{
 		
 		
 		CustSvcRep custSvcRep=createNewCustSvcRep(optionsExpr);	
 
 		custSvcRep.setEmail(email);
+		custSvcRep.setPasswd(passwd);
 		Role role = loadRole(roleId,emptyOptions());
 		custSvcRep.setRole(role);
 		SellerCompany company = loadCompany(companyId,emptyOptions());
 		custSvcRep.setCompany(company);
-		//save for later setOrderValues(custSvcRep);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return custSvcRepDAO.save(custSvcRep, options);
-		return saveCustSvcRep(custSvcRep, options);
+
+		return saveCustSvcRep(custSvcRep, emptyOptions());
 		
 
 		
@@ -101,10 +99,15 @@ public class CustSvcRepManagerImpl implements CustSvcRepManager {
 	
 	public CustSvcRep transferToNewRole(String custSvcRepId, String newRoleId) throws Exception
  	{
- 		CustSvcRep custSvcRep = loadCustSvcRep(custSvcRepId, allTokens());	
-		Role role = loadRole(newRoleId, emptyOptions());		
-		custSvcRep.setRole(role);		
-		return saveCustSvcRep(custSvcRep, emptyOptions());
+ 
+		CustSvcRep custSvcRep = loadCustSvcRep(custSvcRepId, allTokens());	
+		synchronized(custSvcRep){
+			//will be good when the custSvcRep loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			Role role = loadRole(newRoleId, emptyOptions());		
+			custSvcRep.setRole(role);		
+			return saveCustSvcRep(custSvcRep, emptyOptions());
+		}
  	}
  	
  	protected Role loadRole(String newRoleId, Map<String,Object> options) throws Exception
@@ -114,10 +117,15 @@ public class CustSvcRepManagerImpl implements CustSvcRepManager {
  	
  	public CustSvcRep transferToNewCompany(String custSvcRepId, String newCompanyId) throws Exception
  	{
- 		CustSvcRep custSvcRep = loadCustSvcRep(custSvcRepId, allTokens());	
-		SellerCompany company = loadCompany(newCompanyId, emptyOptions());		
-		custSvcRep.setCompany(company);		
-		return saveCustSvcRep(custSvcRep, emptyOptions());
+ 
+		CustSvcRep custSvcRep = loadCustSvcRep(custSvcRepId, allTokens());	
+		synchronized(custSvcRep){
+			//will be good when the custSvcRep loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			SellerCompany company = loadCompany(newCompanyId, emptyOptions());		
+			custSvcRep.setCompany(company);		
+			return saveCustSvcRep(custSvcRep, emptyOptions());
+		}
  	}
  	
  	protected SellerCompany loadCompany(String newCompanyId, Map<String,Object> options) throws Exception

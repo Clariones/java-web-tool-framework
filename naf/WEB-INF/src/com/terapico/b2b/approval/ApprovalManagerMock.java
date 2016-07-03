@@ -23,7 +23,7 @@ public class ApprovalManagerMock implements ApprovalManager {
 	{
 		return 0;
 	}
-	public  Approval addOrder(String approvalId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)
+	public  Approval addOrder(String approvalId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)
 	{
 		return new Approval();
 	}

@@ -3,7 +3,6 @@ package com.terapico.b2b.approval;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
-import com.terapico.b2b.order.Order;
 
 public class ApprovalMapper implements RowMapper<Approval>{
 	

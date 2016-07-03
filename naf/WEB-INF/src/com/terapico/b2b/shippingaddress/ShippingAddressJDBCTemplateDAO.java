@@ -4,11 +4,13 @@ package com.terapico.b2b.shippingaddress;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.shippinggroup.ShippingGroup;
 
 import com.terapico.b2b.shippinggroup.ShippingGroupDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implements ShippingAddressDAO{
 
@@ -38,7 +40,7 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 	}
 	public ShippingAddress save(ShippingAddress shippingAddress,Map<String,Object> options){
 		
-		String methodName="save(ShippingAddress shippingAddress,Map<String,Object> options){";
+		String methodName="save(ShippingAddress shippingAddress,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(shippingAddress, methodName, "shippingAddress");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -175,10 +177,17 @@ public class ShippingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implem
 	protected ShippingAddressMapper getMapper(){
 		return new ShippingAddressMapper();
 	}
-	protected ShippingAddress extractShippingAddress(String shippingAddressId){
+	protected ShippingAddress extractShippingAddress(String shippingAddressId) throws Exception{
 		String SQL = "select * from shipping_address_data where id=?";	
-		ShippingAddress shippingAddress = getJdbcTemplateObject().queryForObject(SQL, new Object[]{shippingAddressId}, getMapper());
-		return shippingAddress;
+		try{
+		
+			ShippingAddress shippingAddress = getJdbcTemplateObject().queryForObject(SQL, new Object[]{shippingAddressId}, getMapper());
+			return shippingAddress;
+		}catch(EmptyResultDataAccessException e){
+			throw new ShippingAddressNotFoundException("ShippingAddress("+shippingAddressId+") is not found!");
+		}
+		
+		
 	}
 
 	protected ShippingAddress loadInternalShippingAddress(String shippingAddressId, Map<String,Object> loadOptions) throws Exception{

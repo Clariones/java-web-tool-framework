@@ -6,13 +6,15 @@ import java.util.Map;
 import java.util.HashMap;
 import com.terapico.b2b.order.Order;
 
-import com.terapico.b2b.order.OrderDAO;
 
 import com.terapico.b2b.approval.Approval;
 import com.terapico.b2b.confirmation.Confirmation;
+import com.terapico.b2b.recurringinfo.RecurringInfo;
 import com.terapico.b2b.shipment.Shipment;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.processing.Processing;
+import com.terapico.b2b.costcenter.CostCenter;
+import com.terapico.b2b.profitcenter.ProfitCenter;
 import com.terapico.b2b.delivery.Delivery;
 import com.terapico.b2b.sellercompany.SellerCompany;
 
@@ -53,11 +55,8 @@ public class ShipmentManagerImpl implements ShipmentManager {
 
 		shipment.setWho(who);
 		shipment.setShipTime(shipTime);
-		//save for later setOrderValues(shipment);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return shipmentDAO.save(shipment, options);
-		return saveShipment(shipment, options);
+
+		return saveShipment(shipment, emptyOptions());
 		
 
 		
@@ -93,17 +92,19 @@ public class ShipmentManagerImpl implements ShipmentManager {
 	{
 		return 0;
 	}
-	public  Shipment addOrder(String shipmentId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete) throws Exception
+	public  Shipment addOrder(String shipmentId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status) throws Exception
 	{		
-		Order order = createOrder(buyerId, sellerId, title, totalAmount, type, markAsDelete);
+		Order order = createOrder(buyerId, sellerId, title, costCenterId, profitCenterId, totalAmount, type, markAsDelete, recurringInfoId, status);
 		
 		Shipment shipment = loadShipment(shipmentId, allTokens());
-		
-		shipment.addOrder( order );
-		
-		return saveShipment(shipment, tokens().withOrderList().done());
+		synchronized(shipment){ 
+			//will be good when the shipment loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			shipment.addOrder( order );		
+			return saveShipment(shipment, tokens().withOrderList().done());
+		}
 	}
-	protected Order createOrder(String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete){
+	protected Order createOrder(String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status){
 
 		Order order = new Order();
 		
@@ -115,9 +116,19 @@ public class ShipmentManagerImpl implements ShipmentManager {
 		seller.setId(sellerId);		
 		order.setSeller(seller);		
 		order.setTitle(title);		
+		CostCenter  costCenter = new CostCenter();
+		costCenter.setId(costCenterId);		
+		order.setCostCenter(costCenter);		
+		ProfitCenter  profitCenter = new ProfitCenter();
+		profitCenter.setId(profitCenterId);		
+		order.setProfitCenter(profitCenter);		
 		order.setTotalAmount(totalAmount);		
 		order.setType(type);		
-		order.setMarkAsDelete(markAsDelete);
+		order.setMarkAsDelete(markAsDelete);		
+		RecurringInfo  recurringInfo = new RecurringInfo();
+		recurringInfo.setId(recurringInfoId);		
+		order.setRecurringInfo(recurringInfo);		
+		order.setStatus(status);
 	
 		
 		return order;			

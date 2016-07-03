@@ -13,6 +13,7 @@ public class CustSvcRepMapper implements RowMapper<CustSvcRep>{
 		 		
  		setId(custSvcRep, rs, rowNumber); 		
  		setEmail(custSvcRep, rs, rowNumber); 		
+ 		setPasswd(custSvcRep, rs, rowNumber); 		
  		setRole(custSvcRep, rs, rowNumber); 		
  		setCompany(custSvcRep, rs, rowNumber); 		
  		setVersion(custSvcRep, rs, rowNumber);
@@ -30,6 +31,10 @@ public class CustSvcRepMapper implements RowMapper<CustSvcRep>{
 		
 	protected void setEmail(CustSvcRep custSvcRep, ResultSet rs, int rowNumber) throws SQLException{
 		custSvcRep.setEmail(rs.getString("email"));
+	}
+		
+	protected void setPasswd(CustSvcRep custSvcRep, ResultSet rs, int rowNumber) throws SQLException{
+		custSvcRep.setPasswd(rs.getString("passwd"));
 	}
 		 		
  	protected void setRole(CustSvcRep custSvcRep, ResultSet rs, int rowNumber) throws SQLException{

@@ -47,7 +47,7 @@ public class LineItemManagerImpl implements LineItemManager {
 
  	
  	
-	public LineItem createLineItem(String bizOrderId, String skuId, String skuName, double amount, int quantity, String[] optionsExpr) throws Exception
+	public LineItem createLineItem(String bizOrderId, String skuId, String skuName, double amount, int quantity, boolean active, String[] optionsExpr) throws Exception
 	{
 		
 		
@@ -59,11 +59,9 @@ public class LineItemManagerImpl implements LineItemManager {
 		lineItem.setSkuName(skuName);
 		lineItem.setAmount(amount);
 		lineItem.setQuantity(quantity);
-		//save for later setOrderValues(lineItem);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return lineItemDAO.save(lineItem, options);
-		return saveLineItem(lineItem, options);
+		lineItem.setActive(active);
+
+		return saveLineItem(lineItem, emptyOptions());
 		
 
 		
@@ -91,10 +89,15 @@ public class LineItemManagerImpl implements LineItemManager {
 	
 	public LineItem transferToNewBizOrder(String lineItemId, String newBizOrderId) throws Exception
  	{
- 		LineItem lineItem = loadLineItem(lineItemId, allTokens());	
-		Order bizOrder = loadBizOrder(newBizOrderId, emptyOptions());		
-		lineItem.setBizOrder(bizOrder);		
-		return saveLineItem(lineItem, emptyOptions());
+ 
+		LineItem lineItem = loadLineItem(lineItemId, allTokens());	
+		synchronized(lineItem){
+			//will be good when the lineItem loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			Order bizOrder = loadBizOrder(newBizOrderId, emptyOptions());		
+			lineItem.setBizOrder(bizOrder);		
+			return saveLineItem(lineItem, emptyOptions());
+		}
  	}
  	
  	protected Order loadBizOrder(String newBizOrderId, Map<String,Object> options) throws Exception

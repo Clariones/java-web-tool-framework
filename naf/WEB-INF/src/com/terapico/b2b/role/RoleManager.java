@@ -15,7 +15,7 @@ public interface RoleManager{
 	public  Role removeAccess(String roleId, String accessId)  throws Exception;
 	public  Role updateAccess(String roleId, String accessId, String property, Object newValue)  throws Exception;
 
-	public  Role addCustSvcRep(String roleId, String email, String companyId)  throws Exception;
+	public  Role addCustSvcRep(String roleId, String email, String passwd, String companyId)  throws Exception;
 	public  Role removeCustSvcRep(String roleId, String custSvcRepId)  throws Exception;
 	public  Role updateCustSvcRep(String roleId, String custSvcRepId, String property, Object newValue)  throws Exception;
 

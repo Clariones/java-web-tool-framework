@@ -34,7 +34,7 @@ public class RoleManagerMock implements RoleManager {
 		return new Role();
 	}
 
-	public  Role addCustSvcRep(String roleId, String email, String companyId)
+	public  Role addCustSvcRep(String roleId, String email, String passwd, String companyId)
 	{
 		return new Role();
 	}

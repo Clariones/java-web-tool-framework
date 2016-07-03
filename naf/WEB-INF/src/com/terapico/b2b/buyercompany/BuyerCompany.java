@@ -3,14 +3,14 @@ package com.terapico.b2b.buyercompany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
-
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.terapico.b2b.order.Order;
+import com.terapico.b2b.creditaccount.CreditAccount;
 import com.terapico.b2b.billingaddress.BillingAddress;
+import com.terapico.b2b.costcenter.CostCenter;
 import com.terapico.b2b.employee.Employee;
 
-
+@JsonSerialize(using = BuyerCompanySerializer.class)
 public class BuyerCompany implements  java.io.Serializable{
 
 	protected		String	mId;
@@ -22,6 +22,8 @@ public class BuyerCompany implements  java.io.Serializable{
 	protected		int	mVersion;
 	
 	
+	protected		List<CostCenter> mCostCenterList;
+	protected		List<CreditAccount> mCreditAccountList;
 	protected		List<BillingAddress> mBillingAddressList;
 	protected		List<Employee> mEmployeeList;
 	protected		List<Order> mOrderList;
@@ -38,6 +40,8 @@ public class BuyerCompany implements  java.io.Serializable{
 		setRating(rating);
 		setLogo(logo);
 		setOwner(owner);
+		this.mCostCenterList = new ArrayList<CostCenter>();
+		this.mCreditAccountList = new ArrayList<CreditAccount>();
 		this.mBillingAddressList = new ArrayList<BillingAddress>();
 		this.mEmployeeList = new ArrayList<Employee>();
 		this.mOrderList = new ArrayList<Order>();	
@@ -93,6 +97,80 @@ public class BuyerCompany implements  java.io.Serializable{
 	public int getVersion(){
 		return this.mVersion;
 	}
+	
+	public  List<CostCenter> getCostCenterList(){
+		if(this.mCostCenterList == null){
+			this.mCostCenterList = new ArrayList<CostCenter>();
+		}
+		return this.mCostCenterList;	
+	}
+	public  void setCostCenterList(List<CostCenter> costCenterList){
+		for( CostCenter costCenter:costCenterList){
+			costCenter.setBelongsTo(this);
+		}
+		
+		
+		this.mCostCenterList = costCenterList;
+		
+	}
+	
+	public  void addCostCenter(CostCenter costCenter){
+		costCenter.setBelongsTo(this);
+		getCostCenterList().add(costCenter);
+	}
+	public  void addCostCenters(List<CostCenter> costCenterList){
+		for( CostCenter costCenter:costCenterList){
+			costCenter.setBelongsTo(this);
+		}
+		getCostCenterList().addAll(costCenterList);
+	}
+	
+	public  void removeCostCenter(CostCenter costCenter){
+		getCostCenterList().remove(costCenter);
+	}
+	public  void cleanUpCostCenterList(){
+		getCostCenterList().clear();
+	}
+	
+	
+	
+	
+	public  List<CreditAccount> getCreditAccountList(){
+		if(this.mCreditAccountList == null){
+			this.mCreditAccountList = new ArrayList<CreditAccount>();
+		}
+		return this.mCreditAccountList;	
+	}
+	public  void setCreditAccountList(List<CreditAccount> creditAccountList){
+		for( CreditAccount creditAccount:creditAccountList){
+			creditAccount.setBuyer(this);
+		}
+		
+		
+		this.mCreditAccountList = creditAccountList;
+		
+	}
+	
+	public  void addCreditAccount(CreditAccount creditAccount){
+		creditAccount.setBuyer(this);
+		getCreditAccountList().add(creditAccount);
+	}
+	public  void addCreditAccounts(List<CreditAccount> creditAccountList){
+		for( CreditAccount creditAccount:creditAccountList){
+			creditAccount.setBuyer(this);
+		}
+		getCreditAccountList().addAll(creditAccountList);
+	}
+	
+	public  void removeCreditAccount(CreditAccount creditAccount){
+		getCreditAccountList().remove(creditAccount);
+	}
+	public  void cleanUpCreditAccountList(){
+		getCreditAccountList().clear();
+	}
+	
+	
+	
 	
 	public  List<BillingAddress> getBillingAddressList(){
 		if(this.mBillingAddressList == null){

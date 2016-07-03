@@ -23,7 +23,7 @@ public class ConfirmationManagerMock implements ConfirmationManager {
 	{
 		return 0;
 	}
-	public  Confirmation addOrder(String confirmationId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)
+	public  Confirmation addOrder(String confirmationId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)
 	{
 		return new Confirmation();
 	}

@@ -3,9 +3,6 @@ package com.terapico.b2b.buyercompany;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
-import com.terapico.b2b.order.Order;
-import com.terapico.b2b.billingaddress.BillingAddress;
-import com.terapico.b2b.employee.Employee;
 
 public class BuyerCompanyMapper implements RowMapper<BuyerCompany>{
 	

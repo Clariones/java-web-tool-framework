@@ -23,7 +23,7 @@ public class ProcessingManagerMock implements ProcessingManager {
 	{
 		return 0;
 	}
-	public  Processing addOrder(String processingId, String buyerId, String sellerId, String title, double totalAmount, String type, boolean markAsDelete)
+	public  Processing addOrder(String processingId, String buyerId, String sellerId, String title, String costCenterId, String profitCenterId, double totalAmount, String type, boolean markAsDelete, String recurringInfoId, String status)
 	{
 		return new Processing();
 	}

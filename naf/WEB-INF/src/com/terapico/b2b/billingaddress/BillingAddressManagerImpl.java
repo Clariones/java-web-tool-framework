@@ -7,7 +7,6 @@ import java.util.HashMap;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
 
-import com.terapico.b2b.paymentgroup.PaymentGroupDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
 
 import com.terapico.b2b.order.Order;
@@ -64,11 +63,8 @@ public class BillingAddressManagerImpl implements BillingAddressManager {
 		billingAddress.setCity(city);
 		billingAddress.setState(state);
 		billingAddress.setCountry(country);
-		//save for later setOrderValues(billingAddress);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return billingAddressDAO.save(billingAddress, options);
-		return saveBillingAddress(billingAddress, options);
+
+		return saveBillingAddress(billingAddress, emptyOptions());
 		
 
 		
@@ -96,10 +92,15 @@ public class BillingAddressManagerImpl implements BillingAddressManager {
 	
 	public BillingAddress transferToNewCompany(String billingAddressId, String newCompanyId) throws Exception
  	{
- 		BillingAddress billingAddress = loadBillingAddress(billingAddressId, allTokens());	
-		BuyerCompany company = loadCompany(newCompanyId, emptyOptions());		
-		billingAddress.setCompany(company);		
-		return saveBillingAddress(billingAddress, emptyOptions());
+ 
+		BillingAddress billingAddress = loadBillingAddress(billingAddressId, allTokens());	
+		synchronized(billingAddress){
+			//will be good when the billingAddress loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			BuyerCompany company = loadCompany(newCompanyId, emptyOptions());		
+			billingAddress.setCompany(company);		
+			return saveBillingAddress(billingAddress, emptyOptions());
+		}
  	}
  	
  	protected BuyerCompany loadCompany(String newCompanyId, Map<String,Object> options) throws Exception
@@ -122,10 +123,12 @@ public class BillingAddressManagerImpl implements BillingAddressManager {
 		PaymentGroup paymentGroup = createPaymentGroup(name, bizOrderId, cardNumber);
 		
 		BillingAddress billingAddress = loadBillingAddress(billingAddressId, allTokens());
-		
-		billingAddress.addPaymentGroup( paymentGroup );
-		
-		return saveBillingAddress(billingAddress, tokens().withPaymentGroupList().done());
+		synchronized(billingAddress){ 
+			//will be good when the billingAddress loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			billingAddress.addPaymentGroup( paymentGroup );		
+			return saveBillingAddress(billingAddress, tokens().withPaymentGroupList().done());
+		}
 	}
 	protected PaymentGroup createPaymentGroup(String name, String bizOrderId, String cardNumber){
 

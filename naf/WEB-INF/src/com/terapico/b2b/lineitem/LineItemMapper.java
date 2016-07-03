@@ -16,6 +16,7 @@ public class LineItemMapper implements RowMapper<LineItem>{
  		setSkuName(lineItem, rs, rowNumber); 		
  		setAmount(lineItem, rs, rowNumber); 		
  		setQuantity(lineItem, rs, rowNumber); 		
+ 		setActive(lineItem, rs, rowNumber); 		
  		setVersion(lineItem, rs, rowNumber);
 
 		return lineItem;
@@ -60,6 +61,10 @@ public class LineItemMapper implements RowMapper<LineItem>{
 		
 	protected void setQuantity(LineItem lineItem, ResultSet rs, int rowNumber) throws SQLException{
 		lineItem.setQuantity(rs.getInt("quantity"));
+	}
+		
+	protected void setActive(LineItem lineItem, ResultSet rs, int rowNumber) throws SQLException{
+		lineItem.setActive(rs.getBoolean("active"));
 	}
 		
 	protected void setVersion(LineItem lineItem, ResultSet rs, int rowNumber) throws SQLException{

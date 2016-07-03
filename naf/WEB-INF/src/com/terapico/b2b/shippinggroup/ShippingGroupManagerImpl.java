@@ -70,11 +70,8 @@ public class ShippingGroupManagerImpl implements ShippingGroupManager {
 		ShippingAddress address = loadAddress(addressId,emptyOptions());
 		shippingGroup.setAddress(address);
 		shippingGroup.setAmount(amount);
-		//save for later setOrderValues(shippingGroup);
-		Map<String, Object> options = new HashMap<String, Object>();
-		
-		//return shippingGroupDAO.save(shippingGroup, options);
-		return saveShippingGroup(shippingGroup, options);
+
+		return saveShippingGroup(shippingGroup, emptyOptions());
 		
 
 		
@@ -102,10 +99,15 @@ public class ShippingGroupManagerImpl implements ShippingGroupManager {
 	
 	public ShippingGroup transferToNewBizOrder(String shippingGroupId, String newBizOrderId) throws Exception
  	{
- 		ShippingGroup shippingGroup = loadShippingGroup(shippingGroupId, allTokens());	
-		Order bizOrder = loadBizOrder(newBizOrderId, emptyOptions());		
-		shippingGroup.setBizOrder(bizOrder);		
-		return saveShippingGroup(shippingGroup, emptyOptions());
+ 
+		ShippingGroup shippingGroup = loadShippingGroup(shippingGroupId, allTokens());	
+		synchronized(shippingGroup){
+			//will be good when the shippingGroup loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			Order bizOrder = loadBizOrder(newBizOrderId, emptyOptions());		
+			shippingGroup.setBizOrder(bizOrder);		
+			return saveShippingGroup(shippingGroup, emptyOptions());
+		}
  	}
  	
  	protected Order loadBizOrder(String newBizOrderId, Map<String,Object> options) throws Exception
@@ -115,10 +117,15 @@ public class ShippingGroupManagerImpl implements ShippingGroupManager {
  	
  	public ShippingGroup transferToNewAddress(String shippingGroupId, String newAddressId) throws Exception
  	{
- 		ShippingGroup shippingGroup = loadShippingGroup(shippingGroupId, allTokens());	
-		ShippingAddress address = loadAddress(newAddressId, emptyOptions());		
-		shippingGroup.setAddress(address);		
-		return saveShippingGroup(shippingGroup, emptyOptions());
+ 
+		ShippingGroup shippingGroup = loadShippingGroup(shippingGroupId, allTokens());	
+		synchronized(shippingGroup){
+			//will be good when the shippingGroup loaded from this jvm process cache.
+			//also good when there is a ram based DAO implementation
+			ShippingAddress address = loadAddress(newAddressId, emptyOptions());		
+			shippingGroup.setAddress(address);		
+			return saveShippingGroup(shippingGroup, emptyOptions());
+		}
  	}
  	
  	protected ShippingAddress loadAddress(String newAddressId, Map<String,Object> options) throws Exception

@@ -4,13 +4,15 @@ package com.terapico.b2b.employee;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.assignment.Assignment;
 
 import com.terapico.b2b.assignment.AssignmentDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements EmployeeDAO{
  
@@ -49,7 +51,7 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	}
 	public Employee save(Employee employee,Map<String,Object> options){
 		
-		String methodName="save(Employee employee,Map<String,Object> options){";
+		String methodName="save(Employee employee,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(employee, methodName, "employee");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -203,10 +205,17 @@ public class EmployeeJDBCTemplateDAO extends CommonJDBCTemplateDAO implements Em
 	protected EmployeeMapper getMapper(){
 		return new EmployeeMapper();
 	}
-	protected Employee extractEmployee(String employeeId){
+	protected Employee extractEmployee(String employeeId) throws Exception{
 		String SQL = "select * from employee_data where id=?";	
-		Employee employee = getJdbcTemplateObject().queryForObject(SQL, new Object[]{employeeId}, getMapper());
-		return employee;
+		try{
+		
+			Employee employee = getJdbcTemplateObject().queryForObject(SQL, new Object[]{employeeId}, getMapper());
+			return employee;
+		}catch(EmptyResultDataAccessException e){
+			throw new EmployeeNotFoundException("Employee("+employeeId+") is not found!");
+		}
+		
+		
 	}
 
 	protected Employee loadInternalEmployee(String employeeId, Map<String,Object> loadOptions) throws Exception{

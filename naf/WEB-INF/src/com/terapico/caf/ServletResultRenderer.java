@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 @SuppressWarnings("rawtypes")
 public class ServletResultRenderer {
 
@@ -51,9 +51,17 @@ public class ServletResultRenderer {
 		}
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("applicaton/json; encoding=UTF-8");
-		Gson gson = new Gson();
+		//Gson gson = new Gson();
+		ObjectMapper mapper = new ObjectMapper();
 		// Type t=new TypeToken<weather.WeatherResponse>().getType();
-		response.getWriter().println(gson.toJson(result.getActualResult()));
+		//response.getWriter().println(gson.toJson(result.getActualResult()));
+		//mapper
+		/*
+		Order order=(Order)OrdreJsonTool.prepareForJson((Order)result.getActualResult());
+		
+		*/
+		String json = mapper.writeValueAsString(result.getActualResult());
+		response.getWriter().println(json);
 		return;
 
 	}

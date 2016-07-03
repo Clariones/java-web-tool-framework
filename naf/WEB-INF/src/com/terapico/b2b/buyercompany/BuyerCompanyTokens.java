@@ -10,6 +10,8 @@ public class BuyerCompanyTokens extends CommonTokens{
 	}
 	public static Map <String,Object> all(){
 		return new BuyerCompanyTokens()
+			.withCostCenterList()
+			.withCreditAccountList()
 			.withBillingAddressList()
 			.withEmployeeList()
 			.withOrderList()
@@ -24,6 +26,24 @@ public class BuyerCompanyTokens extends CommonTokens{
 			.done();
 	}
 
+	protected static final String COST_CENTER_LIST = "costCenterList";
+	public String getCostCenterList(){
+		return COST_CENTER_LIST;
+	}
+	public BuyerCompanyTokens withCostCenterList(){		
+		addSimpleOptions(COST_CENTER_LIST);
+		return this;
+	}	
+		
+	protected static final String CREDIT_ACCOUNT_LIST = "creditAccountList";
+	public String getCreditAccountList(){
+		return CREDIT_ACCOUNT_LIST;
+	}
+	public BuyerCompanyTokens withCreditAccountList(){		
+		addSimpleOptions(CREDIT_ACCOUNT_LIST);
+		return this;
+	}	
+		
 	protected static final String BILLING_ADDRESS_LIST = "billingAddressList";
 	public String getBillingAddressList(){
 		return BILLING_ADDRESS_LIST;

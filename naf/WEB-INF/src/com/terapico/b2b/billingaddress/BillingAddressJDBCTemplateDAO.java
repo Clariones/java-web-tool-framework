@@ -4,13 +4,15 @@ package com.terapico.b2b.billingaddress;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.buyercompany.BuyerCompany;
 import com.terapico.b2b.paymentgroup.PaymentGroup;
 
 import com.terapico.b2b.paymentgroup.PaymentGroupDAO;
 import com.terapico.b2b.buyercompany.BuyerCompanyDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO implements BillingAddressDAO{
  
@@ -49,7 +51,7 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 	}
 	public BillingAddress save(BillingAddress billingAddress,Map<String,Object> options){
 		
-		String methodName="save(BillingAddress billingAddress,Map<String,Object> options){";
+		String methodName="save(BillingAddress billingAddress,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(billingAddress, methodName, "billingAddress");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -203,10 +205,17 @@ public class BillingAddressJDBCTemplateDAO extends CommonJDBCTemplateDAO impleme
 	protected BillingAddressMapper getMapper(){
 		return new BillingAddressMapper();
 	}
-	protected BillingAddress extractBillingAddress(String billingAddressId){
+	protected BillingAddress extractBillingAddress(String billingAddressId) throws Exception{
 		String SQL = "select * from billing_address_data where id=?";	
-		BillingAddress billingAddress = getJdbcTemplateObject().queryForObject(SQL, new Object[]{billingAddressId}, getMapper());
-		return billingAddress;
+		try{
+		
+			BillingAddress billingAddress = getJdbcTemplateObject().queryForObject(SQL, new Object[]{billingAddressId}, getMapper());
+			return billingAddress;
+		}catch(EmptyResultDataAccessException e){
+			throw new BillingAddressNotFoundException("BillingAddress("+billingAddressId+") is not found!");
+		}
+		
+		
 	}
 
 	protected BillingAddress loadInternalBillingAddress(String billingAddressId, Map<String,Object> loadOptions) throws Exception{

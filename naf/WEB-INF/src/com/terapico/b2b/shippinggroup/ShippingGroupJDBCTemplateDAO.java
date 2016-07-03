@@ -4,13 +4,15 @@ package com.terapico.b2b.shippinggroup;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import com.terapico.b2b.CommonJDBCTemplateDAO;
 import com.terapico.b2b.order.Order;
 import com.terapico.b2b.shippingaddress.ShippingAddress;
 
 import com.terapico.b2b.shippingaddress.ShippingAddressDAO;
 import com.terapico.b2b.order.OrderDAO;
+
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implements ShippingGroupDAO{
  
@@ -39,7 +41,7 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	}
 	public ShippingGroup save(ShippingGroup shippingGroup,Map<String,Object> options){
 		
-		String methodName="save(ShippingGroup shippingGroup,Map<String,Object> options){";
+		String methodName="save(ShippingGroup shippingGroup,Map<String,Object> options)";
 		
 		assertMethodArgumentNotNull(shippingGroup, methodName, "shippingGroup");
 		assertMethodArgumentNotNull(options, methodName, "options");
@@ -187,10 +189,17 @@ public class ShippingGroupJDBCTemplateDAO extends CommonJDBCTemplateDAO implemen
 	protected ShippingGroupMapper getMapper(){
 		return new ShippingGroupMapper();
 	}
-	protected ShippingGroup extractShippingGroup(String shippingGroupId){
+	protected ShippingGroup extractShippingGroup(String shippingGroupId) throws Exception{
 		String SQL = "select * from shipping_group_data where id=?";	
-		ShippingGroup shippingGroup = getJdbcTemplateObject().queryForObject(SQL, new Object[]{shippingGroupId}, getMapper());
-		return shippingGroup;
+		try{
+		
+			ShippingGroup shippingGroup = getJdbcTemplateObject().queryForObject(SQL, new Object[]{shippingGroupId}, getMapper());
+			return shippingGroup;
+		}catch(EmptyResultDataAccessException e){
+			throw new ShippingGroupNotFoundException("ShippingGroup("+shippingGroupId+") is not found!");
+		}
+		
+		
 	}
 
 	protected ShippingGroup loadInternalShippingGroup(String shippingGroupId, Map<String,Object> loadOptions) throws Exception{
